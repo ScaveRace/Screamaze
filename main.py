@@ -6,8 +6,12 @@ import UI.frontUI as ui
 import menu.startupMenu as s
 import Rooms.frontDesk as fd
 import Rooms.ghostRoom as gr
-import menu.pauseMenu as pm
-from menu import startupMenu
+import Rooms.storrageRoom as st
+import Rooms.vampireRoom as vp
+import Rooms.corridor as corri
+import Rooms. lab2001 as lab
+
+
 
 pygame.init()
 pygame.mixer.init()
@@ -26,9 +30,13 @@ running = True
 ROOMS = {
     "startup": s.StartupMenu,
     "frontD": fd.FrontDesk,
-    "corridor": s.StartupMenu,
+    "corridor": corri.Corridor,
     "ghostR" : gr.GhostRoom,
+    "storrR" : st.StorrageRoom,
+    "vampR" : vp.Classroom2015,
+    #"lab" : lab.Lab2001
 }
+
 room = s.StartupMenu(screen)
 while running:
 
@@ -42,6 +50,7 @@ while running:
         if name not in ROOMS:
             raise KeyError(f"No room named {name!r}. Known: {sorted(ROOMS)}")
         room = ROOMS[name](screen)
+
     room.draw()
     #ui.draw_base_ui(screen, font)
     pygame.display.flip()

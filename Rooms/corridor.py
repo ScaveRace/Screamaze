@@ -13,20 +13,23 @@ class Corridor:
         self.conversation = 0
         self.next_room = None
         self.buttons = [
-            u.Button(930, 350, 140, 50, "Start Run", self.teacher),
-            u.Button(0, 350, 140, 50, "Start Run", self.teacher),
-            u.Button(200, 350, 140, 50, "Start Run", self.teacher),
-            u.Button(200, 350, 140, 50, "Start Run", self.teacher),
-            u.Button(600, 350, 140, 50, "Start Run", self.teacher),
+            u.Button(0, 100, 140, 50, "Storr Room", self.storr),
+            u.Button(200, 100, 140, 50, "VampRoom", self.vamp),
+            u.Button(400, 100, 140, 50, "Ghost Room", self.ghost),
+            u.Button(600, 100, 140, 50, "Front Desk", self.frontdesk),
         ]
 
+    def storr(self):
+        self.next_room = "storrR"
 
+    def vamp(self):
+        self.next_room = "vampR"
 
-    def teacher(self):
-        print("teacher")
+    def ghost(self):
+        self.next_room = "ghostR"
 
-
-
+    def lab(self):
+        self.next_room = "frontD"
 
     def handle_event(self, event):
       for b in self.buttons:

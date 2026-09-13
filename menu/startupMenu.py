@@ -30,6 +30,7 @@ class StartupMenu:
         ]
 
     def load_game(self):
+
         print("loading the game")
 
     def new_game(self):
@@ -37,6 +38,7 @@ class StartupMenu:
         self.next_room = "frontD"
 
     def settings(self):
+
         print("entering settings menu")
 
     def handle_event(self, event):

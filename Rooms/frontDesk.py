@@ -54,7 +54,7 @@ class FrontDesk:
     def startRun(self):
         print(self.buttons[0].label)
         print(self.textField.text)
-        self.next_room = "ghostR"
+        self.next_room = "corridor"
 
     def handle_event(self, event):
         for b in self.buttons:
