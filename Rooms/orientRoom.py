@@ -27,9 +27,11 @@ class Room:
         self.next_room = None
         #for buttons adn other lements you need to add them eighter one by one or in lists
         self.buttons = [
-            u.Button(930, 350, 140, 50, "Start Run", self.action, 0, 0, 0, (255, 255, 255), "center"),
+            u.Button(930, 350, 140, 50, "Start Run", self.action),
             u.Button(200, 350, 140, 50, "Start Run", self.action),
         ]
+        #change thigs work my calling specifics:
+        self.buttons[0].bgCol = (100,34,98)
         #i made buttons and others very variabel abeove you see the min and max you can add as informations
         self.textF = u.TextField(200, 350, 140, 50, "Start Run",(255,255,255),(0,0,0),128, True)
 
