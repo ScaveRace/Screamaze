@@ -185,13 +185,13 @@ Then open a pull request on GitHub and ask someone to review it.
 
 | Area | File | Owner | Reviewer |
 |---|---|---|---|
-| Front desk | `Rooms/frontDesk.py` | | |
-| Ghost room | `Rooms/ghostRoom.py` | | |
-| Lab 2.001 | `Rooms/lab2001.py` | | |
-| Corridor | `Rooms/corridor.py` | | |
-| Menus | `menu/` | | |
-| UI elements | `UI/uiElements.py` | | |
-| main.py and the room list | `main.py` | | |
+| Front desk | `Rooms/frontDesk.py` | Fynn | |
+| Ghost room | `Rooms/ghostRoom.py` | Jill | |
+| Lab 2.001 | `Rooms/lab2001.py` | Alexander | |
+| Corridor | `Rooms/corridor.py` | Fynn | |
+| Menus | `menu/` | Collaboration | |
+| UI elements | `UI/uiElements.py` | Collaboration | |
+| main.py and the room list | `main.py` | / | |
 | Sound | `functions/sound.py` | | |
 | Save data | `data/saver.py` | | |
 
