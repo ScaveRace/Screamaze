@@ -36,7 +36,7 @@ class FrontDesk:
 
 
         self.buttons = [
-            u.Button(1000, 290, 140, 30, "Male", self.test,"center",0,(0,0,0),(255,255,255),(100,100,100)),
+            u.Button(1000, 290, 140, 30, "Male", self.test),
             u.Button(930, 350, 140, 50, "Start Run", self.startRun),
 
         ]

@@ -24,9 +24,9 @@ class StartupMenu:
         self.next_room = None
         self.background = u.load_image("assets/startup.png", screen.get_size())
         self.buttons = [
-            u.Button(120, 420, 150, 50, "New Game", self.new_game,"left",0,(0,0,0),(255,255,255),(0,0,0)),
-            u.Button(120, 470, 150, 50, "Load Game", self.load_game,"left",0,(0,0,0),(255,255,255),(0,0,0)),
-            u.Button(120, 520, 150, 50, "Settings", self.settings,"left",0,(0,0,0),(255,255,255),(0,0,0)),
+            u.Button(120, 420, 150, 50, "New Game", self.new_game),
+            u.Button(120, 470, 150, 50, "Load Game", self.load_game),
+            u.Button(120, 520, 150, 50, "Settings",self.settings),
         ]
 
     def load_game(self):
@@ -45,6 +45,7 @@ class StartupMenu:
 
     def draw(self):
         self.screen.blit(self.background, (0, 0))
+
         for b in self.buttons:
             b.draw2(self.screen)
 

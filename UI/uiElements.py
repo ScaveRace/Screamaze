@@ -1,7 +1,7 @@
 import pygame
 
 pygame.font.init()
-font = pygame.font.Font(None,28)
+
 
 
 ##basic functions
@@ -29,17 +29,17 @@ def butImageAnim(alpha,fadetime):
 ##button setup
 class Button:
 
-    def __init__(self,x,y,w,h,label,action,font = pygame.font.Font(None, 28),outline = 1,bgCol = (0,0,0),fgCol  = (255,255,255), hoverCol = (128,128,128),align = "center"):
+    def __init__(self,x,y,w,h,label,action):
         self.rect = pygame.Rect(x,y,w,h)
 
         self.label = label #text of the button
         self.action = action #function to be called
-        self.bgCol = bgCol
-        self.fgCol = fgCol
-        self.outline = outline # 0 = if you hover, 1 equals always
-        self.align = align #left,right or center
-        self.hoverCol = hoverCol #color when hovering background
-        self.font = font
+        self.bgCol = (0,0,0)
+        self.fgCol = (255,255,255),
+        self.outline = 0 # 0 = if you hover, 1 equals always
+        self.align = "center" #left,right or center
+        self.hoverCol =(128,128,128) #color when hovering background
+        self.font = pygame.font.Font(None, 28)
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONUP and event.button == 1:

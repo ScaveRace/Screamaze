@@ -13,11 +13,11 @@ class GhostRoom:
         self.conversation = 0
         self.next_room = None
         self.buttons = [
-            u.Button(930, 350, 140, 50, "Start Run", self.teacher, 0, 0, 0, (255, 255, 255), "center"),
-            u.Button(0, 350, 140, 50, "Start Run", self.teacher, 0, 0, 0, (255, 255, 255), "center"),
-            u.Button(200, 350, 140, 50, "Start Run", self.teacher, 0, 0, 0, (255, 255, 255), "center"),
-            u.Button(200, 350, 140, 50, "Start Run", self.teacher, 0, 0, 0, (255, 255, 255), "center"),
-            u.Button(600, 350, 140, 50, "Start Run", self.teacher, 0, 0, 0, (255, 255, 255), "center"),
+            u.Button(930, 350, 140, 50, "Start Run", self.teacher),
+            u.Button(0, 350, 140, 50, "Start Run", self.teacher),
+            u.Button(200, 350, 140, 50, "Start Run", self.teacher),
+            u.Button(200, 350, 140, 50, "Start Run", self.teacher),
+            u.Button(600, 350, 140, 50, "Start Run", self.teacher),
         ]
 
 
