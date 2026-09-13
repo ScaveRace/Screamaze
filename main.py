@@ -1,0 +1,52 @@
+import UI.uiElements
+import json
+import pygame
+import UI.frontUI as ui
+#import Rooms.corridor as cori
+import menu.startupMenu as s
+import Rooms.frontDesk as fd
+import Rooms.ghostRoom as gr
+import menu.pauseMenu as pm
+from menu import startupMenu
+
+pygame.init()
+pygame.mixer.init()
+
+SCREEN_WIDTH = 1280
+SCREEN_HEIGHT = 720
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("THUAS's Screamazing")
+
+clock = pygame.time.Clock()
+font = pygame.font.Font(None, 32)
+
+isMusician = False
+running = True
+
+ROOMS = {
+    "startup": s.StartupMenu,
+    "frontD": fd.FrontDesk,
+    "corridor": s.StartupMenu,
+    "ghostR" : gr.GhostRoom,
+}
+room = s.StartupMenu(screen)
+while running:
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        else:
+            room.handle_event(event)
+    if room.next_room is not None:
+        name = room.next_room
+        if name not in ROOMS:
+            raise KeyError(f"No room named {name!r}. Known: {sorted(ROOMS)}")
+        room = ROOMS[name](screen)
+    room.draw()
+    #ui.draw_base_ui(screen, font)
+    pygame.display.flip()
+
+
+
+
+pygame.quit()
