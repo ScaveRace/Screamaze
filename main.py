@@ -43,6 +43,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             print("Quit")
+            print("no way")
             running = False
         else:
             room.handle_event(event)
