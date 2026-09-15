@@ -33,7 +33,7 @@ ROOMS = {
     "corridor": corri.Corridor,
     "ghostR" : gr.GhostRoom,
     "storrR" : st.StorrageRoom,
-    "vampR" : vp.Classroom2015,
+    "vampR" : vp.VampireRoom,
     #"lab" : lab.Lab2001
 }
 
