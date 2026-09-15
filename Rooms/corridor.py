@@ -16,6 +16,7 @@ class Corridor:
             u.Button(0, 100, 140, 50, "Storr Room", self.storr),
             u.Button(200, 100, 140, 50, "VampRoom", self.vamp),
             u.Button(400, 100, 140, 50, "Ghost Room", self.ghost),
+            u.Button(600, 100, 140, 50, "Equinox Room", self.equin)
         ]
 
     def storr(self):
@@ -24,6 +25,9 @@ class Corridor:
 
     def vamp(self):
         self.next_room = "vampR"
+
+    def equin(self):
+        self.next_room = "equinR"
 
     def ghost(self):
         self.next_room = "ghostR"
