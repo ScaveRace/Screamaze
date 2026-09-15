@@ -42,6 +42,7 @@ class GhostRoom:
 
     def returnc(self):
         print("return to corridor")
+        self.next_room = "corridor"
 
     def returnr(self):
         self.current_image = self.default_image
