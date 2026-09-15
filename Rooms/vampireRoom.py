@@ -10,16 +10,16 @@ class vampireRoom:
         self.screen = screen
         self.next_room = None
 
-        # room backgrounds: shutters closed / open (vampire dead, stone visible)
+        #both bg before and after
         self.bg_closed = u.load_image("assets/Room2015_1_win_clo.png", screen.get_size(), fallback=(35, 8, 18))
         self.bg_open = u.load_image("assets/Room2015_1_win_op.png", screen.get_size(), fallback=(120, 100, 60))
         self.image = self.bg_closed
 
-        # fuse box closeups: door closed / door open
+        #Fuse box open and closed
         self.fusebox_closed_img = u.load_image("assets/fuse_box.png", screen.get_size(), fallback=(20, 20, 20))
         self.fusebox_open_img = u.load_image("assets/fuse_box2.png", screen.get_size(), fallback=(20, 20, 20))
 
-        # icon shown at the fuse's hiding spot until it's picked up
+
         self.fuse_icon = u.load_image("assets/fuse_item.png", (56, 56), fallback=(120, 90, 40))
 
         self.font = pygame.font.Font(None, 28)
@@ -68,7 +68,7 @@ class vampireRoom:
             u.Button(900, 600, 150, 50, "Close", self.close_fusebox),
         ]
 
-    # --- dialogue -------------------------------------------------------------
+
 
     def talk(self):
         if self.line < len(self.dialogue):
@@ -79,9 +79,9 @@ class vampireRoom:
         elif not self.task_done:
             self.chatbox.say("Vampire > That panel is your only way to open those shutters.")
         else:
-            self.chatbox.say("...")  # he's in no state to talk anymore
+            self.chatbox.say("...")
 
-    # --- corner pickup -------------------------------------------------------
+
 
     def search_corner(self):
         if not self.fuse_found:
@@ -91,7 +91,7 @@ class vampireRoom:
         else:
             self.chatbox.say("You > Nothing else here.")
 
-    # --- fuse box closeup -----------------------------------------------------
+
 
     def open_fusebox_closeup(self):
         self.state = "fusebox_closed"
@@ -102,8 +102,7 @@ class vampireRoom:
     def close_fusebox(self):
         self.state = "room"
         if self.task_done and self.image is not self.bg_open:
-            # this is the moment the room "becomes different" — leaving the
-            # panel closeup after the power is back on
+            #here the room bg change with the dead vam
             self.image = self.bg_open
 
     def insert_fuse(self):
@@ -126,10 +125,9 @@ class vampireRoom:
         self.task_done = True
         self.chatbox.say("You > *click* — the panel hums back to life.")
         self.chatbox.say("You > Something outside screamed. I should go look.")
-        # stays in the fusebox_open view here — the background only changes
-        # once the player backs out via Close, per close_fusebox() above
 
-    # --- stone pickup (post-task) ----------------------------------------------
+
+    # stone pickup
 
     def collect_stone(self):
         if not self.task_done:
@@ -143,17 +141,16 @@ class vampireRoom:
         self.inventory.append("red_stone")
         self.chatbox.say("You > A red stone... still cold.")
 
-        # once player.py's shared inventory/story.json is fixed, this is
-        # worth ~20% of total weight toward escaping the maze:
+
         # from player import newPlayer
         # newPlayer.addToStone("vampire_stone")
 
-    # --- leaving --------------------------------------------------------------
+
 
     def leave(self):
         self.next_room = "corridor"  # always allowed — task or no task
 
-    # --- room contract --------------------------------------------------------
+
 
     def handle_event(self, event):
         if self.state == "fusebox_closed":
@@ -190,7 +187,7 @@ class vampireRoom:
                 self.screen.blit(self.fuse_icon, (self.fuse_spot.x, self.fuse_spot.y))
 
             if self.task_done and not self.stone_collected:
-                # placeholder mark until real stone art exists
+                # placeholder redstone
                 pygame.draw.circle(self.screen, (180, 20, 20), self.stone_spot.center, self.stone_spot.w // 2)
 
             for b in self.room_buttons:
