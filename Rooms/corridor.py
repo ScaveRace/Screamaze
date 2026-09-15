@@ -16,7 +16,6 @@ class Corridor:
             u.Button(0, 100, 140, 50, "Storr Room", self.storr),
             u.Button(200, 100, 140, 50, "VampRoom", self.vamp),
             u.Button(400, 100, 140, 50, "Ghost Room", self.ghost),
-            u.Button(600, 100, 140, 50, "Front Desk", self.frontdesk),
         ]
 
     def storr(self):
