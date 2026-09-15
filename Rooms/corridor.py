@@ -19,8 +19,6 @@ class Corridor:
         ]
 
     def storr(self):
-
-        print("Hello")
         self.next_room = "storrR"
 
     def vamp(self):
