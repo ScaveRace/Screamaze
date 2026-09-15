@@ -9,7 +9,7 @@ CABINET_CODE = "4537"
 
 class GhostRoom:
     def __init__(self, screen):
-        self.default_image = u.load_image("assets/ghostRoom1.png", screen.get_size())
+        self.default_image = u.load_image("assets/gr.ghostRoom.png", screen.get_size())
         self.current_image = self.default_image
         self.screensize = screen.get_size()
         self.screen = screen
