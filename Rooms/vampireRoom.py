@@ -5,7 +5,7 @@ pygame.init()
 pygame.mixer.init()
 
 
-class Classroom2015:
+class VampireRoom:
     def __init__(self, screen):
         self.screen = screen
         self.next_room = None

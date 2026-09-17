@@ -9,8 +9,8 @@ import Rooms.ghostRoom as gr
 import Rooms.storrageRoom as st
 import Rooms.vampireRoom as vp
 import Rooms.corridor as corri
-import Rooms.equinoxRoom as eq
-import Rooms. lab2001 as lab
+import Rooms.lab2001 as lab
+import Rooms.projectRoom as pR
 
 
 
@@ -34,8 +34,8 @@ ROOMS = {
     "corridor": corri.Corridor,
     "ghostR" : gr.GhostRoom,
     "storrR" : st.StorrageRoom,
-    "vampR" : vp.Classroom2015,
-    "equinR" : eq.EquinoxRoom,
+    "vampR" : vp.VampireRoom,
+    "projRoom" : pR.ProjectRoom
     #"lab" : lab.Lab2001
 }
 
