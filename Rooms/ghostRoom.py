@@ -15,11 +15,9 @@ class GhostRoom:
         self.conversation = 0
         self.next_room = None
 
-        self.default_image = u.load_image("assets/gr.ghostRoom.png", screen.get_size())
-        self.current_image = self.default_image
-
-        self.room_image = u.load_image("assets/ghostRoom1.png", self.screensize)
+        self.room_image = u.load_image("assets/gr.ghostRoom.png", self.screensize)
         self.room_empty = u.load_image("assets/gr.ghostRoom.no.teacher.png", self.screensize)
+        self.current_image = self.room_image
 
         self.teacher_image = u.load_image("assets/gr.teacher.png", self.screensize)
         self.no_teacher_image = u.load_image("assets/gr.bureau.no.teacher.png", self.screensize)
