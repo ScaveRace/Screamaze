@@ -62,8 +62,5 @@ while running:
     #ui.draw_base_ui(screen, font)
     pygame.display.flip()
 
-    #dt2 = clock.tick(60) / 1000
-    #save.time += dt2
-
 
 pygame.quit()
