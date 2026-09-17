@@ -32,12 +32,12 @@ class VampireRoom:
         ]
         self.line = 0
         self.task_started = False
-        self.task_done = False   # power restored / vampire dead
+        self.task_done = False
 
 
         self.inventory = []
-        self.fuse_found = False      # picked up from the corner yet?
-        self.fuse_inserted = False   # slotted into the box yet?
+        self.fuse_found = False
+        self.fuse_inserted = False
 
 
         self.fuse_spot = pygame.Rect(100, 580, 56, 56)
@@ -47,13 +47,13 @@ class VampireRoom:
 
         self.state = "room"
 
-        self.chatbox = u.Chatbox(50, 20, 300, 200, self.font)
+        self.chatbox = u.Chatbox(10, 540, 600, 150, self.font)
 
         self.room_buttons = [
-            u.Button(780, 420, 220, 50, "Talk to Vampire", self.talk),
-            u.Button(780, 480, 220, 50, "Search Corner", self.search_corner),
-            u.Button(780, 540, 220, 50, "Inspect Fuse Box", self.open_fusebox_closeup),
-            u.Button(780, 600, 220, 50, "Collect Stone", self.collect_stone),
+            u.Button(780, 150, 220, 50, "Talk to Vampire", self.talk),
+            u.Button(150, 500, 220, 50, "Search Corner", self.search_corner),
+            u.Button(1000, 460, 220, 50, "Inspect Fuse Box", self.open_fusebox_closeup),
+            u.Button(780, 170, 220, 50, "Collect Stone", self.collect_stone),
             u.Button(780, 660, 220, 50, "Leave Room", self.leave),
         ]
 
@@ -142,13 +142,12 @@ class VampireRoom:
         self.chatbox.say("You > A red stone... still cold.")
 
 
-        # from player import newPlayer
-        # newPlayer.addToStone("vampire_stone")
+
 
 
 
     def leave(self):
-        self.next_room = "corridor"  # always allowed — task or no task
+        self.next_room = "corridor"  # always allowed with task or no task done
 
 
 
