@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a70a6be2-95e6-49d6-95ab-30f0f5c4cc82" name="Changes" comment="added equinoxRoom without inside functionality">
+    <list default="true" id="a70a6be2-95e6-49d6-95ab-30f0f5c4cc82" name="Changes" comment="addedProdjRoom V1&#10;&#10;(cherry picked from commit 7dd440b397181195969645330814dc96b009b64c)">
+      <changelist_data name="fynnherr" email="fynnherr@gmail.com" date="1789637873000" automatic="true" />
+      <change afterPath="$PROJECT_DIR$/Rooms/projectRoom.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Rooms/corridor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Rooms/corridor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Rooms/vampireRoom.py" beforeDir="false" afterPath="$PROJECT_DIR$/Rooms/vampireRoom.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -22,6 +27,7 @@
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
+        <option value="fynnherr &lt;fynnherr@gmail.com&gt;" />
         <option value="mcmrg &lt;alexanderreijngoud@gmail.com&gt;" />
       </list>
     </option>
@@ -32,18 +38,18 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "alexanderreijngoud"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;alexanderreijngoud&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/ScaveRace/Screamaze.git",
-    "accountId": "4e042649-430c-4fa8-9c90-7261d76d1685"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/ScaveRace/Screamaze.git&quot;,
+    &quot;accountId&quot;: &quot;4e042649-430c-4fa8-9c90-7261d76d1685&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -52,23 +58,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.corridor.executor": "Run",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "alexander",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/mcmrg/Desktop/THUAS PYTHON PROJECTS/screammaze git",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.corridor.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;alexander&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/mcmrg/Desktop/THUAS PYTHON PROJECTS/screammaze git&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -214,10 +220,12 @@
     <MESSAGE value="remove prints" />
     <MESSAGE value="remove print corridor" />
     <MESSAGE value="added equinoxRoom without inside functionality" />
-    <option name="LAST_COMMIT_MESSAGE" value="added equinoxRoom without inside functionality" />
+    <MESSAGE value="addedProdjRoom V1&#10;&#10;(cherry picked from commit 7dd440b397181195969645330814dc96b009b64c)" />
+    <option name="LAST_COMMIT_MESSAGE" value="addedProdjRoom V1&#10;&#10;(cherry picked from commit 7dd440b397181195969645330814dc96b009b64c)" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/screammaze_git$main.coverage" NAME="main Coverage Results" MODIFIED="1789633036346" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/screammaze_git$corridor.coverage" NAME="corridor Coverage Results" MODIFIED="1789483360992" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Rooms" />
+    <SUITE FILE_PATH="coverage/screammaze_git$main.coverage" NAME="main Coverage Results" MODIFIED="1789640207167" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/screammaze_git$saver.coverage" NAME="saver Coverage Results" MODIFIED="1789636484583" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data" />
+    <SUITE FILE_PATH="coverage/screammaze_git$corridor.coverage" NAME="corridor Coverage Results" MODIFIED="1789640199684" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Rooms" />
   </component>
 </project>
