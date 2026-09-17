@@ -9,7 +9,7 @@ import Rooms.ghostRoom as gr
 import Rooms.storrageRoom as st
 import Rooms.vampireRoom as vp
 import Rooms.corridor as corri
-
+import Rooms.equinoxRoom as eq
 import Rooms. lab2001 as lab
 
 
