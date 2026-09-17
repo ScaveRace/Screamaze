@@ -189,7 +189,13 @@ class VampireRoom:
                 # placeholder redstone
                 pygame.draw.circle(self.screen, (180, 20, 20), self.stone_spot.center, self.stone_spot.w // 2)
 
-            for b in self.room_buttons:
+            for i , b in enumerate(self.room_buttons):
+                if i == 0 and self.task_done and not self.stone_collected:
+                    continue
+
                 b.draw2(self.screen)
+            self.chatbox.draw(self.screen)
+
+            b.draw2(self.screen)
 
         self.chatbox.draw(self.screen)
