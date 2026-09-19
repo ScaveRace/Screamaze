@@ -50,12 +50,12 @@ class VampireRoom:
         self.chatbox = u.Chatbox(10, 540, 600, 150, self.font)
 
         self.room_buttons = [
-            u.Button(780, 150, 220, 50, "Talk to Vampire", self.talk),
+            u.Button(780, 120, 220, 50, "Talk to Vampire", self.talk),
             u.Button(150, 500, 220, 50, "Search Corner", self.search_corner),
             u.Button(1000, 460, 220, 50, "Inspect Fuse Box", self.open_fusebox_closeup),
-            u.Button(780, 170, 220, 50, "Collect Stone", self.collect_stone),
             u.Button(780, 660, 220, 50, "Leave Room", self.leave),
         ]
+        self.button1 =  u.Button(780, 170, 220, 50, "Collect Stone", self.collect_stone)
 
         self.fusebox_closed_buttons = [
             u.Button(700, 600, 150, 50, "Open", self.open_fusebox_door),
@@ -123,6 +123,8 @@ class VampireRoom:
             return
 
         self.task_done = True
+        self.room_buttons.append(self.button1)
+
         self.chatbox.say("You > *click* — the panel hums back to life.")
         self.chatbox.say("You > Something outside screamed. I should go look.")
 
@@ -130,14 +132,15 @@ class VampireRoom:
     # stone pickup
 
     def collect_stone(self):
-        if not self.task_done:
-            self.chatbox.say("You > There's nothing here yet.")
-            return
+        # if not self.task_done:
+        #     self.chatbox.say("You > There's nothing here yet.")
+        #     return
         if self.stone_collected:
             self.chatbox.say("You > Already got it.")
             return
 
         self.stone_collected = True
+        self.room_buttons.pop()
         self.inventory.append("red_stone")
         self.chatbox.say("You > A red stone... still cold.")
 
@@ -185,15 +188,29 @@ class VampireRoom:
             if not self.fuse_found:
                 self.screen.blit(self.fuse_icon, (self.fuse_spot.x, self.fuse_spot.y))
 
-            if self.task_done and not self.stone_collected:
+            if self.task_done and not self.stone_collected :
                 # placeholder redstone
+
                 pygame.draw.circle(self.screen, (180, 20, 20), self.stone_spot.center, self.stone_spot.w // 2)
 
-            for i , b in enumerate(self.room_buttons):
-                if i == 0 and self.task_done and not self.stone_collected:
-                    continue
+            for i, b in enumerate(self.room_buttons):
 
+                if i == 0 and self.task_done :
+                    continue
+                elif i == 1 and self.fuse_found:
+                    continue
+                elif i == 2 and self.task_done :
+                    continue
                 b.draw2(self.screen)
+
+            # for i, b in enumerate(self.room_buttons):
+            #     if i == 0 and self.task_done:
+            #         continue
+            #     elif i == 1 and self.fuse_found :
+            #         continue
+            #     else:
+            #
+            # b.draw2(self.screen)
             self.chatbox.draw(self.screen)
 
             b.draw2(self.screen)
