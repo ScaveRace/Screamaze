@@ -203,14 +203,6 @@ class VampireRoom:
                     continue
                 b.draw2(self.screen)
 
-            # for i, b in enumerate(self.room_buttons):
-            #     if i == 0 and self.task_done:
-            #         continue
-            #     elif i == 1 and self.fuse_found :
-            #         continue
-            #     else:
-            #
-            # b.draw2(self.screen)
             self.chatbox.draw(self.screen)
 
             b.draw2(self.screen)
