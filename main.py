@@ -12,10 +12,7 @@ import Rooms.corridor as corri
 import Rooms.lab2001 as lab
 import Rooms.projectRoom as pR
 import Rooms.equinoxRoom as eq
-import Rooms. lab2001 as lab
-#from data.saver import savedata
 
-#save = savedata()
 
 
 pygame.init()

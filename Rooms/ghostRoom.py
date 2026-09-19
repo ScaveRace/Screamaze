@@ -1,4 +1,3 @@
-
 import pygame
 import UI.uiElements as u
 
@@ -186,9 +185,6 @@ class GhostRoom:
     def whiteboard(self):
         self.current_image = self.whiteboard_image
         self.current_buttons = self.returnr_buttons
-
-
-
 
     def returnc(self):
         self.next_room = "corridor"

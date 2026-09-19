@@ -1,17 +1,6 @@
 import UI.uiElements as u
 import pygame
 
-
-
-#assets
-
-#integers
-
-#floats
-
-#strings
-
-#bool
 pygame.init()
 pygame.mixer.init()
 
@@ -47,13 +36,10 @@ class FrontDesk:
             self.buttons[0].label = "Female"
         else:
             self.buttons[0].label = "Male"
-        #self.animation = True
 
-    alpha = 0
+
         # startAnim =
     def startRun(self):
-        print(self.buttons[0].label)
-        print(self.textField.text)
         self.next_room = "corridor"
 
     def handle_event(self, event):
@@ -79,14 +65,8 @@ class FrontDesk:
         if self.alpha != 255:
             self.alpha = u.storyImageAnim(self.startAnim, self.alpha, 1000)
             self.screen.blit(self.background, (0, 0))
-        ### executed based on time parameters check init ###
 
-        # if self.alpha != 255:
-        #     if self.animation:
-        #         self.alpha = u.butImageAnim(self.alpha, 1000)
-        #     screen.blit(self.background, (0, 0))
-        ### if you want it to be executed by a button check init and function###
-
+        ##### latest frame when alpha=255 #####
         self.secondIm.set_alpha(self.alpha)
         self.screen.blit(self.secondIm, (0, 0))
 
