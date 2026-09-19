@@ -1,18 +1,25 @@
 import pygame
 import UI.uiElements as u
+from player import Player
 
 pygame.init()
 
 pygame.mixer.init()
 
 class EquinoxRoom:
-    def __init__(self, screen):
+    def __init__(self, screen, player):
         self.image = u.load_image("assets/startup.png", screen.get_size()) #  will change
         self.screen = screen
+        self.player = Player
         self.conversation = 0
         self.next_room = None
-        self.buttons = [u.Button(400, 400, 140, 50, "corridor", self.corridor)]
+        self.buttons = [
+            u.Button(400, 400, 140, 50, "corridor", self.corridor),
+            u.Button(200, 400, 140, 50, "testitem", self.gettestitem)
+        ]
 
+    def gettestitem(self):
+        self.player.addToInventory("yeet")
 
     def corridor(self):
         self.next_room = "corridor"
