@@ -7,7 +7,7 @@ pygame.init()
 pygame.mixer.init()
 
 class EquinoxRoom:
-    def __init__(self, screen, player):
+    def __init__(self, screen):
         self.image = u.load_image("assets/startup.png", screen.get_size()) #  will change
         self.screen = screen
         self.player = Player
