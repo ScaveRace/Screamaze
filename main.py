@@ -11,7 +11,11 @@ import Rooms.vampireRoom as vp
 import Rooms.corridor as corri
 import Rooms.lab2001 as lab
 import Rooms.projectRoom as pR
+import Rooms.equinoxRoom as eq
+import Rooms. lab2001 as lab
+#from data.saver import savedata
 
+#save = savedata()
 
 
 pygame.init()
@@ -35,6 +39,7 @@ ROOMS = {
     "ghostR" : gr.GhostRoom,
     "storrR" : st.StorrageRoom,
     "vampR" : vp.VampireRoom,
+    "equinR" : eq.EquinoxRoom,
     "projRoom" : pR.ProjectRoom
     #"lab" : lab.Lab2001
 }
@@ -56,8 +61,6 @@ while running:
     room.draw()
     #ui.draw_base_ui(screen, font)
     pygame.display.flip()
-
-
 
 
 pygame.quit()

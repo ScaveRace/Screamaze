@@ -173,3 +173,20 @@ def focused(event,rect):
     if rect.collidepoint(event.pos):
         return True
     return False
+
+class Slider:
+    def __init__(self,x,y,w,h,label,action):
+        self.rect = pygame.Rect(x, y, w, h)
+
+        self.label = label  # text of the button
+        self.action = action  # function to be called
+        self.bgCol = (0, 0, 0)
+        self.fgCol = (255, 255, 255),
+        self.outline = 0  # 0 = if you hover, 1 equals always
+        self.align = "center"  # left,right or center
+        self.hoverCol = (128, 128, 128)
+
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                if self.rect.collidepoint(event.pos):
+                    self.action()
