@@ -12,7 +12,7 @@ class Corridor:
         self.screen = screen
         self.conversation = 0
         self.next_room = None
-        self.buttons = [
+        self.buttons = [            ### list of all rooms accessible from the corridor
             u.Button(0, 100, 140, 50, "Storr Room", self.storr),
             u.Button(200, 100, 140, 50, "VampRoom", self.vamp),
             u.Button(400, 100, 140, 50, "Ghost Room", self.ghost),
@@ -33,7 +33,7 @@ class Corridor:
     def lab(self):
         self.next_room = "frontD"
 
-    def prodjRoom(self):
+    def projRoom(self):
         self.next_room = "projRoom"
 
     def equin(self):

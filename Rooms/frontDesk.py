@@ -50,7 +50,7 @@ class FrontDesk:
         # in draw:
 
 
-    def draw(self):
+    def draw(self):  ####  very complicated draw
 
         x = 850
         y = 200
@@ -61,7 +61,7 @@ class FrontDesk:
 
         rect_surface.fill((25, 25, 25))
         rect_surface.set_alpha(170)
-
+        ########## animation ###########
         if self.alpha != 255:
             self.alpha = u.storyImageAnim(self.startAnim, self.alpha, 1000)
             self.screen.blit(self.background, (0, 0))
@@ -69,7 +69,7 @@ class FrontDesk:
         ##### latest frame when alpha=255 #####
         self.secondIm.set_alpha(self.alpha)
         self.screen.blit(self.secondIm, (0, 0))
-
+        #########  blit UI after animation  ##########
         if self.alpha == 255:
             self.screen.blit(rect_surface, (x, y))
             pygame.draw.rect(self.screen, (255, 255, 255), rect_outline, 1)

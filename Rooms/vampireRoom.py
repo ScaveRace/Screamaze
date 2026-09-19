@@ -88,8 +88,7 @@ class VampireRoom:
             self.fuse_found = True
             self.inventory.append("fuse")
             self.chatbox.say("You > Found a spare fuse tucked in the corner.")
-        else:
-            self.chatbox.say("You > Nothing else here.")
+
 
 
 
@@ -132,12 +131,6 @@ class VampireRoom:
     # stone pickup
 
     def collect_stone(self):
-        # if not self.task_done:
-        #     self.chatbox.say("You > There's nothing here yet.")
-        #     return
-        if self.stone_collected:
-            self.chatbox.say("You > Already got it.")
-            return
 
         self.stone_collected = True
         self.room_buttons.pop()
@@ -158,12 +151,12 @@ class VampireRoom:
         if self.state == "fusebox_closed":
             for b in self.fusebox_closed_buttons:
                 b.handle_event(event)
-            return
 
-        if self.state == "fusebox_open":
+
+        elif self.state == "fusebox_open":
             for b in self.fusebox_open_buttons:
                 b.handle_event(event)
-            return
+
 
         # "room"
         for b in self.room_buttons:
