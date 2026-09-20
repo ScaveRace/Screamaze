@@ -1,21 +1,15 @@
-import UI.uiElements
-import json
 import pygame
-import UI.frontUI as ui
-#import Rooms.corridor as cori
 import menu.startupMenu as s
 import Rooms.frontDesk as fd
 import Rooms.ghostRoom as gr
 import Rooms.storrageRoom as st
 import Rooms.vampireRoom as vp
 import Rooms.corridor as corri
-import Rooms.lab2001 as lab
 import Rooms.projectRoom as pR
 import Rooms.equinoxRoom as eq
-import Rooms. lab2001 as lab
-#from data.saver import savedata
 
-#save = savedata()
+from player import player
+from UI.frontUI import PauseMenu
 
 
 pygame.init()
@@ -45,21 +39,43 @@ ROOMS = {
 }
 
 room = s.StartupMenu(screen)
+current = "startup"
+
+pause = PauseMenu(screen)
+ms_buffer = 0          # leftover milliseconds not yet worth a whole second
+
 while running:
+    dt = clock.tick(60)                     # caps at 60 fps, returns ms since last call
+    show_pause = current not in ("startup", "frontD")      # no pause button on the title screen
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif show_pause and pause.handle_event(event):
+            continue                        # overlay consumed it, room must not see it
         else:
             room.handle_event(event)
-    if room.next_room is not None:
-        name = room.next_room
-        if name not in ROOMS:
-            raise KeyError(f"No room named {name!r}. Known: {sorted(ROOMS)}")
-        room = ROOMS[name](screen)
+
+    if show_pause and not pause.paused:
+        # clock only advances while unpaused
+        ms_buffer += dt
+        while ms_buffer >= 1000:
+            player.add_time(1)
+            ms_buffer -= 1000
+    if not pause.paused:
+        if room.next_room is not None:
+            name = room.next_room
+            if name not in ROOMS:
+                raise KeyError(f"No room named {name!r}. Known: {sorted(ROOMS)}")
+            room = ROOMS[name](screen)
+            current = name
+            player.position = name
+            if name == "startup":
+                pause.paused = False
 
     room.draw()
-    #ui.draw_base_ui(screen, font)
+    if show_pause:
+        pause.draw()                        # last, so it sits on top of the room
     pygame.display.flip()
 
 

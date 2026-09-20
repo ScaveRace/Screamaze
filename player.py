@@ -1,82 +1,84 @@
-import json
 
-with open("story.json", encoding = "utf-8") as f:
-    data = json.load(f)
+#####  player data  #####
+#  use: from player import player
+#  call function like: player.add_item("testitem")
+
+import json
+import os
+
+SAVE_PATH = "savegame.json"
+
 
 class Player:
-    completionPercentage = 0.0
-    stones = []
-    weapons = []
-    deathCount = 0
-    inventory = [stones,weapons]
-    fullWeight = 0 #weight of all teh stories based on  json later
-
-
-    def __init__(self, name, time, position, currentId, newRun):
+    def __init__(self, name="", time=0, position="", inventory=None, volume=1.0):
         self.name = name
-        self.time = time
+        self.time = time            # seconds, integer
         self.position = position
-        self.currentId = currentId
-        self.newRun = newRun
+        self.inventory = inventory if inventory is not None else []
+        self.volume = volume        # 0.0 - 1.0
+
+    # --- inventory ---
+    def add_item(self, item, amount=1):
+        for _ in range(amount):
+            self.inventory.append(item)
+
+    def remove_item(self, item):
+        if item in self.inventory:
+            self.inventory.remove(item)
+            return True
+        return False
+
+    def has_item(self, item):
+        return item in self.inventory
+
+    def count(self, item):
+        return self.inventory.count(item)
+
+    # --- time ---
+    def add_time(self, seconds):
+        self.time += int(seconds)
+
+    def reset(self):
+        self.__init__()
+
+    # --- saving / loading ---
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "time": self.time,
+            "position": self.position,
+            "inventory": self.inventory,
+            "volume": self.volume,
+        }
+
+    def save(self, path=SAVE_PATH):
+        """Write to JSON. Writes to a temp file first so a crash
+        mid-write can't corrupt an existing save."""
+        tmp = path + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(self.to_dict(), f, indent=2)
+        os.replace(tmp, path)
+
+    def load(self, path=SAVE_PATH):
+        """Load from JSON into this same instance. Returns False if
+        there's no save file yet (or it's unreadable)."""
+        try:
+            with open(path, encoding="utf-8") as f:
+                data = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return False
+
+        self.name = data.get("name", "")
+        self.time = int(data.get("time", 0))
+        self.position = data.get("position", "")
+        self.inventory = list(data.get("inventory", []))
+        self.volume = float(data.get("volume", 1.0))
+        return True
+
+    def __repr__(self):
+        return (f"Player(name={self.name!r}, time={self.time}, "
+                f"position={self.position!r}, inventory={self.inventory})")
 
 
-
-    def addToStone(self,stone):
-        self.stones.append(stone)
-
-    def addToWeapon(self, weapon):
-        self.weapons.append(weapon)
-
-    def addToInventory(self, item):
-        self.inventory.append(item)
-
-    def playerdeath(self):
-        self.deathCount += 1
-
-    def changeCurrentID(self, cId):
-        self.currentId = cId
-
-    def updateTime(self,time):
-        self.time = time
-
-
-
-    def weight_up_to(self):
-        total = 0
-        for key, entry in data.items():
-            total += entry["weight"]
-            if key == self.currentId:
-                break
-        percentageweight = 100/self.fullWeight
-        self.completionPercentage = percentageweight*total
-        print(self.completionPercentage)
-
-    def fullWeightCal(self):
-        for key, entry in data.items():
-            self.fullWeight += entry["weight"]
-            if key == "moment.green_stone":
-                break
-
-    def saveJson(self):
-        data = {}
-        if self.newRun:
-            self.newRun = False
-        for key, value in vars(type(self)).items():
-            if key.startswith("_"):
-                continue
-            if callable(value):
-                continue
-            if isinstance(value, (property, classmethod, staticmethod)):
-                continue
-            data[key] = value
-        data.update(vars(self))
-        with open("playerRun.json", "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2)
-
-newPlayer = Player("Johan",11099.7,"Stuck","quiz.lab2001", False)
-newPlayer.fullWeightCal()
-newPlayer.weight_up_to()
-saveStruct.saveRunDB(newPlayer)
-newPlayer.saveJson()
-
-
+# for import
+player = Player()

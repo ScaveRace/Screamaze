@@ -1,6 +1,6 @@
 import pygame
 import UI.uiElements as u
-from player import Player
+from player import player
 
 pygame.init()
 
@@ -10,7 +10,6 @@ class EquinoxRoom:
     def __init__(self, screen):
         self.image = u.load_image("assets/startup.png", screen.get_size()) #  will change
         self.screen = screen
-        self.player = Player
         self.conversation = 0
         self.next_room = None
         self.buttons = [
@@ -19,7 +18,8 @@ class EquinoxRoom:
         ]
 
     def gettestitem(self):
-        self.player.addToInventory("yeet")
+        if not player.has_item("testitem"):
+            player.add_item("testitem")
 
     def corridor(self):
         self.next_room = "corridor"

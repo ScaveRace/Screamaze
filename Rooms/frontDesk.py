@@ -1,6 +1,6 @@
 import UI.uiElements as u
 import pygame
-
+from player import player
 
 
 #assets
@@ -52,8 +52,13 @@ class FrontDesk:
     alpha = 0
         # startAnim =
     def startRun(self):
-        print(self.buttons[0].label)
-        print(self.textField.text)
+        name = self.textField.text.strip()
+        if not name:
+            return  # don't start without a name
+        player.name = name
+        player.appearance = self.buttons[0].label
+        player.time = 0  # fresh run
+        player.inventory.clear()
         self.next_room = "corridor"
 
     def handle_event(self, event):
@@ -77,7 +82,7 @@ class FrontDesk:
         rect_surface.set_alpha(170)
 
         if self.alpha != 255:
-            self.alpha = u.storyImageAnim(self.startAnim, self.alpha, 1000)
+            self.alpha = u.storyImageAnim(self.startAnim, self.alpha, 100)
             self.screen.blit(self.background, (0, 0))
         ### executed based on time parameters check init ###
 
