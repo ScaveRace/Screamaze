@@ -10,7 +10,7 @@ class VampireRoom:
         self.screen = screen
         self.next_room = None
 
-        #both bg before and after
+        #both bg before and after the vampire is dead
         self.bg_closed = u.load_image("assets/Room2015_1_win_clo.png", screen.get_size(), fallback=(35, 8, 18))
         self.bg_open = u.load_image("assets/Room2015_1_win_op.png", screen.get_size(), fallback=(120, 100, 60))
         self.image = self.bg_closed
@@ -19,7 +19,7 @@ class VampireRoom:
         self.fusebox_closed_img = u.load_image("assets/fuse_box.png", screen.get_size(), fallback=(20, 20, 20))
         self.fusebox_open_img = u.load_image("assets/fuse_box2.png", screen.get_size(), fallback=(20, 20, 20))
 
-
+        #this is the item (fause that we find in the room)
         self.fuse_icon = u.load_image("assets/fuse_item.png", (56, 56), fallback=(120, 90, 40))
 
         self.font = pygame.font.Font(None, 28)
@@ -34,7 +34,7 @@ class VampireRoom:
         self.task_started = False
         self.task_done = False
 
-
+        # this tracks the players inventory within the room
         self.inventory = []
         self.fuse_found = False
         self.fuse_inserted = False
@@ -69,7 +69,7 @@ class VampireRoom:
         ]
 
 
-
+#we cannot type to the chatbox yet, but it exists and we can see comments after every button is pressed
     def talk(self):
         if self.line < len(self.dialogue):
             self.chatbox.say(self.dialogue[self.line])
@@ -103,7 +103,7 @@ class VampireRoom:
         if self.task_done and self.image is not self.bg_open:
             #here the room bg change with the dead vam
             self.image = self.bg_open
-
+    #this will be edited in the next version to show when the fuse is actually inserted instead of the messages
     def insert_fuse(self):
         if self.fuse_inserted:
             return
@@ -157,7 +157,6 @@ class VampireRoom:
             for b in self.fusebox_open_buttons:
                 b.handle_event(event)
 
-
         # "room"
         for b in self.room_buttons:
             b.handle_event(event)
@@ -185,7 +184,7 @@ class VampireRoom:
                 # placeholder redstone
 
                 pygame.draw.circle(self.screen, (180, 20, 20), self.stone_spot.center, self.stone_spot.w // 2)
-
+            # this is to remove every button after the purpose of it is done
             for i, b in enumerate(self.room_buttons):
 
                 if i == 0 and self.task_done :
