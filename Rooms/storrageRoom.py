@@ -1,6 +1,6 @@
 import pygame
-
 import UI.uiElements as ui
+from Rooms import corridor
 
 pygame.init()
 pygame.mixer.init()
@@ -8,17 +8,23 @@ pygame.mixer.init()
 class StorrageRoom:
     def __init__(self, screen):
         self.screen = screen
-        self.image = ui.load_image("assets/corridor.png", screen.get_size())
+        self.image = ui.load_image("assets/storrageRoom.png", screen.get_size())
         self.next_room = None
         self.buttons = [
-            ui.Button(560, 346, 30,30, "", self.action),
-            ui.Button(45, 346, 30,30, "", self.action),
-            ui.Button(670, 346, 30,30, "", self.action),
+            ui.Button(580, 650, 140,30, "Leave Room", self.leave),
+            ui.Button(350, 100, 200,30, "Science equipment", self.action),
+            ui.Button(800, 100, 90,30, "Flyers", self.action1),
         ]
         self.fieldoftext = ui.TextField(1100, 600, 100, 60)
 
+    def leave(self):
+       self.next_room = "corridor"
+
     def action(self):
-       print("actions")
+        print("ahwidobhabhej")
+
+    def action1(self):
+        print("agubhkwjdjke")
 
     def handle_event(self, event):
         for b in self.buttons:
