@@ -9,9 +9,6 @@ fontSmall = pygame.font.Font(None, 22)
 fontBig = pygame.font.Font(None, 40)
 
 
-
-
-
 class ProjectRoom:
     def __init__(self, screen):
         self.screen = screen

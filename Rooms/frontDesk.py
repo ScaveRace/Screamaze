@@ -1,17 +1,5 @@
 import UI.uiElements as u
 import pygame
-from player import player
-
-
-#assets
-
-#integers
-
-#floats
-
-#strings
-
-#bool
 
 pygame.init()
 pygame.mixer.init()
@@ -52,13 +40,6 @@ class FrontDesk:
 
         # startAnim =
     def startRun(self):
-        name = self.textField.text.strip()
-        if not name:
-            return  # don't start without a name
-        player.name = name
-        player.appearance = self.buttons[0].label
-        player.time = 0  # fresh run
-        player.inventory.clear()
         self.next_room = "corridor"
 
     def handle_event(self, event):
@@ -82,7 +63,7 @@ class FrontDesk:
         rect_surface.set_alpha(170)
         ########## animation ###########
         if self.alpha != 255:
-            self.alpha = u.storyImageAnim(self.startAnim, self.alpha, 100)
+            self.alpha = u.storyImageAnim(self.startAnim, self.alpha, 1000)
             self.screen.blit(self.background, (0, 0))
 
         ##### latest frame when alpha=255 #####
