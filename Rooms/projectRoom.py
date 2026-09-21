@@ -9,15 +9,12 @@ fontSmall = pygame.font.Font(None, 22)
 fontBig = pygame.font.Font(None, 40)
 
 
-
-
-
 class ProjectRoom:
     def __init__(self, screen):
         self.screen = screen
         self.next_room = None
 
-        self.background = u.load_image("assets/", screen.get_size(), (22, 20, 26))
+        self.background = u.load_image("assets/project_room.png", screen.get_size(), (22, 20, 26))
         self.boxImage = u.load_image("assets/", (420, 300), (40, 32, 26))
 
         self.found = {"circle": False, "triangle": False, "square": False}
@@ -119,8 +116,6 @@ class ProjectRoom:
         if self.view == "room":
             for b in self.corners:
                 b.handle_event(event)
-            if self.hasFlyer:
-                self.leaveButton.handle_event(event)
 
         elif self.view == "riddle":
             for b in self.riddleButtons:
@@ -131,6 +126,7 @@ class ProjectRoom:
             self.backButton.handle_event(event)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.boxClick(event.pos)
+        self.leaveButton.handle_event(event)
 
     def boxClick(self, pos):
         x = 420
@@ -172,7 +168,7 @@ class ProjectRoom:
 
         if self.hasFlyer:
             self.screen.blit(font.render("You have the Equinox flyer.", True, (210, 200, 160)), (60, 420))
-            self.leaveButton.draw2(self.screen)
+        self.leaveButton.draw2(self.screen)
 
     def drawRiddle(self):
         panel = pygame.Surface((760, 300))
