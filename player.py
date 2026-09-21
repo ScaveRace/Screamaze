@@ -52,16 +52,12 @@ class Player:
         }
 
     def save(self, path=SAVE_PATH):
-        """Write to JSON. Writes to a temp file first so a crash
-        mid-write can't corrupt an existing save."""
         tmp = path + ".tmp"
         with open(tmp, "w", encoding="utf-8") as f:
             json.dump(self.to_dict(), f, indent=2)
         os.replace(tmp, path)
 
     def load(self, path=SAVE_PATH):
-        """Load from JSON into this same instance. Returns False if
-        there's no save file yet (or it's unreadable)."""
         try:
             with open(path, encoding="utf-8") as f:
                 data = json.load(f)
@@ -75,9 +71,6 @@ class Player:
         self.volume = float(data.get("volume", 1.0))
         return True
 
-    def __repr__(self):
-        return (f"Player(name={self.name!r}, time={self.time}, "
-                f"position={self.position!r}, inventory={self.inventory})")
 
 
 # for import
