@@ -1,22 +1,6 @@
 import UI.uiElements as u
 import pygame
 from Rooms import frontDesk
-#  load game
-#  new game
-#  settings
-#  background
-#  music
-
-#assets
-
-#integers
-
-#floats
-
-#strings
-
-#bool
-
 
 class StartupMenu:
     def __init__(self, screen):

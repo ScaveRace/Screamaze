@@ -1,25 +1,25 @@
 import pygame
 
-pygame.font.init()
+pygame.font.init()  #### fonts need to be initialized before using them
 
 
 
 ##basic functions
-def load_image(path, size, fallback=(40,38,42)):
+def load_image(path, size, fallback=(40,38,42)):  ###  loading images, has fallbacks (very useful)
     try:
         image = pygame.image.load(path).convert() #if we do convert_alpha() we also have the transparency else it is black
-        return pygame.transform.smoothscale(image, size)
-    except (pygame.error, FileNotFoundError):
+        return pygame.transform.smoothscale(image, size)  # image by default is fullscreen, but given a size change it to the room size
+    except (pygame.error, FileNotFoundError):  ### in case of an error, still functions
         surface = pygame.Surface(size)
         surface.fill(fallback)
         return surface
 
-def storyImageAnim(startAnim,alpha,fadetime):
+def storyImageAnim(startAnim,alpha,fadetime):  ##  transition between images, when it starts, takes alpha and returns it to decide when to stop
     if startAnim >= pygame.time.get_ticks() and alpha < 255:
         alpha = min(alpha + 255 / fadetime, 255)
         return alpha
 
-def butImageAnim(alpha,fadetime):
+def butImageAnim(alpha,fadetime):  ##  same thing
     alpha = min(alpha + 255 / fadetime, 255)
     return alpha
 
@@ -29,7 +29,7 @@ def butImageAnim(alpha,fadetime):
 ##button setup
 class Button:
 
-    def __init__(self,x,y,w,h,label,action):
+    def __init__(self,x,y,w,h,label,action):  ## inits decide what information is within a button. Easy to reference
         self.rect = pygame.Rect(x,y,w,h)
 
         self.label = label #text of the button
@@ -41,14 +41,14 @@ class Button:
         self.hoverCol =(128,128,128) #color when hovering background
         self.font = pygame.font.Font(None, 28)
 
-    def handle_event(self, event):
+    def handle_event(self, event):  ## when you have pressed (released) a button, the button does the function inside it
         if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if self.rect.collidepoint(event.pos):
                     self.action()
 
 
-    def draw2(self,screen):
-        hovered = self.rect.collidepoint(pygame.mouse.get_pos())
+    def draw2(self,screen):   ##  will change, but every UI class has their own draw function
+        hovered = self.rect.collidepoint(pygame.mouse.get_pos())  ## changes look upon mouse above the button  ##
         if hovered:
             pygame.draw.rect(screen, self.hoverCol, self.rect)
             if self.outline == 0 or self.outline == 1:
@@ -59,9 +59,9 @@ class Button:
             if self.outline == 1:
                 pygame.draw.rect(screen, self.fgCol, self.rect, 1)
             label = self.font.render(self.label, True, (222, 222, 214))
-        if self.align == "left":
+        if self.align == "left":        ## alignment of text
             screen.blit(label, label.get_rect(midleft=(self.rect.x + 14, self.rect.centery)))
-        elif self.align == "right":
+        elif self.align == "right":     ## needs testing
             screen.blit(label, label.get_rect(midright=(self.rect.x + 14, self.rect.centery)))
         else:
             pos = label.get_rect(center=self.rect.center)
@@ -71,7 +71,7 @@ class Button:
 
 
 
-
+#########  A chatbox is used for NPC talking or player talking, needs rework to create text boundaries ########
 class Chatbox:
 
 
@@ -80,12 +80,12 @@ class Chatbox:
         self.messages = []
         self.input = ""
         self.focus = False
-        self.font = font
+        self.font = font  ### make it used standard font, can decide a different one.
 
-    def say(self,text):
+    def say(self,text): ### simple get a new messages
         self.messages.append(text)
 
-    def handle_event(self,event):
+    def handle_event(self,event):   ###  if text was added, create that as well
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             self.focus = focused(event,self.rect)
         if self.focus:
@@ -97,34 +97,34 @@ class Chatbox:
             else:
                 self.input = handle_text_event(self.input,event)
 
-    def handle_event_npc(self,npc, message_npc):
+    def handle_event_npc(self,npc, message_npc):  ###  prints message as NPC
         self.say(f"{npc} > {message_npc}")
 
-    def isSubmit(self,event):
+    def isSubmit(self,event):  ###  enters upon user pressing enter (return)
         return event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN
 
     def draw(self,screen):
-        pygame.draw.rect(screen,(26,25,28),self.rect)
-        pygame.draw.rect(screen,(26,25,28),self.rect,1)
+        pygame.draw.rect(screen,(26,25,28),self.rect)  ## background
+        pygame.draw.rect(screen,(26,25,28),self.rect,1)  ## outline, therefore has width
         y = self.rect.y + 10
         shown = self.input
-        if self.focus and (pygame.time.get_ticks() // 500) % 2 == 0:
-            shown += "|"
+        if self.focus and (pygame.time.get_ticks() // 500) % 2 == 0:  ## every 500ms, does something
+            shown += "|"  ## nice blinking animation for typing
         screen.blit(self.font.render("> " + shown, True, (222,222,214)),
                     (self.rect.x+10, self.rect.bottom - 34))
         line_h = self.font.get_linesize()
         y = self.rect.bottom - 44
-        for message in reversed(self.messages):
+        for message in reversed(self.messages):  ## needs some testing
             y -= line_h
             if y < self.rect.y + 10:
-                break
+                break  ## stops drawing when it's full
             screen.blit(self.font.render(message, True, (150, 150, 142)),
                         (self.rect.x + 10, y))
 
 
 
 class TextField:
-
+    ## easy to use defaults ##
     def __init__(self,x,y,w,h,font = pygame.font.Font(None,28), fgCol = (255,255,255), bgCol = (0,0,0), bgAlpha = 255, outline = False):
         self.x = x
         self.y = y
@@ -156,20 +156,22 @@ class TextField:
             pygame.draw.rect(screen, self.fgCol,outline,1)
         shown = self.text
         if self.focus and (pygame.time.get_ticks() // 500) % 2 == 0:
-            shown += "|"
+            shown += "|"  ## nice animation
         screen.blit(self.font.render(shown, True, self.fgCol), (self.x+2, self.y+4))
 
 
+########################## functions for all classes  ###################################
 
 def handle_text_event(text,event):
-    if event.type == pygame.TEXTINPUT:
+    if event.type == pygame.TEXTINPUT:  ## adds text that user types
         return text + event.text
-    elif event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
+    elif event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:  ## remove text upon backspace, does not repeat every tick
         return text[:-1]
     return text
 
 
-def focused(event,rect):
+def focused(event,rect):  ## easy function to check for collision
     if rect.collidepoint(event.pos):
         return True
     return False
+
