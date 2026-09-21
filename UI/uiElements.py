@@ -15,9 +15,9 @@ def load_image(path, size, fallback=(40,38,42)):  ###  loading images, has fallb
         return surface
 
 def storyImageAnim(startAnim,alpha,fadetime):  ##  transition between images, when it starts, takes alpha and returns it to decide when to stop
-    if startAnim >= pygame.time.get_ticks() and alpha < 255:
+    if startAnim <= pygame.time.get_ticks() and alpha < 255:
         alpha = min(alpha + 255 / fadetime, 255)
-        return alpha
+    return alpha
 
 def butImageAnim(alpha,fadetime):  ##  same thing
     alpha = min(alpha + 255 / fadetime, 255)

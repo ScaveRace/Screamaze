@@ -17,7 +17,7 @@ class FrontDesk:
     def __init__(self, screen):
         self.animation = False ### button animation switch
         self.alpha = 0
-        self.startAnim = pygame.time.get_ticks() + 200000 ### animation start time
+        self.startAnim = pygame.time.get_ticks() + 2000 ### animation start time
         self.next_room = None
         self.screen = screen
         self.background = u.load_image("assets/frontDesk_1.png", self.screen.get_size())
