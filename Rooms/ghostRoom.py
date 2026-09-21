@@ -1,11 +1,10 @@
-
 import pygame
 import UI.uiElements as u
 
 pygame.init()
 pygame.mixer.init()
 
-CABINET_CODE = "4537"
+CABINET_CODE = "4537"   ## a string to avoid strange behaviour
 
 # where the typed digits get drawn on top of gr.cabinet.homework.png -> tune to your art
 CODE_DISPLAY_POS = (615, 205)
@@ -39,7 +38,7 @@ class GhostRoom:
         ]
         self.line_count = 0
 
-        self.inventory = [] # how to link to player inventory?
+        self.inventory = [] ### global player inventory will be used later
         self.homework_taken = False #so you can't take the homework
         self.homework_spot = pygame.Rect(600, 400, 56, 56)
 
@@ -87,7 +86,7 @@ class GhostRoom:
             self.chatbox.say(self.dialogue[self.line_count])
             self.line_count += 1
         elif "homework" in self.inventory:
-            self.chatbox.say("Ghost . Is that my homework? HAND IT OVER")
+            self.chatbox.say("Ghost . Is that my homework? HAND IT OVER😈")
         else:
             self.chatbox.say("Ghost > No homework, no leaving. Search the room")
 
@@ -109,11 +108,11 @@ class GhostRoom:
     def collect_stone(self):
         if self.stone_collected:
             self.chatbox.say("You > I already collected the stone in my inventory")
-            return
-        self.stone_collected = True
-        self.inventory.append("white stone")
-        self.chatbox.say("You > A white stone... one step closer to freedom")
-        self.current_buttons = self.returnr_buttons
+        else:
+            self.stone_collected = True
+            self.inventory.append("white stone")
+            self.chatbox.say("You > A white stone... one step closer to freedom")
+            self.current_buttons = self.returnr_buttons
 
 
     def cabinet(self):
@@ -159,7 +158,7 @@ class GhostRoom:
             self.chatbox.say("You > Wrong code, try again :)")
 
 
-    def take_homework(self):
+    def take_homework(self):  ## don't try at home
         if self.homework_taken:
             self.chatbox.say("You > The cabinet is empty now")
             return
@@ -168,7 +167,7 @@ class GhostRoom:
         self.chatbox.say("You > Old homework covered in dust, this must be it")
         self.current_buttons = self.returnr_buttons
 
-    def give_homework(self):
+    def give_homework(self):  ##🥲
         if self.task_done:
             self.chatbox.say("You > I already gave it to the teacher")
             return
@@ -186,9 +185,6 @@ class GhostRoom:
     def whiteboard(self):
         self.current_image = self.whiteboard_image
         self.current_buttons = self.returnr_buttons
-
-
-
 
     def returnc(self):
         self.next_room = "corridor"

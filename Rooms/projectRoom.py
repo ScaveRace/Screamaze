@@ -17,8 +17,8 @@ class ProjectRoom:
         self.screen = screen
         self.next_room = None
 
-        self.background = u.load_image("assets/projectRoom/room.png", screen.get_size(), (22, 20, 26))
-        self.boxImage = u.load_image("assets/projectRoom/box.png", (420, 300), (40, 32, 26))
+        self.background = u.load_image("assets/", screen.get_size(), (22, 20, 26))
+        self.boxImage = u.load_image("assets/", (420, 300), (40, 32, 26))
 
         self.found = {"circle": False, "triangle": False, "square": False}
         self.placed = {"circle": False, "triangle": False, "square": False}

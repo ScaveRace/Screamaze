@@ -12,6 +12,7 @@ from player import player
 #strings
 
 #bool
+
 pygame.init()
 pygame.mixer.init()
 
@@ -47,9 +48,8 @@ class FrontDesk:
             self.buttons[0].label = "Female"
         else:
             self.buttons[0].label = "Male"
-        #self.animation = True
 
-    alpha = 0
+
         # startAnim =
     def startRun(self):
         name = self.textField.text.strip()
@@ -69,7 +69,7 @@ class FrontDesk:
         # in draw:
 
 
-    def draw(self):
+    def draw(self):  ####  very complicated draw
 
         x = 850
         y = 200
@@ -80,21 +80,15 @@ class FrontDesk:
 
         rect_surface.fill((25, 25, 25))
         rect_surface.set_alpha(170)
-
+        ########## animation ###########
         if self.alpha != 255:
             self.alpha = u.storyImageAnim(self.startAnim, self.alpha, 100)
             self.screen.blit(self.background, (0, 0))
-        ### executed based on time parameters check init ###
 
-        # if self.alpha != 255:
-        #     if self.animation:
-        #         self.alpha = u.butImageAnim(self.alpha, 1000)
-        #     screen.blit(self.background, (0, 0))
-        ### if you want it to be executed by a button check init and function###
-
+        ##### latest frame when alpha=255 #####
         self.secondIm.set_alpha(self.alpha)
         self.screen.blit(self.secondIm, (0, 0))
-
+        #########  blit UI after animation  ##########
         if self.alpha == 255:
             self.screen.blit(rect_surface, (x, y))
             pygame.draw.rect(self.screen, (255, 255, 255), rect_outline, 1)
