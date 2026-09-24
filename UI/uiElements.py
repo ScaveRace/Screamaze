@@ -1,5 +1,5 @@
 import pygame
-
+from functions import uiFunc as uF
 pygame.font.init()  #### fonts need to be initialized before using them
 
 
@@ -87,7 +87,7 @@ class Chatbox:
 
     def handle_event(self,event):   ###  if text was added, create that as well
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            self.focus = focused(event,self.rect)
+            self.focus = uF.focused(event,self.rect)
         if self.focus:
             if(self.isSubmit(event)):
                 text = self.input.strip()
@@ -95,7 +95,7 @@ class Chatbox:
                 if text:
                     self.say(f"You > {text}")
             else:
-                self.input = handle_text_event(self.input,event)
+                self.input = uF.handle_text_event(self.input,event)
 
     def handle_event_npc(self,npc, message_npc):  ###  prints message as NPC
         self.say(f"{npc} > {message_npc}")
@@ -103,22 +103,30 @@ class Chatbox:
     def isSubmit(self,event):  ###  enters upon user pressing enter (return)
         return event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN
 
-    def draw(self,screen):
-        pygame.draw.rect(screen,(26,25,28),self.rect)  ## background
-        pygame.draw.rect(screen,(26,25,28),self.rect,1)  ## outline, therefore has width
-        y = self.rect.y + 10
-        shown = self.input
-        if self.focus and (pygame.time.get_ticks() // 500) % 2 == 0:  ## every 500ms, does something
-            shown += "|"  ## nice blinking animation for typing
-        screen.blit(self.font.render("> " + shown, True, (222,222,214)),
-                    (self.rect.x+10, self.rect.bottom - 34))
+    def draw(self, screen):
+        pygame.draw.rect(screen, (26, 25, 28), self.rect)  ## background
+        pygame.draw.rect(screen, (60, 58, 64), self.rect, 1)  ## outline
+        max_w = self.rect.width - 20
+
+        # Input line: show only the end if it's too long
+        shown = "> " + self.input
+        while self.font.size(shown + "|")[0] > max_w and len(shown) > 2:
+            shown = shown[:2] + shown[3:]  ## drop the oldest character after "> "
+        if self.focus and (pygame.time.get_ticks() // 500) % 2 == 0:
+            shown += "|"
+        screen.blit(self.font.render(shown, True, (222, 222, 214)),
+                    (self.rect.x + 10, self.rect.bottom - 34))
+
+        # Messages: wrap each one, then draw from the bottom up
+        lines = [line for message in self.messages
+                 for line in uF.wrap_lines(self.font, message, max_w)]
         line_h = self.font.get_linesize()
         y = self.rect.bottom - 44
-        for message in reversed(self.messages):  ## needs some testing
+        for line in reversed(lines):
             y -= line_h
             if y < self.rect.y + 10:
-                break  ## stops drawing when it's full
-            screen.blit(self.font.render(message, True, (150, 150, 142)),
+                break  ## box is full
+            screen.blit(self.font.render(line, True, (150, 150, 142)),
                         (self.rect.x + 10, y))
 
 
@@ -140,9 +148,9 @@ class TextField:
 
     def handle_event(self,event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            self.focus = focused(event,pygame.Rect(self.x,self.y,self.w,self.h))
+            self.focus = uF.focused(event,pygame.Rect(self.x,self.y,self.w,self.h))
         if self.focus:
-            self.text = handle_text_event(self.text,event)
+            self.text = uF.handle_text_event(self.text,event)
 
 
     def draw(self,screen):
@@ -171,12 +179,12 @@ class Mask:
         self.imageMask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(topleft=pos)
 
-        self.font = pygame.font.SysFont("Arial", 18)
+        self.font = pygame.font.SysFont("Arial", 11)
         self.label = label
 
         # Center of the non-transparent part
         shape = self.image.get_bounding_rect().move(self.imageX, self.imageY)
-        self.labelSurf = self.font.render(self.label, True, (255, 255, 255))
+        self.labelSurf = uF.render_wrapped(self.font, self.label, (255, 255, 255), shape.width - 20)
         self.labelRect = self.labelSurf.get_rect(center=shape.center)
 
         self.outlineColor = (255, 255, 255)
@@ -202,18 +210,4 @@ class Mask:
             pygame.draw.lines(screen, self.outlineColor, True,
                               [(x + self.imageX, y + self.imageY) for x, y in outline], 2)
 
-########################## functions for all classes  ###################################
-
-def handle_text_event(text,event):
-    if event.type == pygame.TEXTINPUT:  ## adds text that user types
-        return text + event.text
-    elif event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:  ## remove text upon backspace, does not repeat every tick
-        return text[:-1]
-    return text
-
-
-def focused(event,rect):  ## easy function to check for collision
-    if rect.collidepoint(event.pos):
-        return True
-    return False
 

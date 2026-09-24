@@ -143,6 +143,7 @@ class EquinoxRoom:
     def handle_event(self, event):
         for b in self.buttons:
             b.handle_event(event)
+        self.chat.handle_event(event)
 
         # the chatbox when riddles
         if self.conversation == 1:
