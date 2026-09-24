@@ -9,7 +9,7 @@ import Rooms.corridor as corri
 import Rooms.projectRoom as pR
 import Rooms.equinoxRoom as eq
 
-#from player import player
+from player import player
 #from UI.frontUI import PauseMenu
 
 
