@@ -24,24 +24,26 @@ class Corridor:
         ]
 
         self.masks = [
-            u.Mask("assets/corridor/room_01.png", self.screen.get_size(), (0, 0), self.doPress),
-            u.Mask("assets/corridor/room_02.png", self.screen.get_size(), (0, 0), self.doPress),
-            u.Mask("assets/corridor/room_03.png", self.screen.get_size(), (0, 0), self.doPress),
-            u.Mask("assets/corridor/room_04.png", self.screen.get_size(), (0, 0), self.doPress),
-            u.Mask("assets/corridor/room_05.png", self.screen.get_size(), (0, 0), self.doPress),
-            u.Mask("assets/corridor/room_06.png", self.screen.get_size(), (0, 0), self.doPress),
-            u.Mask("assets/corridor/room_07.png", self.screen.get_size(), (0, 0), self.doPress),
-            u.Mask("assets/corridor/room_08.png", self.screen.get_size(), (0, 0), self.doPress),
-            u.Mask("assets/corridor/room_09.png", self.screen.get_size(), (0, 0), self.doPress),
-            u.Mask("assets/corridor/room_10.png", self.screen.get_size(), (0, 0), self.doPress),
-            u.Mask("assets/corridor/room_11.png", self.screen.get_size(), (0, 0), self.doPress),
-            u.Mask("assets/corridor/room_12.png", self.screen.get_size(), (0, 0), self.doPress),
-            u.Mask("assets/corridor/room_13.png", self.screen.get_size(), (0, 0), self.doPress),
-            u.Mask("assets/corridor/room_14.png", self.screen.get_size(), (0, 0), self.doPress),
-            u.Mask("assets/corridor/room_15.png", self.screen.get_size(), (0, 0), self.doPress),
-            u.Mask("assets/corridor/room_16.png", self.screen.get_size(), (0, 0), self.doPress),
-            u.Mask("assets/corridor/room_17.png", self.screen.get_size(), (0, 0), self.doPress)
+            u.Mask("assets/corridor/room_01.png", self.screen.get_size(), (0, 0), self.doPress, "LAB 2.001"),
+            u.Mask("assets/corridor/room_02.png", self.screen.get_size(), (0, 0), self.doPress, "LAB 2.003"),
+            u.Mask("assets/corridor/room_03.png", self.screen.get_size(), (0, 0), self.doPress, "Front Desk Office"),
+            u.Mask("assets/corridor/room_04.png", self.screen.get_size(), (0, 0), self.doPress, "Classroom 2.015"),
+            u.Mask("assets/corridor/room_05.png", self.screen.get_size(), (0, 0), self.doPress, "Classroom 2.021"),
+            u.Mask("assets/corridor/room_06.png", self.screen.get_size(), (0, 0), self.doPress, "Teachers Room 4"),
+            u.Mask("assets/corridor/room_07.png", self.screen.get_size(), (0, 0), self.doPress, "Classroom 2.031"),
+            u.Mask("assets/corridor/room_08.png", self.screen.get_size(), (0, 0), self.doPress, "Stair Exit"),
+            u.Mask("assets/corridor/room_09.png", self.screen.get_size(), (0, 0), self.doPress, "Teachers Room 1"),
+            u.Mask("assets/corridor/room_10.png", self.screen.get_size(), (0, 0), self.doPress, "Teachers Room 2"),
+            u.Mask("assets/corridor/room_11.png", self.screen.get_size(), (0, 0), self.doPress, "Teachers Room 3"),
+            u.Mask("assets/corridor/room_12.png", self.screen.get_size(), (0, 0), self.doPress,
+                   "Equinox Student Society"),
+            u.Mask("assets/corridor/room_13.png", self.screen.get_size(), (0, 0), self.doPress, "Project Room 3"),
+            u.Mask("assets/corridor/room_14.png", self.screen.get_size(), (0, 0), self.doPress, "Storage"),
+            u.Mask("assets/corridor/room_15.png", self.screen.get_size(), (0, 0), self.doPress, "Classroom 2.035"),
+            u.Mask("assets/corridor/room_16.png", self.screen.get_size(), (0, 0), self.doPress, "Project Room 1"),
+            u.Mask("assets/corridor/room_17.png", self.screen.get_size(), (0, 0), self.doPress, "Project Room 2"),
         ]
+
 
 
     def doPress(self):
