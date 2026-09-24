@@ -161,49 +161,46 @@ class TextField:
 
 
 class Mask:
-    def __init__(self, image, size, pos, action):
+    def __init__(self, image, size, pos, action, label=""):
         self.action = action
 
         self.image = pygame.image.load(image).convert_alpha()
         self.image = pygame.transform.scale(self.image, size)
-
-        self.imageX = pos[0]
-        self.imageY = pos[1]
+        self.imageX, self.imageY = pos
 
         self.imageMask = pygame.mask.from_surface(self.image)
+        self.rect = self.image.get_rect(topleft=pos)
 
-        self.rect = self.image.get_rect(topleft=(self.imageX, self.imageY))
+        self.font = pygame.font.SysFont("Arial", 18)
+        self.label = label
+
+        # Center of the non-transparent part
+        shape = self.image.get_bounding_rect().move(self.imageX, self.imageY)
+        self.labelSurf = self.font.render(self.label, True, (255, 255, 255))
+        self.labelRect = self.labelSurf.get_rect(center=shape.center)
 
         self.outlineColor = (255, 255, 255)
         self.hovering = False
 
     def handle_event(self, event):
         mouseX, mouseY = pygame.mouse.get_pos()
-
         localX = mouseX - self.imageX
         localY = mouseY - self.imageY
-
         maskW, maskH = self.imageMask.get_size()
 
-        ##same as if stateents##
-        self.hovering = (0 <= localX < maskW and 0 <= localY < maskH and self.imageMask.get_at((localX, localY)))
-        #basically boolean checking if these 3 conditions are right if so they return true making it to true
+        self.hovering = (0 <= localX < maskW and 0 <= localY < maskH
+                         and self.imageMask.get_at((localX, localY)))
 
-        # Click
         if self.hovering and event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             self.action()
 
     def draw(self, screen):
-
         screen.blit(self.image, (self.imageX, self.imageY))
-
-        # Draw 2 pixel outline when hovering
+        screen.blit(self.labelSurf, self.labelRect)
         if self.hovering:
             outline = self.imageMask.outline()
-            pygame.draw.lines(screen, self.outlineColor,True, [(x + self.imageX, y + self.imageY)for x, y in outline],2)
-
-
-
+            pygame.draw.lines(screen, self.outlineColor, True,
+                              [(x + self.imageX, y + self.imageY) for x, y in outline], 2)
 
 ########################## functions for all classes  ###################################
 
