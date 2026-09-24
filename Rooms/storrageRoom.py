@@ -34,7 +34,7 @@ class StorrageRoom:
 
         # green stone in the drawer
         self.stone_collected = False
-        self.stone_spot = pygame.Rect(600, 400, 44, 44)  # position of the stone in the drawer
+        self.stone_spot = pygame.Rect(300, 500, 44, 44)  # position of the stone in the drawer
 
         self.fieldoftext = u.TextField(1100, 600, 100, 60)
 
