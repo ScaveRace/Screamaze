@@ -59,11 +59,6 @@ while running:
             continue                        # overlay consumed it, room must not see it
         else:
             room.handle_event(event)
-    if room.next_room is not None:    ### handle room and function within the class
-        name = room.next_room
-        if name not in ROOMS:       ###  check for lack of a room (debugging)
-            raise KeyError(f"No room named {name!r}. Known: {sorted(ROOMS)}")
-        room = ROOMS[name](screen)
 
     if show_pause and not pause.paused:
         # clock only advances while unpaused
