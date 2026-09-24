@@ -160,6 +160,51 @@ class TextField:
         screen.blit(self.font.render(shown, True, self.fgCol), (self.x+2, self.y+4))
 
 
+class Mask:
+    def __init__(self, image, size, pos, action):
+        self.action = action
+
+        self.image = pygame.image.load(image).convert_alpha()
+        self.image = pygame.transform.scale(self.image, size)
+
+        self.imageX = pos[0]
+        self.imageY = pos[1]
+
+        self.imageMask = pygame.mask.from_surface(self.image)
+
+        self.rect = self.image.get_rect(topleft=(self.imageX, self.imageY))
+
+        self.outlineColor = (255, 255, 255)
+        self.hovering = False
+
+    def handle_event(self, event):
+        mouseX, mouseY = pygame.mouse.get_pos()
+
+        localX = mouseX - self.imageX
+        localY = mouseY - self.imageY
+
+        maskW, maskH = self.imageMask.get_size()
+
+        ##same as if stateents##
+        self.hovering = (0 <= localX < maskW and 0 <= localY < maskH and self.imageMask.get_at((localX, localY)))
+        #basically boolean checking if these 3 conditions are right if so they return true making it to true
+
+        # Click
+        if self.hovering and event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            self.action()
+
+    def draw(self, screen):
+
+        screen.blit(self.image, (self.imageX, self.imageY))
+
+        # Draw 2 pixel outline when hovering
+        if self.hovering:
+            outline = self.imageMask.outline()
+            pygame.draw.lines(screen, self.outlineColor,True, [(x + self.imageX, y + self.imageY)for x, y in outline],2)
+
+
+
+
 ########################## functions for all classes  ###################################
 
 def handle_text_event(text,event):
