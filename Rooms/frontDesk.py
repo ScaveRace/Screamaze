@@ -17,7 +17,7 @@ class FrontDesk:
     def __init__(self, screen):
         self.animation = False ### button animation switch
         self.alpha = 0
-        self.startAnim = pygame.time.get_ticks() + 2000 ### animation start time
+        self.startAnim = pygame.time.get_ticks() + 100 ### animation start time
         self.next_room = None
         self.screen = screen
         self.background = u.load_image("assets/frontDesk_1.png", self.screen.get_size())
@@ -63,7 +63,7 @@ class FrontDesk:
         rect_surface.set_alpha(170)
         ########## animation ###########
         if self.alpha != 255:
-            self.alpha = u.storyImageAnim(self.startAnim, self.alpha, 1000)
+            self.alpha = u.storyImageAnim(self.startAnim, self.alpha, 100)
             self.screen.blit(self.background, (0, 0))
 
         ##### latest frame when alpha=255 #####

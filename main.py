@@ -10,7 +10,7 @@ import Rooms.projectRoom as pR
 import Rooms.equinoxRoom as eq
 
 from player import player
-#from UI.frontUI import PauseMenu
+from UI.frontUI import PauseMenu
 
 
 pygame.init()

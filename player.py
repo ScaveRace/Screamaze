@@ -12,7 +12,7 @@ SAVE_PATH = "savegame.json"
 
 class Player:
     def __init__(self, name="", time=0, position="", inventory=None, volume=1.0, gender="Male"):
-        self.pImage = u.load_image()
+        #self.pImage = u.load_image()
         self.name = name
         self.time = time            # seconds, integer
         self.position = position

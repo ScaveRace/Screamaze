@@ -23,7 +23,6 @@ class PauseMenu:
 
     def setVolume(self, value):
         player.volume = value
-        pygame.mixer.music.set_volume(value)
 
     def saveGame(self):
         player.save()
