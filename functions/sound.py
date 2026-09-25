@@ -1,18 +1,24 @@
 import pygame
+from player import player
 
-vol = 1
-def play_music(music, volume):
-    pygame.mixer.music.load(music)
-    pygame.mixer.music.set_volume(volume *vol)
-    pygame.mixer.music.play(loops=-1)
+class sound:
+    def __init__(self, volume=1):
+        self.volume = volume
 
+    def play_music(self, music, volume=1):
+        self.volume = volume
+        pygame.mixer.music.load(music)
+        pygame.mixer.music.set_volume(self.volume*player.volume)
+        pygame.mixer.music.play(loops=-1)
 
-def play_sound(sound, volume):
-    sound_effect = pygame.mixer.Sound(sound)
-    sound_effect.set_volume(volume*vol)
-    sound_effect.play()
+    def play_sound(self, sound):
+        sound_effect = pygame.mixer.Sound(sound)
+        sound_effect.set_volume(self.volume*player.volume)
+        sound_effect.play()
 
+    def setVolume(self, playervolume):
+        pygame.mixer_music.set_volume(playervolume*self.volume)
+        player.volume = playervolume
 
-def setVolume(v):
-    global vol
-    vol = v
+sound = sound()
+

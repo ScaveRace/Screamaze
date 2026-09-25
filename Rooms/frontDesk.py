@@ -7,6 +7,7 @@ pygame.mixer.init()
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 28)
 
+from functions.sound import sound as s
 running = True
 
 
@@ -22,7 +23,8 @@ class FrontDesk:
         self.screen = screen
         self.background = u.load_image("assets/frontDesk_1.png", self.screen.get_size())
         self.secondIm = u.load_image("assets/frontDesk_2.png", self.screen.get_size())
-
+        self.bgMusic = "assets/music/The_Unmarked_Door.mp3"
+        s.play_music(self.bgMusic, .4)
 
         self.buttons = [
             u.Button(1000, 290, 140, 30, "Male", self.test),
@@ -30,6 +32,8 @@ class FrontDesk:
 
         ]
         self.textField = u.TextField(1000, 250, 140, 30,font,(255,255,255), (0,0,0),0,True)
+
+
 
     def test(self):
         if self.buttons[0].label == "Male":

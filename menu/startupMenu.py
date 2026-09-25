@@ -1,5 +1,5 @@
 import UI.uiElements as u
-import functions.sound as s
+from functions.sound import sound as s
 import pygame
 from Rooms import frontDesk
 
@@ -14,7 +14,7 @@ class StartupMenu:
             u.Button(120, 470, 150, 50, "Load Game", self.load_game),
             u.Button(120, 520, 150, 50, "Settings",self.settings),
         ]
-        s.play_music(self.bgMusic,40)
+        s.play_music(self.bgMusic,.8)
 
     def load_game(self):
 

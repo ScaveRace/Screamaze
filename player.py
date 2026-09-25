@@ -12,7 +12,7 @@ SAVE_PATH = "savegame.json"
 
 class Player:
     def __init__(self, name="", time=0, position="", inventory=None, volume=1.0, gender="Male"):
-        #self.pImage = u.load_image()
+        self.pImage = u.load_image(self.setGenderIm(gender),(64,64))
         self.name = name
         self.time = time            # seconds, integer
         self.position = position
@@ -23,6 +23,9 @@ class Player:
     def add_item(self, item, amount=1):
         for _ in range(amount):
             self.inventory.append(item)
+
+    def setGenderIm(self,g):
+        return(f"assets/palyer/player_{g}.png")
 
     def remove_item(self, item):
         if item in self.inventory:
