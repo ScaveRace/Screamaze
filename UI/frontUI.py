@@ -1,16 +1,15 @@
 import pygame
 import UI.uiElements as u
 import functions.sound as s
-import functions.settingsFunc as sF
+from functions.settingsFunc import settings as sett
 import functions.savingFunc as save
 
 font = pygame.font.Font(None, 36)
 
 
 class PauseMenu:
-    def __init__(self, screen,player,sett):
+    def __init__(self, screen,player):
         self.screen = screen
-        self.sett = sett
         self.paused = False
         self.pauseButton = u.Button(1170, 20, 90, 36, "pause", self.toggle)
         self.buttons = [
@@ -18,7 +17,7 @@ class PauseMenu:
             u.Button(570, 390, 140, 44, "resume", self.toggle),
         ]
         self.player = player
-        self.volumeSlider = u.Slider(490, 280, 300, 18, "volume",sett.setMusicVolume(.1),self.saveAction,sF.Settings().getMusicVolume())
+        self.volumeSlider = u.Slider(490, 280, 300, 18, "volume",sett.setMusicVolume,self.saveAction,sett.getMusicVolume())
 
     def toggle(self):
         self.paused = not self.paused
@@ -26,12 +25,14 @@ class PauseMenu:
 
 
     def saveGame(self):
-        save.save(self.player,"data/savegame.json")
+        save.save(self.player,"data/savePlayer.json")
         self.buttons[0].label = "saved!"
+
+
 
     def saveAction(self):
         print("works")
-        save.save(self.sett, "data/gameSettings.json")
+        save.save(sett, "data/gameSettings.json")
 
     def handle_event(self, event):
         # returns True when the pause menu used the event, so the room ignores it
@@ -51,7 +52,8 @@ class PauseMenu:
 
     def draw(self):
         self.pauseButton.draw2(self.screen)
-
+        self.screen.blit(
+            font.render(f"{self.player.name}", True, (210, 200, 160)),(10, 10))
         if self.paused:
             panel = pygame.Rect(440, 180, 400, 290)
             pygame.draw.rect(self.screen, (0, 0, 0), panel)

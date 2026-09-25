@@ -14,6 +14,15 @@ def load_image(path, size, fallback=(40,38,42)):  ###  loading images, has fallb
         surface.fill(fallback)
         return surface
 
+def load_alpha_image(path, size, fallback=(40,38,42)):  ###  loading images, has fallbacks (very useful)
+    try:
+        image = pygame.image.load(path).convert_alpha() #if we do convert_alpha() we also have the transparency else it is black
+        return pygame.transform.smoothscale(image, size)  # image by default is fullscreen, but given a size change it to the room size
+    except (pygame.error, FileNotFoundError):  ### in case of an error, still functions
+        surface = pygame.Surface(size)
+        surface.fill(fallback)
+        return surface
+
 def storyImageAnim(startAnim,alpha,fadetime):  ##  transition between images, when it starts, takes alpha and returns it to decide when to stop
     if startAnim <= pygame.time.get_ticks() and alpha < 255:
         alpha = min(alpha + 255 / fadetime, 255)
@@ -234,12 +243,15 @@ class Slider:
 
     def set_from_mouse(self, mouse_x):
         travel = self.rect.w - self.knob_w
+
         if travel <= 0:
             return
         # centre the knob on the cursor
         offset = mouse_x - self.knob_w / 2 - self.rect.x
         self.value = max(0.0, min(1.0, offset / travel))
+
         if self.action:
+            print(self.value)
             self.action(self.value)
 
 
@@ -249,6 +261,7 @@ class Slider:
             if self.rect.collidepoint(event.pos):
                 self.dragging = True
                 self.set_from_mouse(event.pos[0])   # click anywhere to jump
+
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             self.action2()
             self.dragging = False

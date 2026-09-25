@@ -11,15 +11,19 @@ class Player:
         self.pImage = None
         self.name = ""
         self.time = 0            # seconds, integer
-        self.position = "corridor"
+        self.position = (505,500)
+        self.location = "corridor"
         self.inventory = []
         self.gender = ""
 
     def createPlayer(self,name,gender):
-        self.pImage = u.load_image(self.setGenderIm(gender), (64, 64))
+        self.pImage = u.load_alpha_image(self.setGenderIm(gender), (64, 64))
+        self.pImage.convert_alpha()
         self.name = name
         self.gender = gender
 
+    def setImage(self):
+        self.pImage = u.load_alpha_image(self.setGenderIm(self.gender), (64, 64))
 
     # --- inventory ---
     def add_item(self, item, amount=1):
@@ -51,7 +55,6 @@ class Player:
         self.time += int(seconds)
 
 
-    def reset(self):
-        self.__init__()
+    def draw(self,screen):
 
-
+        screen.blit(self.pImage,self.position)

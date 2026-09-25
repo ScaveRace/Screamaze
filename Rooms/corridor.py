@@ -9,7 +9,7 @@ pygame.mixer.init()
 class Corridor:
     def __init__(self, screen,p):
         self.image = u.load_image("assets/corridor.png", screen.get_size())
-
+        self.p = p
         self.screen = screen
         self.conversation = 0
         self.next_room = None
@@ -66,3 +66,5 @@ class Corridor:
         self.screen.blit(self.image, (0, 0))
         for m in self.masks:
             m.draw(self.screen)
+
+        self.p.draw(self.screen)

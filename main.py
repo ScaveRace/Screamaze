@@ -12,8 +12,7 @@ import Rooms.equinoxRoom as eq
 import player as p
 from UI.frontUI import PauseMenu
 import functions.savingFunc as load
-import functions.settingsFunc as settings
-
+from functions.settingsFunc import settings as sett
 
 pygame.init()
 pygame.mixer.init()
@@ -41,17 +40,17 @@ ROOMS = {
     "projRoom" : pR.ProjectRoom
     #"lab" : lab.Lab2001
 }
-sett = settings.Settings()
+
 if not load.is_json_empty("data/gameSettings.json"):
     load.load(sett,"data/gameSettings.json")
-    print("loaded")
+    print(sett.getMusicVolume())
 
 
 player = p.Player()
 room = s.StartupMenu(screen,player)
 current = "startup"
 
-pause = PauseMenu(screen,player,sett)
+pause = PauseMenu(screen,player)
 ms_buffer = 0          # leftover milliseconds not yet worth a whole second
 
 ########## game loop ##########
@@ -81,7 +80,7 @@ while running:
                 raise KeyError(f"No room named {name!r}. Known: {sorted(ROOMS)}")
             room = ROOMS[name](screen,player)
             current = name
-            player.position = name
+            player.location = name
             if name == "startup":
                 pause.paused = False
 

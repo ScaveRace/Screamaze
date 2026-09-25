@@ -1,7 +1,7 @@
 import json
 import os
 import UI.uiElements as u
-SAVE_PATH = "data/savegame.json"
+SAVE_PATH = "data/savePlayer.json"
 
 
 # --- saving / loading ---
@@ -17,7 +17,8 @@ def load(what, path=SAVE_PATH):
         return  # no save file yet, so keep the defaults
     with open(path, "r", encoding="utf-8") as f:
         vars(what).update(json.load(f))
-    what.pImage = u.load_image(what.setGenderIm(what.gender), (64, 64))
+
+
 
 def is_json_empty(path):
     if not os.path.exists(path):
@@ -27,4 +28,4 @@ def is_json_empty(path):
             json_obj = json.load(f)
         except json.JSONDecodeError:
             return True
-    return len(json_obj)
+    return False
