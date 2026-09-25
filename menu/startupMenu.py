@@ -2,6 +2,7 @@ import UI.uiElements as u
 import functions.sound as s
 import pygame
 from Rooms import frontDesk
+import functions.savingFunc as load
 
 class StartupMenu:
     def __init__(self, screen,player):
@@ -15,10 +16,10 @@ class StartupMenu:
             u.Button(120, 470, 150, 50, "Load Game", self.load_game),
             u.Button(120, 520, 150, 50, "Settings",self.settings),
         ]
-        s.Sound(player).play_music(self.bgMusic)
+        s.play_music(self.bgMusic)
 
     def load_game(self):
-        self.player.load()
+        load.load(self.player,"data/savegame.json")
         self.next_room = self.player.position
         return
         print("loading the game")

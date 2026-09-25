@@ -1,13 +1,16 @@
 import pygame
 import UI.uiElements as u
 import functions.sound as s
+import functions.settingsFunc as sF
+import functions.savingFunc as save
 
 font = pygame.font.Font(None, 36)
 
 
 class PauseMenu:
-    def __init__(self, screen,player):
+    def __init__(self, screen,player,sett):
         self.screen = screen
+        self.sett = sett
         self.paused = False
         self.pauseButton = u.Button(1170, 20, 90, 36, "pause", self.toggle)
         self.buttons = [
@@ -15,8 +18,7 @@ class PauseMenu:
             u.Button(570, 390, 140, 44, "resume", self.toggle),
         ]
         self.player = player
-        self.sound = s.Sound(self.player)
-        self.volumeSlider = u.Slider(490, 280, 300, 18, "volume", self.sound.setVolume, self.player.getVolume())
+        self.volumeSlider = u.Slider(490, 280, 300, 18, "volume",sett.setMusicVolume(.1),self.saveAction,sF.Settings().getMusicVolume())
 
     def toggle(self):
         self.paused = not self.paused
@@ -24,12 +26,17 @@ class PauseMenu:
 
 
     def saveGame(self):
-        self.player.save()
+        save.save(self.player,"data/savegame.json")
         self.buttons[0].label = "saved!"
+
+    def saveAction(self):
+        print("works")
+        save.save(self.sett, "data/gameSettings.json")
 
     def handle_event(self, event):
         # returns True when the pause menu used the event, so the room ignores it
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+
             self.toggle()
             return True
 

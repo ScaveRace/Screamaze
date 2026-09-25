@@ -211,10 +211,11 @@ class Mask:
                               [(x + self.imageX, y + self.imageY) for x, y in outline], 2)
 
 class Slider:
-    def __init__(self, x, y, w, h, label, action, value=1.0, knob_w=16):
+    def __init__(self, x, y, w, h, label, action,action2, value=1.0, knob_w=16):
         self.rect = pygame.Rect(x, y, w, h)
         self.label = label
         self.action = action          # called with the new value, 0.0 - 1.0
+        self.action2 = action2
         self.value = max(0.0, min(1.0, value))
         self.knob_w = knob_w
         self.dragging = False
@@ -241,12 +242,15 @@ class Slider:
         if self.action:
             self.action(self.value)
 
+
     def handle_event(self, event):
+
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.rect.collidepoint(event.pos):
                 self.dragging = True
                 self.set_from_mouse(event.pos[0])   # click anywhere to jump
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            self.action2()
             self.dragging = False
         elif event.type == pygame.MOUSEMOTION and self.dragging:
             self.set_from_mouse(event.pos[0])
@@ -264,19 +268,4 @@ class Slider:
         text = self.font.render(f"{self.label}   {int(self.value * 100)}%",
                                 True, self.fgCol)
         screen.blit(text, (self.rect.x, self.rect.y - 26))
-
-########################## functions for all classes  ###################################
-
-def handle_text_event(text,event):
-    if event.type == pygame.TEXTINPUT:  ## adds text that user types
-        return text + event.text
-    elif event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:  ## remove text upon backspace, does not repeat every tick
-        return text[:-1]
-    return text
-
-
-def focused(event,rect):  ## easy function to check for collision
-    if rect.collidepoint(event.pos):
-        return True
-    return False
 

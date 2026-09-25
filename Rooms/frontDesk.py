@@ -27,7 +27,7 @@ class FrontDesk:
         self.secondIm = u.load_image("assets/frontDesk_2.png", self.screen.get_size())
         self.bgMusic = "assets/music/The_Unmarked_Door.mp3"
 
-        s.Sound(p).play_music(self.bgMusic, .4)
+        s.play_music(self.bgMusic, .4)
         self.p = p
         self.buttons = [
             u.Button(1000, 290, 140, 30, "Male", self.gender),

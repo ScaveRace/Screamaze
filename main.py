@@ -11,6 +11,8 @@ import Rooms.equinoxRoom as eq
 
 import player as p
 from UI.frontUI import PauseMenu
+import functions.savingFunc as load
+import functions.settingsFunc as settings
 
 
 pygame.init()
@@ -39,11 +41,17 @@ ROOMS = {
     "projRoom" : pR.ProjectRoom
     #"lab" : lab.Lab2001
 }
+sett = settings.Settings()
+if not load.is_json_empty("data/gameSettings.json"):
+    load.load(sett,"data/gameSettings.json")
+    print("loaded")
+
+
 player = p.Player()
 room = s.StartupMenu(screen,player)
 current = "startup"
 
-pause = PauseMenu(screen,player)
+pause = PauseMenu(screen,player,sett)
 ms_buffer = 0          # leftover milliseconds not yet worth a whole second
 
 ########## game loop ##########
