@@ -6,6 +6,7 @@ from Rooms import frontDesk
 class StartupMenu:
     def __init__(self, screen,player):
         self.screen = screen
+        self.player = player
         self.next_room = None
         self.bgMusic = "assets/music/niceThomas.mp3"
         self.background = u.load_image("assets/startup.png", screen.get_size())
@@ -17,7 +18,9 @@ class StartupMenu:
         s.Sound(player).play_music(self.bgMusic)
 
     def load_game(self):
-
+        self.player.load()
+        self.next_room = self.player.position
+        return
         print("loading the game")
 
     def new_game(self):
@@ -25,7 +28,6 @@ class StartupMenu:
         self.next_room = "frontD"
 
     def settings(self):
-
         print("entering settings menu")
 
     def handle_event(self, event):
@@ -37,10 +39,3 @@ class StartupMenu:
 
         for b in self.buttons:
             b.draw2(self.screen)
-
-
-
-
-    
-    
-    

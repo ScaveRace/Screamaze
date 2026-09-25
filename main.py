@@ -46,8 +46,6 @@ current = "startup"
 pause = PauseMenu(screen,player)
 ms_buffer = 0          # leftover milliseconds not yet worth a whole second
 
-
-
 ########## game loop ##########
  ## initial screen
 while running:

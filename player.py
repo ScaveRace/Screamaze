@@ -3,19 +3,16 @@
 #  use: from player import player
 #  call function like: player.add_item("testitem")
 
-import UI.uiElements as u
-SAVE_PATH = "data/savegame.json"
 
 
 class Player:
 
-    def __init__(self, volume = 1.):
+    def __init__(self):
         self.pImage = None
         self.name = ""
         self.time = 0            # seconds, integer
         self.position = "corridor"
         self.inventory = []
-        self.volume = volume     # 0.0 - 1.0
         self.gender = ""
 
     def createPlayer(self,name,gender):
@@ -23,8 +20,7 @@ class Player:
         self.name = name
         self.gender = gender
 
-    def getVolume(self):
-        return self.volume
+
     # --- inventory ---
     def add_item(self, item, amount=1):
         for _ in range(amount):
@@ -57,4 +53,5 @@ class Player:
 
     def reset(self):
         self.__init__()
+
 
