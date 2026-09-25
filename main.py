@@ -9,7 +9,7 @@ import Rooms.corridor as corri
 import Rooms.projectRoom as pR
 import Rooms.equinoxRoom as eq
 
-from player import player
+import player as p
 from UI.frontUI import PauseMenu
 
 
@@ -39,15 +39,17 @@ ROOMS = {
     "projRoom" : pR.ProjectRoom
     #"lab" : lab.Lab2001
 }
-
-room = s.StartupMenu(screen)
+player = p.Player()
+room = s.StartupMenu(screen,player)
 current = "startup"
 
-pause = PauseMenu(screen)
+pause = PauseMenu(screen,player)
 ms_buffer = 0          # leftover milliseconds not yet worth a whole second
 
+
+
 ########## game loop ##########
-room = s.StartupMenu(screen)   ## initial screen
+ ## initial screen
 while running:
     dt = clock.tick(60)                     # caps at 60 fps, returns ms since last call
     show_pause = current not in ("startup", "frontD")      # no pause button on the title screen
@@ -71,7 +73,7 @@ while running:
             name = room.next_room
             if name not in ROOMS:
                 raise KeyError(f"No room named {name!r}. Known: {sorted(ROOMS)}")
-            room = ROOMS[name](screen)
+            room = ROOMS[name](screen,player)
             current = name
             player.position = name
             if name == "startup":

@@ -1,13 +1,12 @@
 import pygame
 import UI.uiElements as u
-from player import player
-from functions.sound import sound
+import functions.sound as s
 
 font = pygame.font.Font(None, 36)
 
 
 class PauseMenu:
-    def __init__(self, screen):
+    def __init__(self, screen,player):
         self.screen = screen
         self.paused = False
         self.pauseButton = u.Button(1170, 20, 90, 36, "pause", self.toggle)
@@ -15,7 +14,9 @@ class PauseMenu:
             u.Button(570, 330, 140, 44, "save game", self.saveGame),
             u.Button(570, 390, 140, 44, "resume", self.toggle),
         ]
-        self.volumeSlider = u.Slider(490, 280, 300, 18, "volume", sound.setVolume, player.volume)
+        self.player = player
+        self.sound = s.Sound(self.player)
+        self.volumeSlider = u.Slider(490, 280, 300, 18, "volume", self.sound.setVolume, self.player.getVolume())
 
     def toggle(self):
         self.paused = not self.paused
@@ -23,7 +24,7 @@ class PauseMenu:
 
 
     def saveGame(self):
-        player.save()
+        self.player.save()
         self.buttons[0].label = "saved!"
 
     def handle_event(self, event):

@@ -1,13 +1,14 @@
 import UI.uiElements as u
 import pygame
 
+
 pygame.init()
 pygame.mixer.init()
 
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 28)
 
-from functions.sound import sound as s
+import functions.sound as s
 running = True
 
 
@@ -15,7 +16,8 @@ running = True
 class FrontDesk:
     text = ""
 
-    def __init__(self, screen):
+    def __init__(self, screen,p):
+        self.player = None
         self.animation = False ### button animation switch
         self.alpha = 0
         self.startAnim = pygame.time.get_ticks() + 100 ### animation start time
@@ -24,10 +26,11 @@ class FrontDesk:
         self.background = u.load_image("assets/frontDesk_1.png", self.screen.get_size())
         self.secondIm = u.load_image("assets/frontDesk_2.png", self.screen.get_size())
         self.bgMusic = "assets/music/The_Unmarked_Door.mp3"
-        s.play_music(self.bgMusic, .4)
 
+        s.Sound(p).play_music(self.bgMusic, .4)
+        self.p = p
         self.buttons = [
-            u.Button(1000, 290, 140, 30, "Male", self.test),
+            u.Button(1000, 290, 140, 30, "Male", self.gender),
             u.Button(930, 350, 140, 50, "Start Run", self.startRun),
 
         ]
@@ -35,7 +38,7 @@ class FrontDesk:
 
 
 
-    def test(self):
+    def gender(self):
         if self.buttons[0].label == "Male":
             self.buttons[0].label = "Female"
         else:
@@ -44,6 +47,7 @@ class FrontDesk:
 
         # startAnim =
     def startRun(self):
+        self.p.createPlayer(self.textField.text,self.buttons[0].label)
         self.next_room = "corridor"
 
     def handle_event(self, event):

@@ -4,7 +4,7 @@ import pygame
 from Rooms import frontDesk
 
 class StartupMenu:
-    def __init__(self, screen):
+    def __init__(self, screen,player):
         self.screen = screen
         self.next_room = None
         self.bgMusic = "assets/music/niceThomas.mp3"
@@ -14,7 +14,7 @@ class StartupMenu:
             u.Button(120, 470, 150, 50, "Load Game", self.load_game),
             u.Button(120, 520, 150, 50, "Settings",self.settings),
         ]
-        s.play_music(self.bgMusic,100)
+        s.Sound(player).play_music(self.bgMusic)
 
     def load_game(self):
 
