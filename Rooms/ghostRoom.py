@@ -129,7 +129,8 @@ class GhostRoom:
         elif self.line_count < len(self.dialogue):
             self.chatbox.say(self.dialogue[self.line_count])
             self.line_count += 1
-        elif "homework" in self.inventory:
+# elif "homework" in self.inventory:
+        elif "homework" in self.player.has_item("Items", "Homework"):
             self.chatbox.say("Ghost . Is that my homework? HAND IT OVER😈")
         else:
             self.chatbox.say("Ghost > No homework, no leaving. Search the room")
@@ -157,8 +158,8 @@ class GhostRoom:
             self.chatbox.say("You > I already collected the stone in my inventory")
         else:
             self.stone_collected = True
-# self.inventory.append("white stone")
-            self.player.add_item("Stones", "White")
+# change the picture of the item
+            self.player.add_item("Stones", "White", "assets/gr.room.teacher.jpg")
             self.chatbox.say("You > A white stone... one step closer to freedom")
             self.current_buttons = self.returnr_buttons
 
@@ -221,7 +222,7 @@ class GhostRoom:
             return
         self.homework_taken = True
 # self.inventory.append("homework")
-        self.player.add_item("Items", "Homework")
+        self.player.add_item("Items", "Homework", "assets/gr.room.teacher.jpg")
         self.chatbox.say("You > Old homework covered in dust, this must be it")
         self.current_buttons = self.returnr_buttons
 
@@ -234,7 +235,7 @@ class GhostRoom:
         if "homework" not in self.player.has_item("Items","Homework"):
             self.chatbox.say("You > I don't have the homework yet")
             return
-# self.inventory.remove("homework")
+
         self.player.remove_item("Items", "Homework")
         self.task_done = True
         self.chatbox.say("You > Here is your homework")

@@ -10,7 +10,7 @@ import Rooms.projectRoom as pR
 import Rooms.equinoxRoom as eq
 
 import player as p
-from UI.frontUI import PauseMenu
+from UI.pauseMenu import PauseMenu
 import functions.savingFunc as load
 from functions.settingsFunc import settings as sett
 
