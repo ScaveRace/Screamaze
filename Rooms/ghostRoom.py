@@ -1,5 +1,6 @@
 import pygame
 import UI.uiElements as u
+from player import Player
 
 pygame.init()
 pygame.mixer.init()
@@ -19,11 +20,11 @@ KEYPAD_GAP = 10              # space between keys
 
 # Controls everything that happens inside the ghost classroom.
 class GhostRoom:
-    def __init__(self, screen):
+    def __init__(self, screen,player):
         self.screensize = screen.get_size()
         self.screen = screen
         self.next_room = None
-
+        self.player = player
         # Load the different images used throughout the room.
         self.room_image = u.load_image("assets/gr.room.teacher.jpg", self.screensize)
         self.room_empty = u.load_image("assets/gr.ghostRoom.no.teacher.png", self.screensize)
@@ -51,7 +52,7 @@ class GhostRoom:
         self.line_count = 0
 
         # Game state: inventory and whether important objects/tasks are completed.
-        self.inventory = [] ### global player inventory will be used later
+# self.inventory = [] ### global player inventory will be used later
         self.homework_taken = False #so you can't take the homework
         self.homework_spot = pygame.Rect(600, 400, 56, 56)
 
@@ -156,7 +157,8 @@ class GhostRoom:
             self.chatbox.say("You > I already collected the stone in my inventory")
         else:
             self.stone_collected = True
-            self.inventory.append("white stone")
+# self.inventory.append("white stone")
+            self.player.add_item("Stones", "White")
             self.chatbox.say("You > A white stone... one step closer to freedom")
             self.current_buttons = self.returnr_buttons
 
@@ -218,7 +220,8 @@ class GhostRoom:
             self.chatbox.say("You > The cabinet is empty now")
             return
         self.homework_taken = True
-        self.inventory.append("homework")
+# self.inventory.append("homework")
+        self.player.add_item("Items", "Homework")
         self.chatbox.say("You > Old homework covered in dust, this must be it")
         self.current_buttons = self.returnr_buttons
 
@@ -227,10 +230,12 @@ class GhostRoom:
         if self.task_done:
             self.chatbox.say("You > I already gave it to the teacher")
             return
-        if "homework" not in self.inventory:
+# if "homework" not in self.inventory:
+        if "homework" not in self.player.has_item("Items","Homework"):
             self.chatbox.say("You > I don't have the homework yet")
             return
-        self.inventory.remove("homework")
+# self.inventory.remove("homework")
+        self.player.remove_item("Items", "Homework")
         self.task_done = True
         self.chatbox.say("You > Here is your homework")
         self.chatbox.say("Ghost . At last... class dismissed")
