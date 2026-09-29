@@ -9,12 +9,12 @@ pygame.mixer.init()
 class EquinoxRoom:
     stoneTaken = False # class variable, so it stays True when you come back into the room
 
-    def __init__(self, screen,p):
+    def __init__(self, screen, player):
         self.image = u.load_image("assets/sandwishRoom.png", screen.get_size()) #  will change
         self.screen = screen
         self.conversation = 0 # 0 = idle, 1 = riddles, 2 = demon revealed, 3 = stone on floor, 4 = done
         self.next_room = None
-
+        self.player = player
         self.stonePos = (870, 544) # centre of the yellow stone circle, change to move it
 
         self.chat = u.Chatbox(40, 470, 700, 230) # all dialogue and your typed answers show up here
