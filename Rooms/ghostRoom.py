@@ -25,7 +25,7 @@ class GhostRoom:
         self.next_room = None
 
         # Load the different images used throughout the room.
-        self.room_image = u.load_image("assets/gr.ghostRoom.png", self.screensize)
+        self.room_image = u.load_image("assets/gr.room.teacher.jpg", self.screensize)
         self.room_empty = u.load_image("assets/gr.ghostRoom.no.teacher.png", self.screensize)
         self.current_image = self.room_image
 
