@@ -11,6 +11,7 @@ import Rooms.equinoxRoom as eq
 
 import player as p
 from UI.pauseMenu import PauseMenu
+from UI.frontUI import inventoryMenu
 import functions.savingFunc as load
 from functions.settingsFunc import settings as sett
 
@@ -51,6 +52,7 @@ room = s.StartupMenu(screen,player)
 current = "startup"
 
 pause = PauseMenu(screen,player)
+inv = inventoryMenu(screen,player)
 ms_buffer = 0          # leftover milliseconds not yet worth a whole second
 
 ########## game loop ##########
@@ -62,6 +64,8 @@ while running:
     for event in pygame.event.get():   ### handle user events
         if event.type == pygame.QUIT:
             running = False
+        elif show_pause and not pause.paused and inv.handle_event(event):
+            continue
         elif show_pause and pause.handle_event(event):
             continue                        # overlay consumed it, room must not see it
         else:
@@ -86,7 +90,9 @@ while running:
 
     room.draw()
     if show_pause:
-        pause.draw()                        # last, so it sits on top of the room
+        pause.draw()
+        if not pause.paused:
+            inv.draw()# last, so it sits on top of the room
     pygame.display.flip()
 
 
