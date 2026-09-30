@@ -13,7 +13,7 @@ class Player:
         self.time = 0            # seconds, integer
         self.position = (505,500)
         self.location = "corridor"
-        self.inventory = {"Stones":[],"Items":[]}
+        self.inventory = {"Stones":[],"Items":[{"Fuse": "assets/fuse_item.png"}]}
         self.gender = ""
 
     def createPlayer(self,name,gender):
