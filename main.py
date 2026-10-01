@@ -72,7 +72,7 @@ while running:
         name = room.next_room
         if name not in ROOMS:
             raise KeyError(f"No room named {name!r}. Known: {sorted(ROOMS)}")
-        if current != "startup" and current != "frontD":
+        if name != "startup" and name != "frontD":
             room = ROOMS[name](screen, player,fui)
         else:
             room = ROOMS[name](screen, player)
