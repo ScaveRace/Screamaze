@@ -78,7 +78,7 @@ while running:
 
 
     room.draw()
-    if current is not "startup" and current is not "frontD":
+    if current != "startup" and current != "frontD":
         if not frontui.pause.paused:
             # clock only advances while unpaused
             ms_buffer += dt
