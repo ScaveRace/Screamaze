@@ -113,7 +113,8 @@ class Chatbox:
         return event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN
 
     def draw(self, screen):
-        pygame.draw.rect(screen, (26, 25, 28), self.rect)  ## background
+        #pygame.draw.rect(screen, (26, 25, 28), self.rect)  ## background
+        pygame.draw.rect(screen, (128, 128, 128), self.rect)  ## background
         pygame.draw.rect(screen, (60, 58, 64), self.rect, 1)  ## outline
         max_w = self.rect.width - 20
 
