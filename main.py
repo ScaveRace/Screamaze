@@ -72,13 +72,16 @@ while running:
         name = room.next_room
         if name not in ROOMS:
             raise KeyError(f"No room named {name!r}. Known: {sorted(ROOMS)}")
-        room = ROOMS[name](screen,player)
+        if current != "startup" and current != "frontD":
+            room = ROOMS[name](screen,player)
+        else:
+            room = ROOMS[name](screen, player,fui)
         current = name
         player.location = name
 
 
     room.draw()
-    if current is not "startup" and current is not "frontD":
+    if current != "startup" and current != "frontD":
         if not frontui.pause.paused:
             # clock only advances while unpaused
             ms_buffer += dt
