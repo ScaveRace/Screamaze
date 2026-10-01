@@ -86,12 +86,11 @@ class EquinoxRoom:
 
     # "take the stone" button: the stone is picked up and won't come back
     def takeStone(self):
-        EquinoxRoom.stoneTaken = True # later: add "yellow_stone" to the player's inventory here
+        self.player.add_item("Stones", "Yellow", "assets/stones/yellow.png") # add_item(category, name, icon path), no self
+        EquinoxRoom.stoneTaken = True # after add_item, so a failed pickup doesn't count as taken
         self.conversation = 4
         self.buttons = [self.corridorButton]
         self.say(None, "* You pick up the stone. Warm as fresh toast.")
-        self.player.add_item(self, "Stones", "Yellow", "assets/stones/yellow.png")
-        self.player.add_item(self, "Items", "Yellow", "assets/stones/yellow.png")
 
     # puts a line in the chatbox, who = None means narration (a "* " line)
     def say(self, who, text):
@@ -145,17 +144,14 @@ class EquinoxRoom:
     def handle_event(self, event):
         for b in self.buttons:
             b.handle_event(event)
-        self.chat.handle_event(event)
 
-        # the chatbox when riddles
-        if self.conversation == 1:
-            if self.chat.focus and self.chat.isSubmit(event):
-                text = self.chat.input.strip() # grab it before the chatbox clears it
-                self.chat.handle_event(event)
-                if text: # ignore empty enters
-                    self.answer(text)
-            else:
-                self.chat.handle_event(event)
+        if self.conversation == 1 and self.chat.focus and self.chat.isSubmit(event):
+            text = self.chat.input.strip()  # read BEFORE the chatbox clears it
+            self.chat.handle_event(event)
+            if text:
+                self.answer(text)
+        else:
+            self.chat.handle_event(event)
 
     def draw(self):
         self.screen.blit(self.image, (0, 0)) # background
