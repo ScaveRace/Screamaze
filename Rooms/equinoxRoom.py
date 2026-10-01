@@ -9,7 +9,8 @@ pygame.mixer.init()
 class EquinoxRoom:
     stoneTaken = False # class variable, so it stays True when you come back into the room
 
-    def __init__(self, screen, player):
+    def __init__(self, screen, player, fui):
+        self.fui = fui
         self.image = u.load_image("assets/sandwishRoom.png", screen.get_size()) #  will change
         self.screen = screen
         self.conversation = 0 # 0 = idle, 1 = riddles, 2 = demon revealed, 3 = stone on floor, 4 = done
@@ -86,7 +87,8 @@ class EquinoxRoom:
 
     # "take the stone" button: the stone is picked up and won't come back
     def takeStone(self):
-        EquinoxRoom.stoneTaken = True # later: add "yellow_stone" to the player's inventory here
+        self.player.add_item("Stones", "Yellow", "assets/stones/yellow.png") # add_item(category, name, icon path), no self
+        EquinoxRoom.stoneTaken = True # after add_item, so a failed pickup doesn't count as taken
         self.conversation = 4
         self.buttons = [self.corridorButton]
         self.say(None, "* You pick up the stone. Warm as fresh toast.")
@@ -143,17 +145,14 @@ class EquinoxRoom:
     def handle_event(self, event):
         for b in self.buttons:
             b.handle_event(event)
-        self.chat.handle_event(event)
 
-        # the chatbox when riddles
-        if self.conversation == 1:
-            if self.chat.focus and self.chat.isSubmit(event):
-                text = self.chat.input.strip() # grab it before the chatbox clears it
-                self.chat.handle_event(event)
-                if text: # ignore empty enters
-                    self.answer(text)
-            else:
-                self.chat.handle_event(event)
+        if self.conversation == 1 and self.chat.focus and self.chat.isSubmit(event):
+            text = self.chat.input.strip()  # read BEFORE the chatbox clears it
+            self.chat.handle_event(event)
+            if text:
+                self.answer(text)
+        else:
+            self.chat.handle_event(event)
 
     def draw(self):
         self.screen.blit(self.image, (0, 0)) # background
