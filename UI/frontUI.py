@@ -13,7 +13,7 @@ class FrontUI:
         self.visible = False
         self.inventory = i.InventoryMenu(screen,p)
         self.pause = pause.PauseMenu(screen,p)
-        self.chat = u.Chatbox(40,550,300,150,font)
+        self.chat = u.Chatbox(0,0,300,720,font)
 
 
 

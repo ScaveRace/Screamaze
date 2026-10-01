@@ -2,13 +2,13 @@ import pygame
 from functions import uiFunc as uF
 pygame.font.init()  #### fonts need to be initialized before using them
 
-
+startX = 300
 
 ##basic functions
 def load_image(path, size, fallback=(40,38,42)):  ###  loading images, has fallbacks (very useful)
     try:
         image = pygame.image.load(path).convert() #if we do convert_alpha() we also have the transparency else it is black
-        return pygame.transform.smoothscale(image, size)  # image by default is fullscreen, but given a size change it to the room size
+        return pygame.transform.smoothscale(image, (size[0]-startX,size[1]))  # image by default is fullscreen, but given a size change it to the room size
     except (pygame.error, FileNotFoundError):  ### in case of an error, still functions
         surface = pygame.Surface(size)
         surface.fill(fallback)
@@ -17,7 +17,7 @@ def load_image(path, size, fallback=(40,38,42)):  ###  loading images, has fallb
 def load_alpha_image(path, size, fallback=(40,38,42)):  ###  loading images, has fallbacks (very useful)
     try:
         image = pygame.image.load(path).convert_alpha() #if we do convert_alpha() we also have the transparency else it is black
-        return pygame.transform.smoothscale(image, size)  # image by default is fullscreen, but given a size change it to the room size
+        return pygame.transform.smoothscale(image, (size[0],size[1]))  # image by default is fullscreen, but given a size change it to the room size
     except (pygame.error, FileNotFoundError):  ### in case of an error, still functions
         surface = pygame.Surface(size)
         surface.fill(fallback)
@@ -113,8 +113,7 @@ class Chatbox:
         return event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN
 
     def draw(self, screen):
-        #pygame.draw.rect(screen, (26, 25, 28), self.rect)  ## background
-        pygame.draw.rect(screen, (128, 128, 128), self.rect)  ## background
+        pygame.draw.rect(screen, (26, 25, 28), self.rect)  ## background
         pygame.draw.rect(screen, (60, 58, 64), self.rect, 1)  ## outline
         max_w = self.rect.width - 20
 
@@ -183,9 +182,9 @@ class Mask:
         self.action = action
 
         self.image = pygame.image.load(image).convert_alpha()
-        self.image = pygame.transform.scale(self.image, size)
+        self.image = pygame.transform.scale(self.image, (size[0]-startX,size[1]))
         self.imageX, self.imageY = pos
-
+        self.imageX+=startX
         self.imageMask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(topleft=pos)
 

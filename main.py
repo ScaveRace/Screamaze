@@ -16,9 +16,13 @@ import UI.frontUI as fui
 pygame.init()
 pygame.mixer.init()
 ##########  setting the display and mode   ################
-SCREEN_WIDTH = 1280
+SCREEN_WIDTH = 1480
 SCREEN_HEIGHT = 720
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+GAME_WIDTH = 1280
+GAME_HEIGHT = 720
+
+screen = pygame.display.set_mode((GAME_WIDTH, GAME_WIDTH))
+screen2 = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("THUAS's Screamazing")
 #########  clock to measure time   ################
 clock = pygame.time.Clock()
@@ -46,8 +50,8 @@ if not load.is_json_empty("data/gameSettings.json"):
 
 
 player = p.Player()
-frontui = fui.FrontUI(player,screen)
-room = s.StartupMenu(screen,player)
+frontui = fui.FrontUI(player,screen2)
+room = s.StartupMenu(screen2,player)
 current = "startup"
 
 ms_buffer = 0          # leftover milliseconds not yet worth a whole second
@@ -75,7 +79,7 @@ while running:
         if name != "startup" and name != "frontD":
             room = ROOMS[name](screen, player,fui)
         else:
-            room = ROOMS[name](screen, player)
+            room = ROOMS[name](screen2, player)
         current = name
         player.location = name
 

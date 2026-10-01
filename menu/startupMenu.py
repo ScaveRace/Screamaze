@@ -13,7 +13,7 @@ class StartupMenu:
         self.player = player
         self.next_room = None
         self.bgMusic = "assets/music/niceThomas.mp3"
-        self.background = u.load_image("assets/startup.png", screen.get_size())
+        self.background = u.load_image("assets/startup.png", (screen.get_size()[0]+300,screen.get_size()[1]))
         self.buttons = [
             u.Button(120, 420, 150, 50, "New Game", self.new_game),
             u.Button(120, 470, 150, 50, "Load Game", self.load_game),

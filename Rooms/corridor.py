@@ -64,7 +64,7 @@ class Corridor:
             m.handle_event(event)
 
     def draw(self):
-        self.screen.blit(self.image, (0, 0))
+        self.screen.blit(self.image, (300, 0))
         for m in self.masks:
             m.draw(self.screen)
 
