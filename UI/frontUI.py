@@ -30,7 +30,7 @@ class inventoryMenu:
     def get_image(self, path):
         if path not in self.images:  # only load each file once
             file = path if path else ""  # unknown items have path None
-            self.images = u.load_alpha_image(file, (32, 32))
+            self.images[path] = u.load_alpha_image(file, (32, 32))
         return self.images[path]
 
     def draw(self):
@@ -44,24 +44,17 @@ class inventoryMenu:
         self.screen.blit(title, title.get_rect(center=(640, 175)))
 
         y = self.panel.y + 70
+        items = self.p.inventory["Items"]
 
-        if not any(self.p.inventory.values()):  # every category is empty
+        if not items:  # no items yet
             empty = self.small_font.render("Nothing here yet.", True, (150, 150, 142))
             self.screen.blit(empty, empty.get_rect(center=(640, y + 20)))
 
-        for category, entries in self.p.inventory.items():
-            if not entries:  # skip empty categories
-                continue
-            self.screen.blit(self.small_font.render(category.capitalize(), True, (210, 200, 160)),
-                             (self.panel.x + 30, y))
-            y += 30
-            for name, path in entries:
+        for entry in items:  # entry = {"Fuse": "assets/fuse_item.png"}
+            for name, path in entry.items():  # one dict = one item
                 self.screen.blit(self.get_image(path), (self.panel.x + 40, y))
                 self.screen.blit(self.small_font.render(name, True, (222, 222, 214)),
                                  (self.panel.x + 85, y + 8))
                 y += 40
-            y += 10
 
         self.closeButton.draw2(self.screen)
-
-
