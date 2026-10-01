@@ -13,7 +13,7 @@ class Player:
         self.time = 0            # seconds, integer
         self.position = (505,500)
         self.location = "corridor"
-        self.inventory = []
+        self.inventory = {"Stones":[],"Items":[{"Fuse": "assets/fuse_item.png"}]}
         self.gender = ""
 
     def createPlayer(self,name,gender):
@@ -26,9 +26,8 @@ class Player:
         self.pImage = u.load_alpha_image(self.setGenderIm(self.gender), (64, 64))
 
     # --- inventory ---
-    def add_item(self, item, amount=1):
-        for _ in range(amount):
-            self.inventory.append(item)
+    def add_item(self, StonesOrItems, name, path):
+        self.inventory[StonesOrItems].append({name: path})
 
 
     def setGenderIm(self, g):

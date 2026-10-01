@@ -13,7 +13,7 @@ fontBig = pygame.font.Font(None, 40)
 ########## project room class ##########
 class ProjectRoom:
 
-    def __init__(self, screen):
+    def __init__(self, screen, p):
         self.screen = screen
         self.next_room = None
 

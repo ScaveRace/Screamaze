@@ -1,65 +1,60 @@
 import pygame
 import UI.uiElements as u
-import functions.sound as s
-from functions.settingsFunc import settings as sett
-import functions.savingFunc as save
 
-font = pygame.font.Font(None, 36)
-
-
-class PauseMenu:
-    def __init__(self, screen,player):
+class inventoryMenu:
+    def __init__(self,screen,player):
         self.screen = screen
-        self.paused = False
-        self.pauseButton = u.Button(1170, 20, 90, 36, "pause", self.toggle)
-        self.buttons = [
-            u.Button(570, 330, 140, 44, "save game", self.saveGame),
-            u.Button(570, 390, 140, 44, "resume", self.toggle),
-        ]
-        self.player = player
-        self.volumeSlider = u.Slider(490, 280, 300, 18, "volume",sett.setMusicVolume,self.saveAction,sett.getMusicVolume())
+        self.p = player
+        self.open = False
+        self.panel =  pygame.Rect(440,140,400,440)
+        self.images = {}
+        self.font = pygame.font.Font(None,36)
+        self.small_font = pygame.font.Font(None, 28)
+
+        self.openButton = u.Button(1070,20,90,36,"Inventory",self.toggle)
+        self.closeButton = u.Button(570,520,140,44,"Close",self.toggle)
 
     def toggle(self):
-        self.paused = not self.paused
-        self.buttons[0].label = "save game"
-
-
-    def saveGame(self):
-        save.save(self.player,"data/savePlayer.json")
-        self.buttons[0].label = "saved!"
-
-
-
-    def saveAction(self):
-        print("works")
-        save.save(sett, "data/gameSettings.json")
+        self.open = not self.open
 
     def handle_event(self, event):
-        # returns True when the pause menu used the event, so the room ignores it
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-
-            self.toggle()
+        if self.open:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                self.toggle()
+                return True
+            self.closeButton.handle_event(event)
             return True
+        self.openButton.handle_event(event)
+        return self.open
 
-        self.pauseButton.handle_event(event)
-
-        if self.paused:
-            self.volumeSlider.handle_event(event)
-            for b in self.buttons:
-                b.handle_event(event)
-            return True
-        return False
+    def get_image(self, path):
+        if path not in self.images:  # only load each file once
+            file = path if path else ""  # unknown items have path None
+            self.images[path] = u.load_alpha_image(file, (32, 32))
+        return self.images[path]
 
     def draw(self):
-        self.pauseButton.draw2(self.screen)
-        self.screen.blit(
-            font.render(f"{self.player.name}", True, (210, 200, 160)),(10, 10))
-        if self.paused:
-            panel = pygame.Rect(440, 180, 400, 290)
-            pygame.draw.rect(self.screen, (0, 0, 0), panel)
-            pygame.draw.rect(self.screen, (255, 255, 255), panel, 1)
-            title = font.render("PAUSED", True, (255, 255, 255))
-            self.screen.blit(title, title.get_rect(center=(640, 215)))
-            self.volumeSlider.draw(self.screen)
-            for b in self.buttons:
-                b.draw2(self.screen)
+        if not self.open:
+            self.openButton.draw2(self.screen)
+            return
+
+        pygame.draw.rect(self.screen, (0, 0, 0), self.panel)
+        pygame.draw.rect(self.screen, (255, 255, 255), self.panel, 1)
+        title = self.font.render("INVENTORY", True, (255, 255, 255))
+        self.screen.blit(title, title.get_rect(center=(640, 175)))
+
+        y = self.panel.y + 70
+        items = self.p.inventory["Items"]
+
+        if not items:  # no items yet
+            empty = self.small_font.render("Nothing here yet.", True, (150, 150, 142))
+            self.screen.blit(empty, empty.get_rect(center=(640, y + 20)))
+
+        for entry in items:  # entry = {"Fuse": "assets/fuse_item.png"}
+            for name, path in entry.items():  # one dict = one item
+                self.screen.blit(self.get_image(path), (self.panel.x + 40, y))
+                self.screen.blit(self.small_font.render(name, True, (222, 222, 214)),
+                                 (self.panel.x + 85, y + 8))
+                y += 40
+
+        self.closeButton.draw2(self.screen)
