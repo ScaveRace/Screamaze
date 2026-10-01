@@ -7,7 +7,8 @@ pygame.mixer.init()
 
 
 class Corridor:
-    def __init__(self, screen,p):
+    def __init__(self, screen,p, fui):
+        self.fui = fui
         self.image = u.load_image("assets/corridor.png", screen.get_size())
         self.p = p
         self.screen = screen
