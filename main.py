@@ -10,11 +10,9 @@ import Rooms.projectRoom as pR
 import Rooms.equinoxRoom as eq
 
 import player as p
-from UI.pauseMenu import PauseMenu
-from UI.frontUI import inventoryMenu
 import functions.savingFunc as load
 from functions.settingsFunc import settings as sett
-
+import UI.frontUI as fui
 pygame.init()
 pygame.mixer.init()
 ##########  setting the display and mode   ################
@@ -48,51 +46,46 @@ if not load.is_json_empty("data/gameSettings.json"):
 
 
 player = p.Player()
+frontui = fui.FrontUI(player,screen)
 room = s.StartupMenu(screen,player)
 current = "startup"
 
-pause = PauseMenu(screen,player)
-inv = inventoryMenu(screen,player)
 ms_buffer = 0          # leftover milliseconds not yet worth a whole second
 
 ########## game loop ##########
  ## initial screen
 while running:
     dt = clock.tick(60)                     # caps at 60 fps, returns ms since last call
-    show_pause = current not in ("startup", "frontD")      # no pause button on the title screen
+    #show_pause = current not in ("startup", "frontD")      # no pause button on the title screen
 
     for event in pygame.event.get():   ### handle user events
         if event.type == pygame.QUIT:
             running = False
-        elif show_pause and not pause.paused and inv.handle_event(event):
-            continue
-        elif show_pause and pause.handle_event(event):
-            continue                        # overlay consumed it, room must not see it
+
         else:
+            frontui.handleEvenet(event)
             room.handle_event(event)
 
-    if show_pause and not pause.paused:
-        # clock only advances while unpaused
-        ms_buffer += dt
-        while ms_buffer >= 1000:
-            player.add_time(1)
-            ms_buffer -= 1000
-    if not pause.paused:
-        if room.next_room is not None:
-            name = room.next_room
-            if name not in ROOMS:
-                raise KeyError(f"No room named {name!r}. Known: {sorted(ROOMS)}")
-            room = ROOMS[name](screen,player)
-            current = name
-            player.location = name
-            if name == "startup":
-                pause.paused = False
+
+
+    if room.next_room is not None:
+        name = room.next_room
+        if name not in ROOMS:
+            raise KeyError(f"No room named {name!r}. Known: {sorted(ROOMS)}")
+        room = ROOMS[name](screen,player)
+        current = name
+        player.location = name
+
 
     room.draw()
-    if show_pause:
-        pause.draw()
-        if not pause.paused:
-            inv.draw()# last, so it sits on top of the room
+    if current is not "startup" and current is not "frontD":
+        if not frontui.pause.paused:
+            # clock only advances while unpaused
+            ms_buffer += dt
+            while ms_buffer >= 1000:
+                player.add_time(1)
+                ms_buffer -= 1000
+        frontui.draw()
     pygame.display.flip()
 
 

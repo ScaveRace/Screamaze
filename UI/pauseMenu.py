@@ -58,9 +58,6 @@ class PauseMenu:
     def draw(self):
         self.pauseButton.draw2(self.screen)
 
-        seconds = self.player.time
-        timeText = font.render(f"{seconds // 60:02d}:{seconds % 60:02d}", True, (210, 200, 160))
-        self.screen.blit(timeText, timeText.get_rect(topright=(1260, 64)))
 
         self.screen.blit(
             font.render(f"{self.player.name}", True, (210, 200, 160)),(10, 10))

@@ -1,60 +1,33 @@
 import pygame
 import UI.uiElements as u
+import menu.inventory as i
+import UI.pauseMenu as pause
 
-class inventoryMenu:
-    def __init__(self,screen,player):
+
+font = pygame.font.Font(None, 24)
+
+class FrontUI:
+    def __init__(self,p,screen):
+        self.player = p
         self.screen = screen
-        self.p = player
-        self.open = False
-        self.panel =  pygame.Rect(440,140,400,440)
-        self.images = {}
-        self.font = pygame.font.Font(None,36)
-        self.small_font = pygame.font.Font(None, 28)
+        self.visible = False
+        self.inventory = i.InventoryMenu(screen,p)
+        self.pause = pause.PauseMenu(screen,p)
+        self.chat = u.Chatbox(40,550,300,150,font)
 
-        self.openButton = u.Button(1070,20,90,36,"Inventory",self.toggle)
-        self.closeButton = u.Button(570,520,140,44,"Close",self.toggle)
 
-    def toggle(self):
-        self.open = not self.open
 
-    def handle_event(self, event):
-        if self.open:
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                self.toggle()
-                return True
-            self.closeButton.handle_event(event)
-            return True
-        self.openButton.handle_event(event)
-        return self.open
-
-    def get_image(self, path):
-        if path not in self.images:  # only load each file once
-            file = path if path else ""  # unknown items have path None
-            self.images[path] = u.load_alpha_image(file, (32, 32))
-        return self.images[path]
+    def handleEvenet(self,event):
+        self.inventory.handle_event(event)
+        self.pause.handle_event(event)
+        self.chat.handle_event(event)
 
     def draw(self):
-        if not self.open:
-            self.openButton.draw2(self.screen)
-            return
 
-        pygame.draw.rect(self.screen, (0, 0, 0), self.panel)
-        pygame.draw.rect(self.screen, (255, 255, 255), self.panel, 1)
-        title = self.font.render("INVENTORY", True, (255, 255, 255))
-        self.screen.blit(title, title.get_rect(center=(640, 175)))
-
-        y = self.panel.y + 70
-        items = self.p.inventory["Items"]
-
-        if not items:  # no items yet
-            empty = self.small_font.render("Nothing here yet.", True, (150, 150, 142))
-            self.screen.blit(empty, empty.get_rect(center=(640, y + 20)))
-
-        for entry in items:  # entry = {"Fuse": "assets/fuse_item.png"}
-            for name, path in entry.items():  # one dict = one item
-                self.screen.blit(self.get_image(path), (self.panel.x + 40, y))
-                self.screen.blit(self.small_font.render(name, True, (222, 222, 214)),
-                                 (self.panel.x + 85, y + 8))
-                y += 40
-
-        self.closeButton.draw2(self.screen)
+        seconds = self.player.time
+        timeText = font.render(f"{seconds // 60:02d}:{seconds % 60:02d}", True, (210, 200, 160))
+        self.screen.blit(timeText, timeText.get_rect(topleft=(20, 30)))
+        self.chat.draw(self.screen)
+        self.pause.draw()
+        if not self.pause.paused:
+            self.inventory.draw()  # last, so it sits on top of the room
