@@ -4,6 +4,7 @@ import functions.sound as s
 from functions.settingsFunc import settings as sett
 import functions.savingFunc as save
 
+
 font = pygame.font.Font(None, 36)
 
 
