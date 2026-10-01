@@ -21,21 +21,21 @@ class FrontDesk:
         self.player = None
         self.animation = False ### button animation switch
         self.alpha = 0
-        self.startAnim = pygame.time.get_ticks() + 100 ### animation start time
+        self.startAnim = pygame.time.get_ticks() + 800 ### animation start time
         self.next_room = None
         self.screen = screen
-        self.background = u.load_image("assets/frontDesk_1.png", self.screen.get_size())
-        self.secondIm = u.load_image("assets/frontDesk_2.png", self.screen.get_size())
+        self.background = u.load_image("assets/frontDesk_1.png", (self.screen.get_size()[0]+300,self.screen.get_size()[1]))
+        self.secondIm = u.load_image("assets/frontDesk_2.png", (self.screen.get_size()[0]+300,self.screen.get_size()[1]))
         self.bgMusic = "assets/music/The_Unmarked_Door.mp3"
 
         s.play_music(self.bgMusic,sett, .4)
         self.p = p
         self.buttons = [
-            u.Button(1000, 290, 140, 30, "Male", self.gender),
-            u.Button(930, 350, 140, 50, "Start Run", self.startRun),
+            u.Button(1200, 290, 140, 30, "Male", self.gender),
+            u.Button(1130, 350, 140, 50, "Start Run", self.startRun),
 
         ]
-        self.textField = u.TextField(1000, 250, 140, 30,font,(255,255,255), (0,0,0),0,True)
+        self.textField = u.TextField(1200, 250, 140, 30,font,(255,255,255), (0,0,0),0,True)
 
 
 
@@ -61,7 +61,7 @@ class FrontDesk:
 
     def draw(self):  ####  very complicated draw
 
-        x = 850
+        x = 1050
         y = 200
         rect_surface = pygame.Surface((300, 300))
         rect_outline = pygame.Rect(x,y,300,300)
