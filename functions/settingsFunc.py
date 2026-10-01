@@ -12,8 +12,8 @@ class Settings:
     def getSFXVolume(self):
         return self.sfxVolume
 
-    #def setSFXVolume(self, volume):
-        #pygame.mixer_music.set_volume(volume*self.volume)
+    def setSFXVolume(self, volume):
+        self.sfxVolume = volume
 
     def setMusicVolume(self,volume):
         pygame.mixer_music.set_volume(volume * self.roomVolume)
