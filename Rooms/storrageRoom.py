@@ -11,15 +11,50 @@ QUESTIONS = [
     ("What is H2O?", ["Water", "Salt", "Hydrogen"], 0),
 ]
 
+stone_spot = pygame.Rect(300,500,44,44)
+stone_colour = (60,200,90)
+
+chatbox_size = (500,90)
+chatbox_margin = 10
+
+
+class view:
+    st_room = "room"
+    desk = "desk"
+    quiz = "quiz"
+    dr_full = "drawer_full"
+    dr_empty = "drawer_empty"
+
+class Quiz:
+    def __init__(self, questions):
+        self.questions = questions
+        self.index = 0
+        self.completed = False
+
+    def current_question(self):
+        return self.questions[self.index]
+
+    def answer(self, choice):
+        _, _, correct = self.current_question()
+        if correct != correct:
+            return False, False
+        self.index += 1
+        if self.index >= len(self.questions):
+            self.completed = True
+            return True, True
+        return True, False
+
 
 class StorrageRoom:
-    def __init__(self, screen):
+    def __init__(self, screen, player):
         self.screensize = screen.get_size()
         self.screen = screen
         self.next_room = None
 
-        self.room_image = u.load_image("assets/Storage_room.png", self.screensize)
-        self.desk_image = u.load_image("assets/storrageDesk.png", self.screensize)
+        self.room_image = u.load_image("assets/storrageRoom/storage_room_bigger.png", self.screensize)
+        self.desk_image = u.load_image("assets/storrageRoom/.png", self.screensize)
+        self.quiz_paper = u.load_image("assets/storrageRoom/quizPaper.png", self.screensize)
+        self.desk_open = u.load_image("assets/storrageRoom/storrageDeskOpen.png", self.screensize)
         self.current_image = self.room_image
 
         self.font = pygame.font.Font(None, 28)
