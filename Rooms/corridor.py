@@ -16,8 +16,8 @@ class Corridor:
         self.next_room = None
 
         self.masks = [
-            u.Mask("assets/corridor/room_01.png", self.screen.get_size(), (0, 0), self.ghost, "LAB 2.001"),
-            u.Mask("assets/corridor/room_02.png", self.screen.get_size(), (0, 0), self.doPress, "LAB 2.003"),
+            u.Mask("assets/corridor/room_01.png", self.screen.get_size(), (0, 0), self.doPress, "LAB 2.001"),
+            u.Mask("assets/corridor/room_02.png", self.screen.get_size(), (0, 0), self.ghost, "LAB 2.003"),
             u.Mask("assets/corridor/room_03.png", self.screen.get_size(), (0, 0), self.doPress, "Front Desk Office"),
             u.Mask("assets/corridor/room_04.png", self.screen.get_size(), (0, 0), self.vamp, "Classroom 2.015"),
             u.Mask("assets/corridor/room_05.png", self.screen.get_size(), (0, 0), self.doPress, "Classroom 2.021"),
