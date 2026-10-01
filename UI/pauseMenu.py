@@ -14,11 +14,14 @@ class PauseMenu:
         self.paused = False
         self.pauseButton = u.Button(1170, 20, 90, 36, "pause", self.toggle)
         self.buttons = [
-            u.Button(570, 330, 140, 44, "save game", self.saveGame),
-            u.Button(570, 390, 140, 44, "resume", self.toggle),
+            u.Button(570, 385, 140, 44, "save game", self.saveGame),
+            u.Button(570, 440, 140, 44, "resume", self.toggle),
         ]
         self.player = player
         self.volumeSlider = u.Slider(490, 280, 300, 18, "volume",sett.setMusicVolume,self.saveAction,sett.getMusicVolume())
+        self.sfxSlider = u.Slider(490, 335, 300, 18, "sound effects", sett.setSFXVolume, self.saveAction, sett.getSFXVolume())
+
+
 
     def toggle(self):
         self.paused = not self.paused
@@ -46,6 +49,7 @@ class PauseMenu:
 
         if self.paused:
             self.volumeSlider.handle_event(event)
+            self.sfxSlider.handle_event(event)
             for b in self.buttons:
                 b.handle_event(event)
             return True
@@ -53,14 +57,17 @@ class PauseMenu:
 
     def draw(self):
         self.pauseButton.draw2(self.screen)
+
+
         self.screen.blit(
             font.render(f"{self.player.name}", True, (210, 200, 160)),(10, 10))
         if self.paused:
-            panel = pygame.Rect(440, 180, 400, 290)
+            panel = pygame.Rect(440, 180, 400, 320)
             pygame.draw.rect(self.screen, (0, 0, 0), panel)
             pygame.draw.rect(self.screen, (255, 255, 255), panel, 1)
             title = font.render("PAUSED", True, (255, 255, 255))
             self.screen.blit(title, title.get_rect(center=(640, 215)))
             self.volumeSlider.draw(self.screen)
+            self.sfxSlider.draw(self.screen)
             for b in self.buttons:
                 b.draw2(self.screen)
