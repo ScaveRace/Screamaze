@@ -90,6 +90,8 @@ class EquinoxRoom:
         self.conversation = 4
         self.buttons = [self.corridorButton]
         self.say(None, "* You pick up the stone. Warm as fresh toast.")
+        self.player.add_item(self, "Stones", "Yellow", "assets/stones/yellow.png")
+        self.player.add_item(self, "Items", "Yellow", "assets/stones/yellow.png")
 
     # puts a line in the chatbox, who = None means narration (a "* " line)
     def say(self, who, text):
