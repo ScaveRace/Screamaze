@@ -26,7 +26,7 @@ class FrontUI:
 
         seconds = self.player.time
         timeText = font.render(f"{seconds // 60:02d}:{seconds % 60:02d}", True, (210, 200, 160))
-        self.screen.blit(timeText, timeText.get_rect(topleft=(20, 30)))
+        self.screen.blit(timeText, timeText.get_rect(topleft=(320, 30)))
         self.chat.draw(self.screen)
         self.pause.draw()
         if not self.pause.paused:

@@ -11,7 +11,7 @@ class InventoryMenu:
         self.font = pygame.font.Font(None,36)
         self.small_font = pygame.font.Font(None, 28)
 
-        self.openButton = u.Button(1070,20,90,36,"Inventory",self.toggle)
+        self.openButton = u.Button(1270,20,90,36,"Inventory",self.toggle)
         self.closeButton = u.Button(570,520,140,44,"Close",self.toggle)
 
     def toggle(self):

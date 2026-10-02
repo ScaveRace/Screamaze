@@ -1,0 +1,20 @@
+DOOR_SPAWNS = {
+    "lab2001": (494, 259),
+    "lab2003": (607, 259),
+    "projectRoom1": (612, 259),
+    "projectRoom2": (681, 259),
+    "frontDesk": (808, 215),
+    "classroom2015": (909, 215),
+    "classroom2021": (1076, 215),
+    "stairExit": (1143, 215),
+    "teachersRoom2": (910, 215),
+    "teachersRoom3": (977, 215),
+    "equinoxStudentSociety": (1044, 215),
+    "projectRoom3": (1108, 215),
+    "teachersRoom4": (1214, 144),
+    "classroom2031": (1214, 174),
+    "classroom2035": (1214, 278),        # upper door
+    "classroom2035Lower": (1214, 400),
+    "leftStairsExit": (762, 450),
+    "rightStairsEntrance": (1214, 496),
+}

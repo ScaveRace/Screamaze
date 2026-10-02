@@ -3,6 +3,7 @@
 #  use: from player import player
 #  call function like: player.add_item("testitem")
 import UI.uiElements as u
+import data.playerLogistics as pL
 
 
 class Player:
@@ -11,10 +12,13 @@ class Player:
         self.pImage = None
         self.name = ""
         self.time = 0            # seconds, integer
-        self.position = (505,500)
+        self.position = (0,0)
         self.location = "corridor"
+        self.lastLocation = "frontDesk"
         self.inventory = {"Stones":[],"Items":[{"Fuse": "assets/fuse_item.png"}]}
         self.gender = ""
+
+
 
     def createPlayer(self,name,gender):
         self.pImage = u.load_alpha_image(self.setGenderIm(gender), (64, 64))
@@ -40,6 +44,8 @@ class Player:
             return True
         return False
 
+    def setCurrent(self,current):
+        self.lastLocation = self.location
 
     def has_item(self, item):
         return item in self.inventory
@@ -55,5 +61,6 @@ class Player:
 
 
     def draw(self,screen):
-
+        if self.location == "corridor":
+            self.position = pL.DOOR_SPAWNS[self.lastLocation]
         screen.blit(self.pImage,self.position)

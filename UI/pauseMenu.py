@@ -12,7 +12,7 @@ class PauseMenu:
     def __init__(self, screen,player):
         self.screen = screen
         self.paused = False
-        self.pauseButton = u.Button(1170, 20, 90, 36, "pause", self.toggle)
+        self.pauseButton = u.Button(1370, 20, 90, 36, "pause", self.toggle)
         self.buttons = [
             u.Button(570, 385, 140, 44, "save game", self.saveGame),
             u.Button(570, 440, 140, 44, "resume", self.toggle),
