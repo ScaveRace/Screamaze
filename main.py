@@ -74,7 +74,7 @@ while running:
         if name not in ROOMS:
             raise KeyError(f"No room named {name!r}. Known: {sorted(ROOMS)}")
         if name != "startup" and name != "frontD":
-            room = ROOMS[name](screen, player,fui)
+            room = ROOMS[name](screen, player,frontui)
         else:
             room = ROOMS[name](screen, player)
         current = name

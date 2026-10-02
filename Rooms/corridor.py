@@ -36,6 +36,7 @@ class Corridor:
             u.Mask("assets/corridor/room_16.png", self.screen.get_size(), (0, 0), self.projRoom, "Project Room 1"),
             u.Mask("assets/corridor/room_17.png", self.screen.get_size(), (0, 0), self.projRoom, "Project Room 2"),
         ]
+        self.fui.sendMessage("Thuas: ","FrontDesk","msg_1")
 
 
 
