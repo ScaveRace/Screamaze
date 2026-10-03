@@ -1,0 +1,94 @@
+Index: Rooms/vampireRoom.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import pygame\r\nimport UI.uiElements as u\r\n\r\npygame.init()\r\npygame.mixer.init()\r\n\r\n\r\nclass VampireRoom:\r\n    def __init__(self, screen):\r\n        self.screen = screen\r\n        self.next_room = None\r\n\r\n        #both bg before and after the vampire is dead\r\n        self.bg_closed = u.load_image(\"assets/Room2015_1_win_clo.png\", screen.get_size(), fallback=(35, 8, 18))\r\n        self.bg_open = u.load_image(\"assets/Room2015_1_win_op.png\", screen.get_size(), fallback=(120, 100, 60))\r\n        self.image = self.bg_closed\r\n\r\n        #Fuse box open and closed\r\n        self.fusebox_closed_img = u.load_image(\"assets/fuse_box.png\", screen.get_size(), fallback=(20, 20, 20))\r\n        self.fusebox_open_img = u.load_image(\"assets/fuse_box2.png\", screen.get_size(), fallback=(20, 20, 20))\r\n\r\n        #this is the item (fause that we find in the room)\r\n        self.fuse_icon = u.load_image(\"assets/fuse_item.png\", (56, 56), fallback=(120, 90, 40))\r\n\r\n        self.font = pygame.font.Font(None, 28)\r\n        self.titleFont = pygame.font.Font(None, 40)\r\n\r\n        self.dialogue = [\r\n            \"Vampire > Ah... a warm little visitor, wandering into my crypt.\",\r\n            \"Vampire > Those shutters have kept the sun out for centuries.\",\r\n            \"Vampire > You'll never get them open without power to that old panel.\",\r\n        ]\r\n        self.line = 0\r\n        self.task_started = False\r\n        self.task_done = False\r\n\r\n        # this tracks the players inventory within the room\r\n        self.inventory = []\r\n        self.fuse_found = False\r\n        self.fuse_inserted = False\r\n\r\n\r\n        self.fuse_spot = pygame.Rect(100, 580, 56, 56)\r\n        self.stone_spot = pygame.Rect(750, 150, 44, 44)\r\n        self.stone_collected = False\r\n\r\n\r\n        self.state = \"room\"\r\n\r\n        self.chatbox = u.Chatbox(10, 540, 600, 150, self.font)\r\n\r\n        self.room_buttons = [\r\n            u.Button(780, 120, 220, 50, \"Talk to Vampire\", self.talk),\r\n            u.Button(150, 500, 220, 50, \"Search Corner\", self.search_corner),\r\n            u.Button(1000, 460, 220, 50, \"Inspect Fuse Box\", self.open_fusebox_closeup),\r\n            u.Button(780, 660, 220, 50, \"Leave Room\", self.leave),\r\n        ]\r\n        self.button1 =  u.Button(780, 170, 220, 50, \"Collect Stone\", self.collect_stone)\r\n\r\n        self.fusebox_closed_buttons = [\r\n            u.Button(700, 600, 150, 50, \"Open\", self.open_fusebox_door),\r\n            u.Button(870, 650, 150, 50, \"Close\", self.close_fusebox),\r\n        ]\r\n\r\n        self.fusebox_open_buttons = [\r\n            u.Button(560, 600, 150, 50, \"Insert Fuse\", self.insert_fuse),\r\n            u.Button(730, 600, 150, 50, \"Press Button\", self.press_reset),\r\n            u.Button(900, 600, 150, 50, \"Close\", self.close_fusebox),\r\n        ]\r\n\r\n\r\n#we cannot type to the chatbox yet, but it exists and we can see comments after every button is pressed\r\n    def talk(self):\r\n        if self.line < len(self.dialogue):\r\n            self.chatbox.say(self.dialogue[self.line])\r\n            self.line += 1\r\n            if self.line == len(self.dialogue):\r\n                self.task_started = True\r\n        elif not self.task_done:\r\n            self.chatbox.say(\"Vampire > That panel is your only way to open those shutters.\")\r\n        else:\r\n            self.chatbox.say(\"...\")\r\n\r\n\r\n\r\n    def search_corner(self):\r\n        if not self.fuse_found:\r\n            self.fuse_found = True\r\n            self.inventory.append(\"fuse\")\r\n            self.chatbox.say(\"You > Found a spare fuse tucked in the corner.\")\r\n\r\n\r\n\r\n\r\n    def open_fusebox_closeup(self):\r\n        self.state = \"fusebox_closed\"\r\n\r\n    def open_fusebox_door(self):\r\n        self.state = \"fusebox_open\"\r\n\r\n    def close_fusebox(self):\r\n        self.state = \"room\"\r\n        if self.task_done and self.image is not self.bg_open:\r\n            #here the room bg change with the dead vam\r\n            self.image = self.bg_open\r\n    #this will be edited in the next version to show when the fuse is actually inserted instead of the messages\r\n    def insert_fuse(self):\r\n        if self.fuse_inserted:\r\n            return\r\n        if \"fuse\" not in self.inventory:\r\n            self.chatbox.say(\"You > I need to find a fuse first.\")\r\n            return\r\n        self.inventory.remove(\"fuse\")\r\n        self.fuse_inserted = True\r\n        self.chatbox.say(\"You > Slotted the last fuse into place. All three are lit now.\")\r\n\r\n    def press_reset(self):\r\n        if self.task_done:\r\n            return\r\n        if not self.fuse_inserted:\r\n            self.chatbox.say(\"You > All three fuses need to be in before I hit this.\")\r\n            return\r\n\r\n        self.task_done = True\r\n        self.room_buttons.append(self.button1)\r\n\r\n        self.chatbox.say(\"You > *click* — the panel hums back to life.\")\r\n        self.chatbox.say(\"You > Something outside screamed. I should go look.\")\r\n\r\n\r\n    # stone pickup\r\n\r\n    def collect_stone(self):\r\n\r\n        self.stone_collected = True\r\n        self.room_buttons.pop()\r\n        self.inventory.append(\"red_stone\")\r\n        self.chatbox.say(\"You > A red stone... still cold.\")\r\n\r\n\r\n\r\n\r\n\r\n\r\n    def leave(self):\r\n        self.next_room = \"corridor\"  # always allowed with task or no task done\r\n\r\n\r\n\r\n    def handle_event(self, event):\r\n        if self.state == \"fusebox_closed\":\r\n            for b in self.fusebox_closed_buttons:\r\n                b.handle_event(event)\r\n\r\n\r\n        elif self.state == \"fusebox_open\":\r\n            for b in self.fusebox_open_buttons:\r\n                b.handle_event(event)\r\n\r\n        # \"room\"\r\n        for b in self.room_buttons:\r\n            b.handle_event(event)\r\n\r\n    def draw(self):\r\n        if self.state == \"fusebox_closed\":\r\n            self.screen.blit(self.fusebox_closed_img, (0, 0))\r\n            for b in self.fusebox_closed_buttons:\r\n                b.draw2(self.screen)\r\n\r\n        elif self.state == \"fusebox_open\":\r\n            self.screen.blit(self.fusebox_open_img, (0, 0))\r\n            for b in self.fusebox_open_buttons:\r\n                b.draw2(self.screen)\r\n\r\n        else:  # \"room\"\r\n            self.screen.blit(self.image, (0, 0))\r\n            title = self.titleFont.render(\"The Vampire's Crypt\", True, (200, 30, 40))\r\n            self.screen.blit(title, (60, 40))\r\n\r\n            if not self.fuse_found:\r\n                self.screen.blit(self.fuse_icon, (self.fuse_spot.x, self.fuse_spot.y))\r\n\r\n            if self.task_done and not self.stone_collected :\r\n                # placeholder redstone\r\n\r\n                pygame.draw.circle(self.screen, (180, 20, 20), self.stone_spot.center, self.stone_spot.w // 2)\r\n            # this is to remove every button after the purpose of it is done\r\n            for i, b in enumerate(self.room_buttons):\r\n\r\n                if i == 0 and self.task_done :\r\n                    continue\r\n                elif i == 1 and self.fuse_found:\r\n                    continue\r\n                elif i == 2 and self.task_done :\r\n                    continue\r\n                b.draw2(self.screen)\r\n\r\n            self.chatbox.draw(self.screen)\r\n\r\n            b.draw2(self.screen)\r\n\r\n        self.chatbox.draw(self.screen)
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Rooms/vampireRoom.py b/Rooms/vampireRoom.py
+--- a/Rooms/vampireRoom.py	(revision 1f17d3a0e7ebdaa875599baf0b58e2f7d6d2e421)
++++ b/Rooms/vampireRoom.py	(date 1790249263718)
+@@ -20,8 +20,8 @@
+         self.fusebox_open_img = u.load_image("assets/fuse_box2.png", screen.get_size(), fallback=(20, 20, 20))
+ 
+         #this is the item (fause that we find in the room)
+-        self.fuse_icon = u.load_image("assets/fuse_item.png", (56, 56), fallback=(120, 90, 40))
+-
++        self.cabinet = u.load_image("assets/vp.cabinet.closed.png", screen.get_size(), fallback=(120, 100, 60))
++        self.cabinet_open = u.load_image("assets/vp.cabinet.open.fuse.png", screen.get_size(), fallback=(120, 100, 60))
+         self.font = pygame.font.Font(None, 28)
+         self.titleFont = pygame.font.Font(None, 40)
+ 
+@@ -51,7 +51,7 @@
+ 
+         self.room_buttons = [
+             u.Button(780, 120, 220, 50, "Talk to Vampire", self.talk),
+-            u.Button(150, 500, 220, 50, "Search Corner", self.search_corner),
++            u.Button(150, 500, 220, 50, "Inspect cabinet", self.search_corner),
+             u.Button(1000, 460, 220, 50, "Inspect Fuse Box", self.open_fusebox_closeup),
+             u.Button(780, 660, 220, 50, "Leave Room", self.leave),
+         ]
+@@ -67,7 +67,11 @@
+             u.Button(730, 600, 150, 50, "Press Button", self.press_reset),
+             u.Button(900, 600, 150, 50, "Close", self.close_fusebox),
+         ]
++        self.cabinet_buttons = [
++            u.Button(780, 660, 220, 50, "Go back", self.leave_image),
++            u.Button(560,300,150,50, "open drawer",self.open_drawer)
+ 
++        ]
+ 
+ #we cannot type to the chatbox yet, but it exists and we can see comments after every button is pressed
+     def talk(self):
+@@ -84,10 +88,14 @@
+ 
+ 
+     def search_corner(self):
+-        if not self.fuse_found:
+-            self.fuse_found = True
+-            self.inventory.append("fuse")
+-            self.chatbox.say("You > Found a spare fuse tucked in the corner.")
++        self.state = "cabinet"
++
++
++
++        # if not self.fuse_found:
++        #     self.fuse_found = True
++        #     self.inventory.append("fuse")
++        #     self.chatbox.say("You > Found a spare fuse tucked in the corner.")
+ 
+ 
+ 
+@@ -138,9 +146,11 @@
+         self.chatbox.say("You > A red stone... still cold.")
+ 
+ 
+-
++    def leave_image(self):
++        self.close_fusebox()
+ 
+-
++    def open_drawer(self):
++        self.state = "open drawer"
+ 
+     def leave(self):
+         self.next_room = "corridor"  # always allowed with task or no task done
+@@ -172,14 +182,15 @@
+             for b in self.fusebox_open_buttons:
+                 b.draw2(self.screen)
+ 
++        elif self.state == "cabinet":
++            self.screen.blit(self.cabinet, (0, 0))
++        for b in self.cabinet_buttons:
++            b.draw2(self.screen)
+         else:  # "room"
+             self.screen.blit(self.image, (0, 0))
+             title = self.titleFont.render("The Vampire's Crypt", True, (200, 30, 40))
+             self.screen.blit(title, (60, 40))
+ 
+-            if not self.fuse_found:
+-                self.screen.blit(self.fuse_icon, (self.fuse_spot.x, self.fuse_spot.y))
+-
+             if self.task_done and not self.stone_collected :
+                 # placeholder redstone
+ 

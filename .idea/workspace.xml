@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c954064b-2f41-460b-b531-8d0d1cada12e" name="Changes" comment="Masks vampire room">
+      <change beforePath="$PROJECT_DIR$/Rooms/vampireRoom.py" beforeDir="false" afterPath="$PROJECT_DIR$/Rooms/vampireRoom.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/savePlayer.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/savePlayer.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DBNavigator.Project.Workspace.Settings">
+    <assistant-settings>
+      <credential-settings>
+        <credentials />
+      </credential-settings>
+      <profile-settings>
+        <profiles />
+      </profile-settings>
+      <mcp-server-settings>
+        <workspace-integration value="false" />
+        <mcp-servers />
+        <mcp-tool-approvals />
+      </mcp-server-settings>
+    </assistant-settings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="Hadi.main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;hadih963&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/ScaveRace/Screamaze.git&quot;,
+    &quot;accountId&quot;: &quot;0f1442ab-ee20-4fa9-a188-3ce47c100577&quot;
+  }
+}</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="2.6929582978144296E-173" />
+      <entry key="S60" value="3.2137781289815644E-86" />
+      <entry key="M2" value="1.117134745185073E-42" />
+      <entry key="M5" value="1.509201236874468E-16" />
+      <entry key="M10" value="8.497931012446066E-8" />
+      <entry key="M15" value="7.597946690605497E-5" />
+      <entry key="M30" value="0.07490440888346454" />
+      <entry key="H1" value="2.5466096355273855" />
+      <entry key="H2" value="16.143011525093193" />
+      <entry key="H4" value="43.154546550023625" />
+      <entry key="D1" value="103.34843766207521" />
+      <entry key="W1" value="120.79407840425122" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.0" />
+      <entry key="S30" value="1.0" />
+      <entry key="S60" value="1.0" />
+      <entry key="M2" value="1.0" />
+      <entry key="M5" value="1.0000000077552214" />
+      <entry key="M10" value="1.000225681303466" />
+      <entry key="M15" value="1.0070209573887465" />
+      <entry key="M30" value="1.2217799378547407" />
+      <entry key="H1" value="2.3079906980293976" />
+      <entry key="H2" value="4.481792588559616" />
+      <entry key="H4" value="7.138781996711659" />
+      <entry key="D1" value="11.632406369355607" />
+      <entry key="W1" value="12.79134928596954" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="9.928450435195415E-6" />
+      <entry key="MS500" value="0.09985648955614347" />
+      <entry key="S2" value="0.5621394618893087" />
+      <entry key="S5" value="0.7942141666425284" />
+      <entry key="S10" value="0.8911869425897848" />
+      <entry key="S30" value="0.9623275922471409" />
+      <entry key="S60" value="0.9809829724552516" />
+      <entry key="M2" value="0.9904458452915291" />
+      <entry key="M5" value="0.9961673358355847" />
+      <entry key="M10" value="0.9983069064952568" />
+      <entry key="M15" value="1.0058035099616314" />
+      <entry key="M30" value="1.2957977085867434" />
+      <entry key="H1" value="4.853168595555207" />
+      <entry key="H2" value="20.622322316629244" />
+      <entry key="H4" value="50.29063875859179" />
+      <entry key="D1" value="114.979937592435" />
+      <entry key="W1" value="133.58528089162095" />
+    </decayedShown>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="AISelfReview" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3JMhAeIAfGwZsWteXVsBr9BWmCw" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.ghostRoom.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.uiElements.executor&quot;: &quot;Run&quot;,
+    &quot;Python.vampireRoom.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;h&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/hadih/PycharmProjects/THE GAME/assets/stones&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;python.packages.toolwindow.project.migrated.to.right.top.v2&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\hadih\PycharmProjects\THE GAME\assets\stones" />
+      <recent name="C:\Users\hadih\PycharmProjects\THE GAME\assets" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\hadih\PycharmProjects\THE GAME\assets\vampire" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-PY-262.10315.174" />
+        <option value="bundled-python-sdk-eff1e8def5f5-5bd6d13a2a75-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-262.10315.174" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c954064b-2f41-460b-b531-8d0d1cada12e" name="Changes" comment="" />
+      <created>1789476702616</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1789476702616</updated>
+      <workItem from="1789476703641" duration="4872000" />
+      <workItem from="1789575726663" duration="1422000" />
+      <workItem from="1789631024525" duration="10092000" />
+      <workItem from="1789813298846" duration="9591000" />
+      <workItem from="1789921169408" duration="793000" />
+      <workItem from="1789979165881" duration="9474000" />
+      <workItem from="1790015117312" duration="3792000" />
+      <workItem from="1790077401881" duration="70000" />
+      <workItem from="1790078527867" duration="3083000" />
+      <workItem from="1790104980499" duration="4000" />
+      <workItem from="1790105002413" duration="18000" />
+      <workItem from="1790148646062" duration="65000" />
+      <workItem from="1790150372725" duration="114000" />
+      <workItem from="1790167127878" duration="318000" />
+      <workItem from="1790236572816" duration="9649000" />
+      <workItem from="1790422924293" duration="706000" />
+      <workItem from="1790527820539" duration="1538000" />
+      <workItem from="1790596557814" duration="1000" />
+      <workItem from="1790682838186" duration="5378000" />
+      <workItem from="1790704384827" duration="14000" />
+      <workItem from="1790840464208" duration="1261000" />
+      <workItem from="1790841743004" duration="12095000" />
+      <workItem from="1791017549139" duration="962000" />
+    </task>
+    <task id="LOCAL-00001" summary="vampireroom added">
+      <option name="closed" value="true" />
+      <created>1789477306906</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1789477306906</updated>
+    </task>
+    <task id="LOCAL-00002" summary="vampireroom added">
+      <option name="closed" value="true" />
+      <created>1789481721284</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1789481721284</updated>
+    </task>
+    <task id="LOCAL-00003" summary="vampireroom added">
+      <option name="closed" value="true" />
+      <created>1789638244914</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1789638244914</updated>
+    </task>
+    <task id="LOCAL-00004" summary="vampireroom added">
+      <option name="closed" value="true" />
+      <created>1789825172951</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1789825172951</updated>
+    </task>
+    <task id="LOCAL-00005" summary="A small change in the vampireroom buttons.1.">
+      <option name="closed" value="true" />
+      <created>1789825413981</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1789825413981</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Project room bg">
+      <option name="closed" value="true" />
+      <created>1789986770900</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1789986770900</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Equinox room bg">
+      <option name="closed" value="true" />
+      <created>1789987648796</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1789987648796</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Comments added to vampire room">
+      <option name="closed" value="true" />
+      <created>1790016108352</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1790016108352</updated>
+    </task>
+    <task id="LOCAL-00009" summary="edits to vampire room">
+      <option name="closed" value="true" />
+      <created>1790683354822</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1790683354822</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Stones images">
+      <option name="closed" value="true" />
+      <created>1790689461268</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1790689461268</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Masks vampire room">
+      <option name="closed" value="true" />
+      <created>1790851928966</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1790851928966</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="true" />
+                </map>
+              </option>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="h" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="vampireroom added" />
+    <MESSAGE value="A small change in the vampireroom buttons" />
+    <MESSAGE value="A small change in the vampireroom buttons.1." />
+    <MESSAGE value="Project room bg" />
+    <MESSAGE value="Equinox room bg" />
+    <MESSAGE value="Comments added to vampire room" />
+    <MESSAGE value="edits to vampire room" />
+    <MESSAGE value="Stones images" />
+    <MESSAGE value="Masks vampire room" />
+    <option name="LAST_COMMIT_MESSAGE" value="Masks vampire room" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/THE_GAME$main.coverage" NAME="main Coverage Results" MODIFIED="1791017731150" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/THE_GAME$uiElements.coverage" NAME="uiElements Coverage Results" MODIFIED="1790167223544" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/UI" />
+    <SUITE FILE_PATH="coverage/THE_GAME$vampireRoom.coverage" NAME="vampireRoom Coverage Results" MODIFIED="1790848665438" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Rooms" />
+    <SUITE FILE_PATH="coverage/THE_GAME$ghostRoom.coverage" NAME="ghostRoom Coverage Results" MODIFIED="1790167437408" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Rooms" />
+  </component>
+</project>

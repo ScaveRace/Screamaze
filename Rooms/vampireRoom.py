@@ -187,7 +187,7 @@ class VampireRoom:
 
     def draw(self):
         if self.state == "room":
-            self.screen.blit(self.image, (0, 0))
+            self.screen.blit(self.image, (300, 0))
             title = self.titleFont.render("The Vampire's Crypt", True, (200, 30, 40))
             self.screen.blit(title, (60, 40))
 
@@ -204,30 +204,30 @@ class VampireRoom:
                 button.draw2(self.screen)
 
         elif self.state == "fusebox_closed":
-            self.screen.blit(self.fusebox_closed_img, (0, 0))
+            self.screen.blit(self.fusebox_closed_img, (300, 0))
             for mask in self.fusebox_closed_mask:
                 mask.draw(self.screen)
             for button in self.fusebox_closed_buttons:
                 button.draw2(self.screen)
 
         elif self.state == "fusebox_open":
-            self.screen.blit(self.fusebox_open_img, (0, 0))
+            self.screen.blit(self.fusebox_open_img, (300, 0))
             if self.fuse_inserted:
-                self.screen.blit(self.fuse_on_box_img, (0, 0))
+                self.screen.blit(self.fuse_on_box_img, (300, 0))
             for mask in self.fusebox_open_mask:
                 mask.draw(self.screen)
             for button in self.fusebox_open_buttons:
                 button.draw2(self.screen)
 
         elif self.state == "cabinet":
-            self.screen.blit(self.cabinet_img, (0, 0))
+            self.screen.blit(self.cabinet_img, (300, 0))
             for mask in self.cabinet_closed_mask:
                 mask.draw(self.screen)
             for button in self.cabinet_closed_buttons:
                 button.draw2(self.screen)
 
         elif self.state == "drawer open":
-            self.screen.blit(self.cabinet_drawer_img, (0, 0))
+            self.screen.blit(self.cabinet_drawer_img, (300, 0))
             if not self.fuse_found:
                 for mask in self.fuse_mask:
                     mask.draw(self.screen)
