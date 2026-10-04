@@ -18,15 +18,11 @@ class VampireRoom:
         self.fusebox_closed_img = u.load_image("assets/vampire/fuse_box.png", screen.get_size(), fallback=(20, 20, 20))
         self.fusebox_open_img = u.load_image("assets/vampire/fuse_box2.png", screen.get_size(), fallback=(20, 20, 20))
         self.fuse_on_box_img = u.load_image("assets/vampire/fuseonbox.png", screen.get_size(), fallback=(20, 20, 20))
+        self.fusebox_three_fuses_img = u.load_image("assets/vampire/fuse_box2_three_fuses.png", screen.get_size(),fallback=(20, 20, 20))
         self.image = self.bg_closed
 
-        self.font = pygame.font.Font(None, 28)
         self.titleFont = pygame.font.Font(None, 40)
-        self.dialogue = [
-            "Vampire > Ah... a warm little visitor, wandering into my crypt.",
-            "Vampire > Those shutters have kept the sun out for centuries.",
-            "Vampire > You'll never get them open without power to that old panel."
-        ]
+
         self.line = 0
         self.task_started = False
         self.task_done = False
@@ -36,13 +32,11 @@ class VampireRoom:
         self.stone_collected = False
         self.state = "room"
 
-        self.chatbox = u.Chatbox(10, 80, 600, 150, self.font)
-
         self.masks = [
             u.Mask("assets/vampire/masks/vampire.png", self.screen.get_size(), (0, 0), self.talk),
             u.Mask("assets/vampire/masks/cabinet.png", self.screen.get_size(), (0, 0), self.search_corner),
             u.Mask("assets/vampire/masks/fusebox.png", self.screen.get_size(), (0, 0), self.open_fusebox_closeup),
-            u.Mask("assets/stones/red.png", self.screen.get_size(), (780, 170), self.collect_stone)
+            u.Mask("assets/stones/red.png", self.screen.get_size(), (0, 0), self.collect_stone)
         ]
 
         self.room_buttons = [
@@ -79,15 +73,15 @@ class VampireRoom:
         ]
 
     def talk(self):
-        if self.line < len(self.dialogue):
-            self.chatbox.say(self.dialogue[self.line])
+        if self.line < 3:
+            self.fui.sendMessage("Vampire", "VampireRoom", self.line + 1)
             self.line += 1
-            if self.line == len(self.dialogue):
+            if self.line == 3:
                 self.task_started = True
         elif not self.task_done:
-            self.chatbox.say("Vampire > That panel is your only way to open those shutters.")
+            self.fui.sendMessage("Vampire", "VampireRoom", 4)
         else:
-            self.chatbox.say("Vampire > ...")
+            self.fui.sendMessage("Vampire", "VampireRoom", 5)
 
     def search_corner(self):
         self.state = "cabinet"
@@ -106,14 +100,17 @@ class VampireRoom:
             return
         self.fuse_found = True
         self.inventory.append("fuse")
-        self.chatbox.say("You > Found a spare fuse inside the cabinet.")
-
+        self.fui.sendMessage("You", "VampireRoom", 6)
     def open_fusebox_closeup(self):
         self.state = "fusebox_closed"
 
     def open_fusebox_door(self):
         self.state = "fusebox_open"
 
+    # def close_fusebox(self):
+        # self.state = "room"
+        # if self.task_done:
+        #     self.image = self.bg_open
     def close_fusebox(self):
         self.state = "room"
         if self.task_done:
@@ -123,28 +120,28 @@ class VampireRoom:
         if self.fuse_inserted:
             return
         if "fuse" not in self.inventory:
-            self.chatbox.say("You > I need to find a fuse first.")
+            self.fui.sendMessage("You", "VampireRoom", 7)
             return
         self.inventory.remove("fuse")
         self.fuse_inserted = True
-        self.chatbox.say("You > Slotted the last fuse into place. All three are lit now.")
+        self.fui.sendMessage("You", "VampireRoom", 8)
 
     def press_reset(self):
         if self.task_done:
             return
         if not self.fuse_inserted:
-            self.chatbox.say("You > All three fuses need to be in before I hit this.")
+            self.fui.sendMessage("You", "VampireRoom", 9)
             return
         self.task_done = True
-        self.chatbox.say("You > *click* — the panel hums back to life.")
-        self.chatbox.say("You > Something outside screamed. I should go look.")
+        self.fui.sendMessage("You", "VampireRoom", 10)
+        self.fui.sendMessage("You", "VampireRoom", 11)
 
     def collect_stone(self):
         if not self.task_done or self.stone_collected:
             return
         self.stone_collected = True
         self.inventory.append("red_stone")
-        self.chatbox.say("You > A red stone... still cold.")
+        self.fui.sendMessage("You", "VampireRoom", 12)
 
     def leave(self):
         self.next_room = "corridor"
@@ -210,10 +207,12 @@ class VampireRoom:
             for button in self.fusebox_closed_buttons:
                 button.draw2(self.screen)
 
+
         elif self.state == "fusebox_open":
-            self.screen.blit(self.fusebox_open_img, (300, 0))
             if self.fuse_inserted:
-                self.screen.blit(self.fuse_on_box_img, (300, 0))
+                self.screen.blit(self.fusebox_three_fuses_img, (300, 0))
+            else:
+                self.screen.blit(self.fusebox_open_img, (300, 0))
             for mask in self.fusebox_open_mask:
                 mask.draw(self.screen)
             for button in self.fusebox_open_buttons:

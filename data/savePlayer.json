@@ -1,11 +1,12 @@
 {
-  "name": "",
-  "time": 37,
+  "name": "h",
+  "time": 47,
   "position": [
-    505,
-    500
+    808,
+    215
   ],
   "location": "vampR",
+  "lastLocation": "frontDesk",
   "inventory": {
     "Stones": [],
     "Items": [

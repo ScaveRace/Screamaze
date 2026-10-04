@@ -4,8 +4,20 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c954064b-2f41-460b-b531-8d0d1cada12e" name="Changes" comment="Masks vampire room">
+    <list default="true" id="c954064b-2f41-460b-b531-8d0d1cada12e" name="Changes" comment="Updates on vamroom">
+      <change afterPath="$PROJECT_DIR$/Rooms/vampireRoom2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_26_2026_1_43_PM_[Changes]/Room2015_1_win_clo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_26_2026_1_43_PM_[Changes]/Room2015_1_win_op.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_26_2026_1_43_PM_[Changes]/fuse_box.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_26_2026_1_43_PM_[Changes]/fuse_box2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_26_2026_1_43_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_26_2026_1_43_PM_[Changes]/vp.cabinet.closed.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_26_2026_1_43_PM_[Changes]/vp.cabinet.open.fuse.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_26_2026_1_43_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Rooms/vampireRoom.py" beforeDir="false" afterPath="$PROJECT_DIR$/Rooms/vampireRoom.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/database/storyDB.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/database/storyDB.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/savePlayer.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/savePlayer.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -27,6 +39,18 @@
         <mcp-tool-approvals />
       </mcp-server-settings>
     </assistant-settings>
+  </component>
+  <component name="DatabaseLocalColorSettings">
+    <colors>
+      <entry key="bf8a0e26-8f31-4816-870e-f7647dc69302" value="" />
+    </colors>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -112,7 +136,7 @@
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="AISelfReview" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0,
@@ -197,7 +221,10 @@
       <workItem from="1790704384827" duration="14000" />
       <workItem from="1790840464208" duration="1261000" />
       <workItem from="1790841743004" duration="12095000" />
-      <workItem from="1791017549139" duration="962000" />
+      <workItem from="1791017549139" duration="3261000" />
+      <workItem from="1791044297969" duration="1248000" />
+      <workItem from="1791061736441" duration="1557000" />
+      <workItem from="1791109462946" duration="9800000" />
     </task>
     <task id="LOCAL-00001" summary="vampireroom added">
       <option name="closed" value="true" />
@@ -287,7 +314,15 @@
       <option name="project" value="LOCAL" />
       <updated>1790851928966</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Updates on vamroom">
+      <option name="closed" value="true" />
+      <created>1791018568787</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1791018568788</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -331,12 +366,13 @@
     <MESSAGE value="edits to vampire room" />
     <MESSAGE value="Stones images" />
     <MESSAGE value="Masks vampire room" />
-    <option name="LAST_COMMIT_MESSAGE" value="Masks vampire room" />
+    <MESSAGE value="Updates on vamroom" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updates on vamroom" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/THE_GAME$main.coverage" NAME="main Coverage Results" MODIFIED="1791017731150" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/THE_GAME$main.coverage" NAME="main Coverage Results" MODIFIED="1791122609875" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/THE_GAME$uiElements.coverage" NAME="uiElements Coverage Results" MODIFIED="1790167223544" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/UI" />
-    <SUITE FILE_PATH="coverage/THE_GAME$vampireRoom.coverage" NAME="vampireRoom Coverage Results" MODIFIED="1790848665438" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Rooms" />
-    <SUITE FILE_PATH="coverage/THE_GAME$ghostRoom.coverage" NAME="ghostRoom Coverage Results" MODIFIED="1790167437408" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Rooms" />
+    <SUITE FILE_PATH="coverage/THE_GAME$vampireRoom.coverage" NAME="vampireRoom Coverage Results" MODIFIED="1791121297460" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Rooms" />
+    <SUITE FILE_PATH="coverage/THE_GAME$ghostRoom.coverage" NAME="ghostRoom Coverage Results" MODIFIED="1791019123878" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Rooms" />
   </component>
 </project>
