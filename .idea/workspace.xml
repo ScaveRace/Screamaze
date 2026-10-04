@@ -4,21 +4,11 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c954064b-2f41-460b-b531-8d0d1cada12e" name="Changes" comment="Updates on vamroom">
+    <list default="true" id="c954064b-2f41-460b-b531-8d0d1cada12e" name="Changes" comment="Vampire room finished version">
       <change afterPath="$PROJECT_DIR$/Rooms/vampireRoom2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_26_2026_1_43_PM_[Changes]/Room2015_1_win_clo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_26_2026_1_43_PM_[Changes]/Room2015_1_win_op.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_26_2026_1_43_PM_[Changes]/fuse_box.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_26_2026_1_43_PM_[Changes]/fuse_box2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_26_2026_1_43_PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_26_2026_1_43_PM_[Changes]/vp.cabinet.closed.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_26_2026_1_43_PM_[Changes]/vp.cabinet.open.fuse.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_26_2026_1_43_PM__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rooms/vampireRoom.py" beforeDir="false" afterPath="$PROJECT_DIR$/Rooms/vampireRoom.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/bf8a0e26-8f31-4816-870e-f7647dc69302.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/bf8a0e26-8f31-4816-870e-f7647dc69302.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/uiElements.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/uiElements.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/database/storyDB.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/database/storyDB.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/savePlayer.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/savePlayer.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,56 +73,56 @@
       <entry key="S2" value="0.0" />
       <entry key="S5" value="0.0" />
       <entry key="S10" value="0.0" />
-      <entry key="S30" value="2.6929582978144296E-173" />
-      <entry key="S60" value="3.2137781289815644E-86" />
-      <entry key="M2" value="1.117134745185073E-42" />
-      <entry key="M5" value="1.509201236874468E-16" />
-      <entry key="M10" value="8.497931012446066E-8" />
-      <entry key="M15" value="7.597946690605497E-5" />
-      <entry key="M30" value="0.07490440888346454" />
-      <entry key="H1" value="2.5466096355273855" />
-      <entry key="H2" value="16.143011525093193" />
-      <entry key="H4" value="43.154546550023625" />
-      <entry key="D1" value="103.34843766207521" />
-      <entry key="W1" value="120.79407840425122" />
+      <entry key="S30" value="2.583914898706527E-173" />
+      <entry key="S60" value="3.1480395494170332E-86" />
+      <entry key="M2" value="1.1056500857919636E-42" />
+      <entry key="M5" value="1.50297587735391E-16" />
+      <entry key="M10" value="8.48038618731103E-8" />
+      <entry key="M15" value="7.587485276869366E-5" />
+      <entry key="M30" value="0.07485282416186735" />
+      <entry key="H1" value="2.5457325925339944" />
+      <entry key="H2" value="16.140231488812123" />
+      <entry key="H4" value="43.15083050328382" />
+      <entry key="D1" value="103.34695438304048" />
+      <entry key="W1" value="120.79383073663814" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0" />
-      <entry key="S10" value="1.0" />
-      <entry key="S30" value="1.0" />
-      <entry key="S60" value="1.0" />
-      <entry key="M2" value="1.0" />
-      <entry key="M5" value="1.0000000077552214" />
-      <entry key="M10" value="1.000225681303466" />
-      <entry key="M15" value="1.0070209573887465" />
-      <entry key="M30" value="1.2217799378547407" />
-      <entry key="H1" value="2.3079906980293976" />
-      <entry key="H2" value="4.481792588559616" />
-      <entry key="H4" value="7.138781996711659" />
-      <entry key="D1" value="11.632406369355607" />
-      <entry key="W1" value="12.79134928596954" />
+      <entry key="MS100" value="1.0000041169290028" />
+      <entry key="MS500" value="1.08373647515174" />
+      <entry key="S2" value="1.5379335965038163" />
+      <entry key="S5" value="1.7803536526624213" />
+      <entry key="S10" value="1.8833762803372192" />
+      <entry key="S30" value="1.9595079510899218" />
+      <entry key="S60" value="1.9795447672719821" />
+      <entry key="M2" value="1.9897195397040428" />
+      <entry key="M5" value="1.9958750710557727" />
+      <entry key="M10" value="1.9981606157424088" />
+      <entry key="M15" value="2.0056344166159317" />
+      <entry key="M30" value="2.2209385297335533" />
+      <entry key="H1" value="3.3071958345205665" />
+      <entry key="H2" value="5.481020765657733" />
+      <entry key="H4" value="8.138167274748717" />
+      <entry key="D1" value="12.632239418554207" />
+      <entry key="W1" value="13.791323059493974" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="9.928450435195415E-6" />
-      <entry key="MS500" value="0.09985648955614347" />
-      <entry key="S2" value="0.5621394618893087" />
-      <entry key="S5" value="0.7942141666425284" />
-      <entry key="S10" value="0.8911869425897848" />
-      <entry key="S30" value="0.9623275922471409" />
-      <entry key="S60" value="0.9809829724552516" />
-      <entry key="M2" value="0.9904458452915291" />
-      <entry key="M5" value="0.9961673358355847" />
-      <entry key="M10" value="0.9983069064952568" />
-      <entry key="M15" value="1.0058035099616314" />
-      <entry key="M30" value="1.2957977085867434" />
-      <entry key="H1" value="4.853168595555207" />
-      <entry key="H2" value="20.622322316629244" />
-      <entry key="H4" value="50.29063875859179" />
-      <entry key="D1" value="114.979937592435" />
-      <entry key="W1" value="133.58528089162095" />
+      <entry key="MS100" value="4.11696987750428E-6" />
+      <entry key="MS500" value="0.09209810560819806" />
+      <entry key="S2" value="0.840327298974652" />
+      <entry key="S5" value="1.4001215785981591" />
+      <entry key="S10" value="1.670629686767282" />
+      <entry key="S30" value="1.8828689274042738" />
+      <entry key="S60" value="1.9404615047234388" />
+      <entry key="M2" value="1.9699831458077566" />
+      <entry key="M5" value="1.9879332719976124" />
+      <entry key="M10" value="1.9941812028164145" />
+      <entry key="M15" value="2.003041771659751" />
+      <entry key="M30" value="2.2942166523124032" />
+      <entry key="H1" value="5.851152785815759" />
+      <entry key="H2" value="21.61859867185406" />
+      <entry key="H4" value="51.2862221113048" />
+      <entry key="D1" value="115.97827302339292" />
+      <entry key="W1" value="134.58500494750422" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -147,34 +137,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.ghostRoom.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.uiElements.executor&quot;: &quot;Run&quot;,
-    &quot;Python.vampireRoom.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;h&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/hadih/PycharmProjects/THE GAME/assets/stones&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;python.packages.toolwindow.project.migrated.to.right.top.v2&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.ghostRoom.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.uiElements.executor": "Run",
+    "Python.uiFunc.executor": "Run",
+    "Python.vampireRoom.executor": "Run",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "h",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "C:/Users/hadih/PycharmProjects/THE GAME/assets/stones",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "python.packages.toolwindow.project.migrated.to.right.top.v2": "true",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "to.speed.mode.migration.done": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\hadih\PycharmProjects\THE GAME\assets\stones" />
@@ -224,7 +215,7 @@
       <workItem from="1791017549139" duration="3261000" />
       <workItem from="1791044297969" duration="1248000" />
       <workItem from="1791061736441" duration="1557000" />
-      <workItem from="1791109462946" duration="9800000" />
+      <workItem from="1791109462946" duration="13943000" />
     </task>
     <task id="LOCAL-00001" summary="vampireroom added">
       <option name="closed" value="true" />
@@ -322,7 +313,15 @@
       <option name="project" value="LOCAL" />
       <updated>1791018568788</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Vampire room finished version">
+      <option name="closed" value="true" />
+      <created>1791122695259</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1791122695259</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -367,11 +366,13 @@
     <MESSAGE value="Stones images" />
     <MESSAGE value="Masks vampire room" />
     <MESSAGE value="Updates on vamroom" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updates on vamroom" />
+    <MESSAGE value="Vampire room finished version" />
+    <option name="LAST_COMMIT_MESSAGE" value="Vampire room finished version" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/THE_GAME$main.coverage" NAME="main Coverage Results" MODIFIED="1791122609875" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/THE_GAME$uiElements.coverage" NAME="uiElements Coverage Results" MODIFIED="1790167223544" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/UI" />
+    <SUITE FILE_PATH="coverage/THE_GAME$main.coverage" NAME="main Coverage Results" MODIFIED="1791123739538" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/THE_GAME$uiElements.coverage" NAME="uiElements Coverage Results" MODIFIED="1791127146150" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/UI" />
+    <SUITE FILE_PATH="coverage/THE_GAME$uiFunc.coverage" NAME="uiFunc Coverage Results" MODIFIED="1791124411796" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/functions" />
     <SUITE FILE_PATH="coverage/THE_GAME$vampireRoom.coverage" NAME="vampireRoom Coverage Results" MODIFIED="1791121297460" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Rooms" />
     <SUITE FILE_PATH="coverage/THE_GAME$ghostRoom.coverage" NAME="ghostRoom Coverage Results" MODIFIED="1791019123878" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Rooms" />
   </component>
