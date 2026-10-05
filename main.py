@@ -20,7 +20,7 @@ pygame.mixer.init()
 SCREEN_WIDTH = 1480
 SCREEN_HEIGHT = 720
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),pygame.SCALED | pygame.RESIZABLE)
 pygame.display.set_caption("THUAS's Screamazing")
 #########  clock to measure time   ################
 clock = pygame.time.Clock()
@@ -76,7 +76,7 @@ while running:
         if name not in ROOMS:
             raise KeyError(f"No room named {name!r}. Known: {sorted(ROOMS)}")
         if name != "startup" and name != "frontD":
-            room = ROOMS[name](screen, player,fui)
+            room = ROOMS[name](screen, player,frontui)
         else:
             room = ROOMS[name](screen, player)
         current = name

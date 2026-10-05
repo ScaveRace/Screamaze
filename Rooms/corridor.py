@@ -9,7 +9,8 @@ pygame.mixer.init()
 class Corridor:
     def __init__(self, screen,p, fui):
         self.fui = fui
-        self.image = u.load_image("assets/corridor.png", screen.get_size())
+        self.image1 = u.load_image("assets/corridor_closed.png", screen.get_size())
+        self.image2 = u.load_image("assets/corridor.png", screen.get_size())
         self.p = p
         self.screen = screen
         self.conversation = 0
@@ -35,6 +36,7 @@ class Corridor:
             u.Mask("assets/corridor/room_16.png", self.screen.get_size(), (0, 0), self.projRoom, "Project Room 1"),
             u.Mask("assets/corridor/room_17.png", self.screen.get_size(), (0, 0), self.projRoom, "Project Room 2"),
         ]
+        self.fui.sendMessage("Thuas: ","FrontDesk","msg_1")
 
 
 
@@ -67,7 +69,10 @@ class Corridor:
             m.handle_event(event)
 
     def draw(self):
-        self.screen.blit(self.image, (300, 0))
+        if len(self.p.inventory["Stones"]) == 5:
+            self.screen.blit(self.image2, (300, 0))
+        else:
+            self.screen.blit(self.image1, (300, 0))
         for m in self.masks:
             m.draw(self.screen)
 

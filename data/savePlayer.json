@@ -1,11 +1,19 @@
 {
-  "name": "Joachim",
-  "time": 3,
+  "name": "h",
+  "time": 47,
   "position": [
-    505,
-    500
+    808,
+    215
   ],
-  "location": "corridor",
-  "inventory": [],
-  "gender": "Female"
+  "location": "vampR",
+  "lastLocation": "frontDesk",
+  "inventory": {
+    "Stones": [],
+    "Items": [
+      {
+        "Fuse": "assets/fuse_item.png"
+      }
+    ]
+  },
+  "gender": "Male"
 }

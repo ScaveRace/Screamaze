@@ -2,6 +2,7 @@ import pygame
 import UI.uiElements as u
 import menu.inventory as i
 import UI.pauseMenu as pause
+import functions.loreFunctions as lF
 
 
 font = pygame.font.Font(None, 24)
@@ -14,9 +15,15 @@ class FrontUI:
         self.inventory = i.InventoryMenu(screen,p)
         self.pause = pause.PauseMenu(screen,p)
         self.chat = u.Chatbox(0,0,300,720,font)
+        self.db = lF.StoryDB()
 
 
+    def sendMessage(self,npc,roomName,msg_id):
+        self.chat.handle_event_npc(npc,self.db.chatMessage(roomName,msg_id))
 
+    def getMessage(self):
+        print(self.chat.messages)
+        return
     def handleEvenet(self,event):
         self.inventory.handle_event(event)
         self.pause.handle_event(event)
@@ -26,7 +33,7 @@ class FrontUI:
 
         seconds = self.player.time
         timeText = font.render(f"{seconds // 60:02d}:{seconds % 60:02d}", True, (210, 200, 160))
-        self.screen.blit(timeText, timeText.get_rect(topleft=(20, 30)))
+        self.screen.blit(timeText, timeText.get_rect(topleft=(320, 30)))
         self.chat.draw(self.screen)
         self.pause.draw()
         if not self.pause.paused:

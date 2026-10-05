@@ -48,8 +48,9 @@ class FrontDesk:
 
         # startAnim =
     def startRun(self):
-        self.p.createPlayer(self.textField.text,self.buttons[0].label)
-        self.next_room = "corridor"
+        if self.textField.text.replace(" ","") != "":
+            self.p.createPlayer(self.textField.text,self.buttons[0].label)
+            self.next_room = "corridor"
 
     def handle_event(self, event):
         for b in self.buttons:
