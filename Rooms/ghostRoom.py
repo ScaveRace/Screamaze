@@ -145,7 +145,7 @@ class GhostRoom:
             self.chatbox.say(self.dialogue[self.line_count])
             self.line_count += 1
 # elif "homework" in self.inventory:
-        elif self.player.has_item("Items", "Homework"):
+        elif self.player.has_item( "Homework"):
             self.chatbox.say("Ghost . Is that my homework? HAND IT OVER😈")
         else:
             self.chatbox.say("Ghost > No homework, no leaving. Search the room")
@@ -254,11 +254,11 @@ class GhostRoom:
             self.chatbox.say("You > I already gave it to the teacher")
             return
 # if "homework" not in self.inventory:
-        if not self.player.has_item("Items","Homework"):
+        if not self.player.has_item("Homework"):
             self.chatbox.say("You > I don't have the homework yet")
             return
 
-        self.player.remove_item("Items", "Homework")
+        self.player.remove_item( "Homework")
         self.task_done = True
         self.chatbox.say("You > Here is your homework")
         self.chatbox.say("Ghost . At last... class dismissed")
