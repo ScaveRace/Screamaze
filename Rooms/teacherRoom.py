@@ -61,13 +61,12 @@ class TeacherRoom:
         self.player = player
 
         # Load the different images used throughout the room. ## placeholder paths
-        self.room_image = u.load_image("assets/teacherRoom/tr.room.chest.png", self.screensize)
-        self.room_opened = u.load_image("assets/teacherRoom/tr.room.chest.open.png", self.screensize)
+        self.room_image = u.load_image("assets/teacherRoom/tr_room_chest.png", self.screensize)
+        self.room_opened = u.load_image("assets/teacherRoom/tr_room_chest_open.png", self.screensize)
         self.current_image = self.room_image
 
-        self.chest_closed_image = u.load_image("assets/teacherRoom/tr.chest.closed.png", self.screensize)
-        self.chest_open_image = u.load_image("assets/teacherRoom/tr.chest.open.png", self.screensize)
-        self.chest_empty_image = u.load_image("assets/teacherRoom/tr.chest.empty.png", self.screensize)
+        self.chest_closed_image = u.load_image("assets/teacherRoom/tr_chest_closed.png", self.screensize)
+        self.chest_open_image = u.load_image("assets/teacherRoom/tr_chest_open.png", self.screensize)
 
         # The five stone pictures, loaded once and kept at slot size.
         self.stone_icons = {}
@@ -88,12 +87,12 @@ class TeacherRoom:
 
         # MASKS - the chest only, clicking it walks up to it
         self.masks = [
-            u.Mask("assets/teacherRoom/tr_room_chest.png", self.screensize, (0, 0), self.chest, "Chest"),
+            u.Mask("assets/teacherRoom/tr_room_chest_mask.png", self.screensize, (0, 0), self.chest, "Chest"),
         ]
 
         # the lid in the close up -> clicking it tries to open the chest
         self.chest_masks = [
-            u.Mask("assets/teacherRoom/tr_chest_lid.png", self.screensize, (0, 0), self.try_open, "Chest lid"),
+            u.Mask("assets/teacherRoom/tr_chest_closed_mask.png", self.screensize, (0, 0), self.try_open, "Chest lid"),
         ]
 
         self.no_masks = []
@@ -124,7 +123,7 @@ class TeacherRoom:
     def chest(self):
         if self.chest_unlocked:
             if self.reward_taken:
-                self.current_image = self.chest_empty_image
+                self.current_image = self.chest_open_image
                 self.current_masks = self.no_masks
                 self.current_buttons = self.returnr_buttons
                 self.chatbox.say("You > The chest is empty now")
@@ -184,7 +183,7 @@ class TeacherRoom:
         # change the picture of the item ## placeholder path
         self.player.add_item("Items", "Key", "assets/teacherRoom/tr.key.png")
         self.chatbox.say("You > A rusty key... this has to be the way out")
-        self.current_image = self.chest_empty_image
+        self.current_image = self.chest_open_image
         self.current_buttons = self.returnr_buttons
 
     # ------------------------------------------------------------------

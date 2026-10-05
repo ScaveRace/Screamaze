@@ -21,7 +21,7 @@ class Corridor:
             u.Mask("assets/corridor/room_03.png", self.screen.get_size(), (0, 0), self.doPress, "Front Desk Office"),
             u.Mask("assets/corridor/room_04.png", self.screen.get_size(), (0, 0), self.vamp, "Classroom 2.015"),
             u.Mask("assets/corridor/room_05.png", self.screen.get_size(), (0, 0), self.doPress, "Classroom 2.021"),
-            u.Mask("assets/corridor/room_06.png", self.screen.get_size(), (0, 0), self.doPress, "Teachers Room 4"),
+            u.Mask("assets/corridor/room_06.png", self.screen.get_size(), (0, 0), self.teachR, "Teachers Room 4"),
             u.Mask("assets/corridor/room_07.png", self.screen.get_size(), (0, 0), self.doPress, "Classroom 2.031"),
             u.Mask("assets/corridor/room_08.png", self.screen.get_size(), (0, 0), self.doPress, "Stair Exit"),
             u.Mask("assets/corridor/room_09.png", self.screen.get_size(), (0, 0), self.doPress, "Teachers Room 1"),
@@ -58,6 +58,9 @@ class Corridor:
 
     def equin(self):
         self.next_room = "equinR"
+
+    def teachR(self):
+        self.next_room = "teacherR"
 
     def handle_event(self, event):
         for m in self.masks:
