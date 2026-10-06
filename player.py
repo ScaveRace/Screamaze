@@ -23,7 +23,7 @@ class Player:
                            "EquinoxRoom":{"all":[],"current": "", "msg":""},
                            "StorrageRoom":{"all":[],"current": "", "msg":""},
                            "ProjectRoom":{"all":[],"current": "", "msg":""},
-                           "Corridor":{"all":[],"current": "", "msg":""},
+                           "Corridor":{"all":[],"current": "corr.start", "msg":""},
                            "FrontDesk":{"all":[],"current": "", "msg":""}
         }
 
@@ -83,3 +83,5 @@ class Player:
         if self.location == "corridor":
             self.position = pL.DOOR_SPAWNS[self.lastLocation]
         screen.blit(self.pImage,self.position)
+
+
