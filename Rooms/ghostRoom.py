@@ -26,6 +26,8 @@ class GhostRoom:
         self.screen = screen
         self.next_room = None
         self.player = player
+        self.fui = fui
+
         # Load the different images used throughout the room.
         self.room_image = u.load_image("assets/ghostRoom/gr.room.teacher.jpg", self.screensize)
         self.room_empty = u.load_image("assets/ghostRoom/gr.ghostRoom.no.teacher.png", self.screensize)
@@ -41,19 +43,14 @@ class GhostRoom:
 
         # Fonts and the dialogue box used for messages.
         self.font = pygame.font.Font(None, 28)
-        self.chatbox = u.Chatbox(10,10,500, 90,self.font) #change width and height of chatbox
         self.codeFont = pygame.font.Font(None, 56)
 
-        # Dialogue shown when the player first talks to the ghost.
-        self.dialogue = [
-            "Ghost > Ohh a student has finally come to class.",
-            "Ghost > I have been waiting for the homework since I died.",
-            "Ghost > Only by handing in your homework can you leave.",
-        ]
-        self.line_count = 0
+        self.line = 0
+
+        self.room_described = False
+
 
         # Game state: inventory and whether important objects/tasks are completed.
-# self.inventory = [] ### global player inventory will be used later
         self.homework_taken = False #so you can't take the homework
         self.homework_spot = pygame.Rect(600, 400, 56, 56)
 
@@ -136,19 +133,25 @@ class GhostRoom:
         keys.append(u.Button(1000, 520, 140, 50, "Back", self.close_keypad))
         return keys
 
+    def on_enter(self):
+        if self.room_described:
+            return
+        self.room_described = True
+        self.fui.sendMessage("You", "GhostRoom", 21)  # cold classroom
+        self.fui.sendMessage("You", "GhostRoom", 22)
 
     # Controls the ghost's dialogue and checks whether the player has the homework.
     def talk(self):
         if self.task_done:
-            self.chatbox.say("...") # feels unnecessary
-        elif self.line_count < len(self.dialogue):
-            self.chatbox.say(self.dialogue[self.line_count])
-            self.line_count += 1
+            self.fui.sendMessage("Ghost", "GhostRoom", 6)
+        elif self.line < 3:
+            self.fui.sendMessage("Ghost", "GhostRoom", self.line + 1)
+            self.line += 1
 # elif "homework" in self.inventory:
         elif self.player.has_item( "Homework"):
-            self.chatbox.say("Ghost . Is that my homework? HAND IT OVER😈")
+            self.fui.sendMessage("Ghost", "GhostRoom", 4)
         else:
-            self.chatbox.say("Ghost > No homework, no leaving. Search the room")
+            self.fui.sendMessage("Ghost", "GhostRoom", 5)
 
 
     # Changes what the player sees when searching the teacher's area.
@@ -156,28 +159,31 @@ class GhostRoom:
         if self.task_done:
             self.current_image= self.no_teacher_image
             self.current_masks = self.no_masks
+            self.fui.sendMessage("You", "GhostRoom", 26)  # the empty desk described
             # Once the teacher leaves, the stone becomes available.
             if self.stone_collected:
                 self.current_buttons = self.returnr_buttons # nobody to talk to so only return
-                self.chatbox.say("You > The classroom is empty. He is really gone")
+                self.fui.sendMessage("You", "GhostRoom", 7)
             else:
                 self.current_buttons = self.stone_buttons
-                self.chatbox.say("You > He left something behind on the desk              ")
+                self.fui.sendMessage("You", "GhostRoom", 8)
         else:
             self.current_image = self.teacher_image
             self.current_masks = self.teacher_masks
             self.current_buttons = self.teacher_buttons
+            self.fui.sendMessage("You", "GhostRoom", 25)  # ghost teacher behind his desk
             self.talk() #line appears moment you walk up, talk button advances it after wards
+
 
     # Adds the stone to the player's inventory if it has not already been collected.
     def collect_stone(self):
         if self.stone_collected:
-            self.chatbox.say("You > I already collected the stone in my inventory")
+            self.fui.sendMessage("You", "GhostRoom", 9)
         else:
             self.stone_collected = True
 # change the picture of the item
             self.player.add_item("Stones", "White", "assets/gr.room.teacher.jpg")
-            self.chatbox.say("You > A white stone... one step closer to freedom")
+            self.fui.sendMessage("You", "GhostRoom", 10)
             self.current_buttons = self.returnr_buttons
 
 
@@ -189,13 +195,18 @@ class GhostRoom:
             self.current_masks = self.no_masks#closed or open picture?
             if self.homework_taken:
                 self.current_buttons = self.returnr_buttons
+                self.fui.sendMessage("You", "GhostRoom", 32)  # open and empty
             else:
                 self.current_buttons = self.cabinet_buttons
+                self.fui.sendMessage("You", "GhostRoom", 31)  # stack of papers on the shelf
         else:
             self.current_image = self.cabinet_locked_image
             self.current_masks = self.keypad_masks
             self.current_buttons = self.returnr_buttons
-            self.chatbox.say("You > It is locked there is a keypad on the front")
+            self.fui.sendMessage("You", "GhostRoom", 29)  # HOMEWORK painted on the doors
+            self.fui.sendMessage("You", "GhostRoom", 30)  # keypad on the front
+            self.fui.sendMessage("You", "GhostRoom", 11)  # it is locked
+
 
     # Opens the keypad and clears any previously entered code.
     def open_keypad(self):
@@ -203,7 +214,9 @@ class GhostRoom:
         self.code_entry = ""
         self.current_buttons = self.keypad_buttons
         self.current_masks = self.no_masks
-        self.chatbox.say("You > Type the four digit code into the keyboard")
+        self.fui.sendMessage("You", "GhostRoom", 33)  # close up on the twelve keys
+        self.fui.sendMessage("You", "GhostRoom", 12)  # type the four digit code
+
 
     # Closes the keypad and returns to the locked cabinet.
     def close_keypad(self):
@@ -228,10 +241,12 @@ class GhostRoom:
             self.current_image = self.cabinet_open_image
             self.current_masks = self.no_masks
             self.current_buttons = self.cabinet_buttons
-            self.chatbox.say("You > 'clunk' the cabinet swings open")
+            self.fui.sendMessage("You", "GhostRoom", 13)  # clunk, the cabinet swings open
+            self.fui.sendMessage("You", "GhostRoom", 31)  # and this is what is inside
         else:
             self.code_entry = ""
-            self.chatbox.say("You > Wrong code, try again :)")
+            self.fui.sendMessage("You", "GhostRoom", 14)
+
 
     def clear_code(self):
         self.code_entry = ""
@@ -243,36 +258,37 @@ class GhostRoom:
             self.chatbox.say("You > The cabinet is empty now")
             return
         self.homework_taken = True
-# self.inventory.append("homework")
         self.player.add_item("Items", "Homework", "assets/gr.room.teacher.jpg")
-        self.chatbox.say("You > Old homework covered in dust, this must be it")
+        self.fui.sendMessage("You", "GhostRoom", 16)
         self.current_buttons = self.returnr_buttons
 
     # Gives the homework to the ghost and completes the main task.
     def give_homework(self):  ##🥲
         if self.task_done:
-            self.chatbox.say("You > I already gave it to the teacher")
+            self.fui.sendMessage("You", "GhostRoom", 17)
             return
 # if "homework" not in self.inventory:
         if not self.player.has_item("Homework"):
-            self.chatbox.say("You > I don't have the homework yet")
+            self.fui.sendMessage("You", "GhostRoom", 18)
             return
 
         self.player.remove_item( "Homework")
         self.task_done = True
-        self.chatbox.say("You > Here is your homework")
-        self.chatbox.say("Ghost . At last... class dismissed")
+        self.fui.sendMessage("You", "GhostRoom", 19)
+        self.fui.sendMessage("Ghost", "GhostRoom", 20)
         # After the homework is delivered, the teacher disappears.
         self.current_image = self.no_teacher_image
         self.current_masks = self.no_masks
         self.current_buttons = self.stone_buttons
+        self.fui.sendMessage("You", "GhostRoom", 26)  # the desk he left behind
+        self.fui.sendMessage("You", "GhostRoom", 8)  # he left something on it
 
 
-    # Shows the whiteboard and only gives the player a way to return.
     def whiteboard(self):
         self.current_image = self.whiteboard_image
         self.current_masks = self.no_masks
         self.current_buttons = self.returnr_buttons
+        self.fui.sendMessage("You", "GhostRoom", 27)  # a whiteboard with something on it
 
     # Tells the main game that the player wants to move to the corridor.
     def returnc(self):
@@ -283,8 +299,10 @@ class GhostRoom:
     def returnr(self):
         if self.task_done:
             self.current_image = self.room_empty
+            self.fui.sendMessage("You", "GhostRoom", 24)  # classroom feels lighter now
         else:
             self.current_image = self.room_image
+            self.fui.sendMessage("You", "GhostRoom", 23)  # back in the classroom
         self.current_masks = self.masks
         self.current_buttons = self.buttons
 
@@ -332,7 +350,4 @@ class GhostRoom:
         # Draw the buttons currently available to the player.
         for b in self.current_buttons:
             b.draw2(self.screen)
-
-        # Draw the dialogue box last so it appears on top of the room.
-        self.chatbox.draw(self.screen)
 
