@@ -90,13 +90,20 @@ class Chatbox:
         self.input = ""
         self.focus = False
         self.font = font  ### make it used standard font, can decide a different one.
+        self.scroll = 0
+        self.scrollRect = None
+        self.startScroll = None
 
     def say(self,text): ### simple get a new messages
         self.messages.append(text)
+        self.scroll = 0  ## jump back to the newest message
 
     def handle_event(self,event):   ###  if text was added, create that as well
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             self.focus = uF.focused(event,self.rect)
+        if event.type == pygame.MOUSEWHEEL and self.rect.collidepoint(pygame.mouse.get_pos()):
+            self.scroll += event.y  ## gets clamped in draw
+
         if self.focus:
             if(self.isSubmit(event)):
                 text = self.input.strip()
@@ -126,17 +133,38 @@ class Chatbox:
         screen.blit(self.font.render(shown, True, (222, 222, 214)),
                     (self.rect.x + 10, self.rect.bottom - 34))
 
-        # Messages: wrap each one, then draw from the bottom up
-        lines = [line for message in self.messages
-                 for line in uF.wrap_lines(self.font, message, max_w)]
+        # Messages: wrap only the text next to the name, then draw from the bottom up
+        rows = []  ## (name, indent, line), name is empty on wrapped lines
+        for message in self.messages:
+            speaker, sep, text = message.partition(" > ")
+            if not sep:
+                speaker, text = "", message  ## no name in front, use the full width
+            name = speaker + sep
+            indent = self.font.size(name)[0]
+            for i, line in enumerate(uF.wrap_lines(self.font, text, max_w - indent)):
+                rows.append((name if i == 0 else "", indent, line))
         line_h = self.font.get_linesize()
+        visible = (self.rect.height - 54) // line_h
+        self.scroll = max(0, min(self.scroll, len(rows) - visible))
         y = self.rect.bottom - 44
-        for line in reversed(lines):
+        for name, indent, line in reversed(rows[:len(rows) - self.scroll]):
             y -= line_h
             if y < self.rect.y + 10:
                 break  ## box is full
+            if name:
+                screen.blit(self.font.render(name, True, (222, 222, 214)),
+                            (self.rect.x + 15, y))
             screen.blit(self.font.render(line, True, (150, 150, 142)),
-                        (self.rect.x + 10, y))
+                        (self.rect.x + 15 + indent, y))
+            # Scroll bar: thin line on the left, only when there is something to scroll
+            max_scroll = len(rows) - visible
+            if max_scroll > 0:
+                track_h = self.rect.height - 54
+                thumb_h = max(20, track_h * visible // len(rows))
+                thumb_y = self.rect.y + 10 + (track_h - thumb_h) * (max_scroll - self.scroll) // max_scroll
+                self.scrollRect = pygame.rect.Rect(self.rect.x + 3, thumb_y, 4, thumb_h)
+                pygame.draw.rect(screen, (90, 88, 96),self.scrollRect)
+
 
 
 
@@ -196,7 +224,7 @@ class Mask:
         self.labelSurf = uF.render_wrapped(self.font, self.label, (255, 255, 255), shape.width - 20)
         self.labelRect = self.labelSurf.get_rect(center=shape.center)
 
-        self.outlineColor = (255, 255, 255)
+        self.outlineColor = (128, 128, 128)
         self.hovering = False
 
     def handle_event(self, event):
@@ -214,11 +242,14 @@ class Mask:
     def draw(self, screen):
         screen.blit(self.image, (self.imageX, self.imageY))
         screen.blit(self.labelSurf, self.labelRect)
+        outline = self.imageMask.outline()
         if self.hovering:
-            outline = self.imageMask.outline()
-            pygame.draw.lines(screen, self.outlineColor, True,
+            pygame.draw.lines(screen, (128, 0, 0), True,
                               [(x + self.imageX, y + self.imageY) for x, y in outline], 2)
 
+        else:
+            pygame.draw.lines(screen, self.outlineColor, True,
+                              [(x + self.imageX, y + self.imageY) for x, y in outline], 1)
 class Slider:
     def __init__(self, x, y, w, h, label, action,action2, value=1.0, knob_w=16):
         self.rect = pygame.Rect(x, y, w, h)
