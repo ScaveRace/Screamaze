@@ -62,10 +62,10 @@ class TeacherRoom:
 
         # Load the different images used throughout the room. ## placeholder paths
         self.room_image = u.load_image("assets/teacherRoom/tr_room_chest.png", self.screensize)
-        self.room_opened = u.load_image("assets/teacherRoom/tr_room_chest_open.png", self.screensize)
+        self.room_opened = u.load_image("assets/teacherRoom/tr_room_chest_open.jpg", self.screensize)
         self.current_image = self.room_image
 
-        self.chest_closed_image = u.load_image("assets/teacherRoom/tr_chest_closed.png", self.screensize)
+        self.chest_closed_image = u.load_image("assets/teacherRoom/tr_chest_closed.jpeg", self.screensize)
         self.chest_open_image = u.load_image("assets/teacherRoom/tr_chest_open.png", self.screensize)
 
         # The five stone pictures, loaded once and kept at slot size.
