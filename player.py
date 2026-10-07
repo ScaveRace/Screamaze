@@ -17,6 +17,15 @@ class Player:
         self.lastLocation = "frontDesk"
         self.inventory = {"Stones":[],"Items":[{"Fuse": "assets/fuse_item.png"}]}
         self.gender = ""
+        self.completion = {"VampRoom":{"all":[],"current": "", "msg":""},
+                           "GhostRoom":{"all":[],"current": "", "msg":""},
+                           "TeacherRoom":{"all":[],"current": "", "msg":""},
+                           "EquinoxRoom":{"all":[],"current": "", "msg":""},
+                           "StorrageRoom":{"all":[],"current": "", "msg":""},
+                           "ProjectRoom":{"all":[],"current": "", "msg":""},
+                           "Corridor":{"all":[],"current": "corr.start", "msg":""},
+                           "FrontDesk":{"all":[],"current": "", "msg":""}
+        }
 
 
 
@@ -38,9 +47,19 @@ class Player:
         return (f"assets/player/player_{g.lower()}.png")
 
 
+    def addCompletion(self,room,current,msg):
+        self.completion[room]["all"].append(current)
+        self.completion[room]["current"] = current
+        self.completion[room]["msg"] = msg
+
+    def getCompletion(self,room):
+        return self.completion[room]
+
+
+
     def remove_item(self, item):
         if item in self.inventory:
-            self.inventory.remove(item)
+            self.inventory["Items"].remove(item)
             return True
         return False
 
@@ -48,7 +67,7 @@ class Player:
         self.lastLocation = self.location
 
     def has_item(self, item):
-        return item in self.inventory
+        return item in self.inventory["Items"]
 
 
     def count(self, item):
@@ -64,3 +83,5 @@ class Player:
         if self.location == "corridor":
             self.position = pL.DOOR_SPAWNS[self.lastLocation]
         screen.blit(self.pImage,self.position)
+
+

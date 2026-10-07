@@ -16,10 +16,11 @@ class FrontUI:
         self.pause = pause.PauseMenu(screen,p)
         self.chat = u.Chatbox(0,0,300,720,font)
         self.db = lF.StoryDB()
+        self.lang = "en"
 
 
     def sendMessage(self,npc,roomName,msg_id):
-        self.chat.handle_event_npc(npc,self.db.chatMessage(roomName,msg_id))
+        self.chat.handle_event_npc(npc,self.db.chatMessage(roomName,msg_id,self.lang))
 
     def getMessage(self):
         print(self.chat.messages)
