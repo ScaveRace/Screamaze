@@ -22,7 +22,7 @@ def current(screen):
         u.Mask("assets/corridor/room_03.png", screen.get_size(), (0, 0), doPress, "Front Desk Office"),
         u.Mask("assets/corridor/room_04.png", screen.get_size(), (0, 0), vamp, "Classroom 2.015"),
         u.Mask("assets/corridor/room_05.png", screen.get_size(), (0, 0), doPress, "Classroom 2.021"),
-        u.Mask("assets/corridor/room_06.png", screen.get_size(), (0, 0), doPress, "Teachers Room 4"),
+        u.Mask("assets/corridor/room_06.png", screen.get_size(), (0, 0), teachR, "Teachers Room 4"),
         u.Mask("assets/corridor/room_07.png", screen.get_size(), (0, 0), doPress, "Classroom 2.031"),
         u.Mask("assets/corridor/room_08.png", screen.get_size(), (0, 0), doPress, "Stair Exit"),
         u.Mask("assets/corridor/room_09.png", screen.get_size(), (0, 0), doPress, "Teachers Room 1"),
@@ -84,6 +84,11 @@ def projRoom():
 def equin():
     global next_room
     next_room = "equinR"
+
+
+def teachR():
+    global next_room
+    next_room = "teacherR"
 
 
 
