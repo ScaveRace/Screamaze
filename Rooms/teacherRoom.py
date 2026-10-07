@@ -3,6 +3,8 @@ import UI.uiElements as u
 from player import Player
 import UI.frontUI as Fui
 
+pygame.init()
+pygame.mixer.init()
 
 # ----------------------------------------------------------------------
 # THE FIVE STONES
@@ -30,6 +32,13 @@ STONE_COLOURS = {
     "Purple": (150, 90, 210),
     "Yellow": (225, 180, 45),
 }
+
+# Dialogue ids, so the numbers below stay readable.
+# One "stone placed" line per stone, in the order of REQUIRED_STONES.
+STONE_LINE_FIRST = 15        # White = 15, Red = 16, Green = 17, Purple = 18, Yellow = 19
+# One "x stones are still missing" line per possible amount.
+# line id = MISSING_LINE_BASE - missing  ->  5 missing = 10, 1 missing = 14
+MISSING_LINE_BASE = 15
 
 # Where the five stone slots are drawn on the chest close up.
 SLOT_ORIGIN = (520, 430)   # centre of the first (left) slot
@@ -59,6 +68,7 @@ class TeacherRoom:
         self.screen = screen
         self.next_room = None
         self.player = player
+        self.fui = fui
 
         # Load the different images used throughout the room. ## placeholder paths
         self.room_image = u.load_image("assets/teacherRoom/tr_room_chest.png", self.screensize)
@@ -73,17 +83,20 @@ class TeacherRoom:
         for name in REQUIRED_STONES:
             self.stone_icons[name] = load_stone(STONE_IMAGES[name], SLOT_SIZE)
 
-        # Fonts and the dialogue box used for messages.
+        # Fonts used in this room.
         self.font = pygame.font.Font(None, 28)
-        self.chatbox = u.Chatbox(10, 10, 500, 90, self.font)
         self.slotFont = pygame.font.Font(None, 56)
+
+        # Description memory, so the long descriptions only play the first time.
+        self.room_described = False
+        self.chest_described = False
 
         # Game state: which stones are already inside the chest.
         self.stones_placed = []          # grows with "White", "Red", ...
         self.chest_unlocked = False      # True the moment all five are in
-        self.reward_taken = False        # so you can't take the reward twice
+        self.reward_taken = False        # so you can't take the necklace twice
 
-        self.reward_spot = pygame.Rect(600, 330, 56, 56)  # placeholder for the thing inside
+        self.reward_spot = pygame.Rect(600, 330, 56, 56)  # placeholder for the necklace
 
         # MASKS - the chest only, clicking it walks up to it
         self.masks = [
@@ -112,8 +125,22 @@ class TeacherRoom:
                              ] + self.returnr_buttons
 
         self.reward_buttons = [
-                                  u.Button(830, 600, 180, 50, "Take reward", self.take_reward),
+                                  u.Button(830, 600, 180, 50, "Take necklace", self.take_reward),
                               ] + self.returnr_buttons
+
+    # ------------------------------------------------------------------
+    # entering the room
+    # ------------------------------------------------------------------
+
+    # Called once, the first time the player sets foot in the lounge.
+    # Describes the whole room so the player knows what can be clicked.
+    def on_enter(self):
+        if self.room_described:
+            return
+        self.room_described = True
+        self.fui.sendMessage("You", "TeacherRoom", 1)   # dark lounge, candles, old paper
+        self.fui.sendMessage("You", "TeacherRoom", 2)   # table / couches / chalkboard layout
+        self.fui.sendMessage("You", "TeacherRoom", 3)   # the glowing chest on the red rug
 
     # ------------------------------------------------------------------
     # chest
@@ -122,49 +149,66 @@ class TeacherRoom:
     # Walks up to the chest and shows the right picture for the situation.
     def chest(self):
         if self.chest_unlocked:
+            self.current_image = self.chest_open_image
+            self.current_masks = self.no_masks
             if self.reward_taken:
-                self.current_image = self.chest_open_image
-                self.current_masks = self.no_masks
                 self.current_buttons = self.returnr_buttons
-                self.chatbox.say("You > The chest is empty now")
+                self.fui.sendMessage("You", "TeacherRoom", 26)  # empty velvet and dust
             else:
-                self.current_image = self.chest_open_image
-                self.current_masks = self.no_masks
                 self.current_buttons = self.reward_buttons
-                self.chatbox.say("You > There is something lying inside")
+                self.fui.sendMessage("You", "TeacherRoom", 24)  # the necklace on the velvet
         else:
             self.current_image = self.chest_closed_image
             self.current_masks = self.chest_masks
             self.current_buttons = self.chest_buttons
-            self.chatbox.say("You > Five holes in the lid... five stones")
+
+            # The long close up description only plays the first time.
+            if not self.chest_described:
+                self.chest_described = True
+                self.fui.sendMessage("You", "TeacherRoom", 6)   # gold, carvings, scorched floor
+                self.fui.sendMessage("You", "TeacherRoom", 7)   # five diamond shaped holes
+                self.fui.sendMessage("You", "TeacherRoom", 8)   # five holes... five stones
+            else:
+                self.describe_slots()
+
+    # Short status line about how full the lid is.
+    def describe_slots(self):
+        missing = len(REQUIRED_STONES) - len(self.stones_placed)
+        if missing == 0:
+            self.fui.sendMessage("You", "TeacherRoom", 9)       # all five are in
+        else:
+            self.fui.sendMessage("You", "TeacherRoom", MISSING_LINE_BASE - missing)
 
     # Clicking the lid itself, only works when every stone is in place.
     def try_open(self):
-        if len(self.stones_placed) < len(REQUIRED_STONES):
-            missing = len(REQUIRED_STONES) - len(self.stones_placed)
-            self.chatbox.say("You > It will not budge, " + str(missing) + " stones are still missing")
+        missing = len(REQUIRED_STONES) - len(self.stones_placed)
+        if missing > 0:
+            # 5 missing -> 10, 4 -> 11, 3 -> 12, 2 -> 13, 1 -> 14
+            self.fui.sendMessage("You", "TeacherRoom", MISSING_LINE_BASE - missing)
         else:
             self.unlock()
 
     # Puts one stone from the inventory into the next free hole.
     def place_stone(self):
         if self.chest_unlocked:
-            self.chatbox.say("You > The chest is already open")
+            self.fui.sendMessage("You", "TeacherRoom", 21)      # the chest is already open
             return
 
-        for stone in REQUIRED_STONES:
+        for i in range(len(REQUIRED_STONES)):
+            stone = REQUIRED_STONES[i]
             if stone in self.stones_placed:
                 continue  # that hole is already filled
             if self.player.has_item("Stones", stone):
                 self.player.remove_item("Stones", stone)
                 self.stones_placed.append(stone)
-                self.chatbox.say("You > The " + stone.lower() + " stone clicks into the lid")
+                # White = 15, Red = 16, Green = 17, Purple = 18, Yellow = 19
+                self.fui.sendMessage("You", "TeacherRoom", STONE_LINE_FIRST + i)
                 # The fifth stone opens the chest by itself.
                 if len(self.stones_placed) == len(REQUIRED_STONES):
                     self.unlock()
                 return  # one stone per click
 
-        self.chatbox.say("You > I have no stone that fits, search the other rooms")
+        self.fui.sendMessage("You", "TeacherRoom", 20)          # no stone that fits
 
     # Everything that happens the moment the last stone goes in.
     def unlock(self):
@@ -172,17 +216,19 @@ class TeacherRoom:
         self.current_image = self.chest_open_image
         self.current_masks = self.no_masks
         self.current_buttons = self.reward_buttons
-        self.chatbox.say("You > 'clunk' the lid swings open")
+        self.fui.sendMessage("You", "TeacherRoom", 22)          # clunk, the lid swings open
+        self.fui.sendMessage("You", "TeacherRoom", 23)          # golden light spills out
+        self.fui.sendMessage("You", "TeacherRoom", 24)          # the necklace on the velvet
 
-    # Takes whatever is inside and adds it to the inventory.
+    # Takes the necklace out of the chest and adds it to the inventory.
     def take_reward(self):
         if self.reward_taken:
-            self.chatbox.say("You > The chest is empty now")
+            self.fui.sendMessage("You", "TeacherRoom", 26)      # the chest is empty now
             return
         self.reward_taken = True
         # change the picture of the item ## placeholder path
-        self.player.add_item("Items", "Key", "assets/teacherRoom/tr.key.png")
-        self.chatbox.say("You > A rusty key... this has to be the way out")
+        self.player.add_item("Items", "Necklace", "assets/teacherRoom/tr.necklace.png")
+        self.fui.sendMessage("You", "TeacherRoom", 25)          # still warm, the way out
         self.current_image = self.chest_open_image
         self.current_buttons = self.returnr_buttons
 
@@ -198,8 +244,10 @@ class TeacherRoom:
     def returnr(self):
         if self.chest_unlocked:
             self.current_image = self.room_opened
+            self.fui.sendMessage("You", "TeacherRoom", 5)       # chest open, glow fading
         else:
             self.current_image = self.room_image
+            self.fui.sendMessage("You", "TeacherRoom", 4)       # chest still waits on the rug
         self.current_masks = self.masks
         self.current_buttons = self.buttons
 
@@ -240,8 +288,12 @@ class TeacherRoom:
                 # empty hole, just a dark ring
                 pygame.draw.circle(self.screen, (60, 50, 40), (cx, cy), SLOT_SIZE // 2, 3)
 
-    # Draws the current room, the slots, the counter, buttons and chatbox.
+    # Draws the current room, the slots, the counter and the buttons.
     def draw(self):
+        # safety net, in case the main loop never calls on_enter
+        if not self.room_described:
+            self.on_enter()
+
         self.screen.blit(self.current_image, (300, 0))
 
         # The holes and the counter only exist on the closed chest screen.
@@ -251,9 +303,9 @@ class TeacherRoom:
             text = self.slotFont.render(shown, True, (0, 255, 120))
             self.screen.blit(text, COUNTER_POS)
 
-        # Draw the reward inside the open chest until the player takes it.
+        # Draw the necklace inside the open chest until the player takes it.
         if self.current_image is self.chest_open_image and not self.reward_taken:
-            pygame.draw.rect(self.screen, (220, 200, 120), self.reward_spot)
+            pygame.draw.rect(self.screen, (220, 220, 230), self.reward_spot)
 
         # masks now get drawn,
         for m in self.current_masks:
@@ -262,6 +314,3 @@ class TeacherRoom:
         # Draw the buttons currently available to the player.
         for b in self.current_buttons:
             b.draw2(self.screen)
-
-        # Draw the dialogue box last so it appears on top of the room.
-        self.chatbox.draw(self.screen)
