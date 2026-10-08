@@ -15,7 +15,7 @@ class Player:
         self.position = (0,0)
         self.location = "corridor"
         self.lastLocation = "frontDesk"
-        self.inventory = {"Stones":[],"Items":[{"Fuse": "assets/fuse_item.png"}]}
+        self.inventory = {"Stones":[],"Items":[]}
         self.gender = ""
         self.completion = {"VampRoom":{"all":[],"current": "", "msg":""},
                            "GhostRoom":{"all":[],"current": "", "msg":""},
