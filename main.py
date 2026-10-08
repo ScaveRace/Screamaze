@@ -9,6 +9,7 @@ import Rooms.corridor as corri
 import Rooms.projectRoom as pR
 import Rooms.equinoxRoom as eq
 import Rooms.teacherRoom as tr
+import Rooms.newRooms as nr
 
 import player as p
 import functions.savingFunc as load
@@ -39,8 +40,17 @@ ROOMS = {
     "vampR" : vp.VampireRoom,
     "equinR" : eq.EquinoxRoom,
     "projRoom" : pR.ProjectRoom,
-    "teacherR" : tr.TeacherRoom
-    #"lab" : lab.Lab2001
+    "teacherR" : tr.TeacherRoom,
+    "lab2001R" : nr.Lab2001,
+    "frontDeskR" : nr.FrontDeskOffice,
+    "class2021R" : nr.Classroom2021,
+    "class2031R" : nr.Classroom2031,
+    "class2035R" : nr.Classroom2035,
+    "stairR" : nr.StairExit,
+    "teach1R" : nr.TeachersRoom1,
+    "teach2R" : nr.TeachersRoom2,
+    "teach3R" : nr.TeachersRoom3,
+    "teach4R" : nr.TeachersRoom4
 }
 
 if not load.is_json_empty("data/gameSettings.json"):
