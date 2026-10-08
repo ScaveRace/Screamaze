@@ -1,338 +1,251 @@
+# roomFunc/ghoRoomFunc.py
 import pygame
 import UI.uiElements as u
-from player import Player
-import UI.frontUI as Fui
 
-
-def set_current():
-    return "hello"
-
-# roomFunc/ghostFunc.py
-from functools import lru_cache, partial
-
-import pygame
-import UI.uiElements as u
+pygame.font.init()
 
 ROOM = "GhostRoom"
-
-CABINET_CODE = "4537"            # string to avoid strange behaviour
-CODE_DISPLAY_POS = (615, 205)    # where typed digits are drawn -> tune to your art
-KEYPAD_ORIGIN = (500, 300)       # top left corner of the "1" key
-KEYPAD_SIZE = 70
-KEYPAD_GAP = 10
+A = "assets/ghostRoom/"
+CABINET_CODE = "4537"                 # string to avoid strange behaviour
+CODE_POS = (615, 205)                 # where typed digits are drawn
+KEYPAD_ORIGIN, KEY, STEP = (500, 300), 70, 80
 HOMEWORK_SPOT = pygame.Rect(600, 400, 56, 56)
-STONE_SPOT = pygame.Rect(750, 400, 44, 44)
+ICON = "assets/gr.room.teacher.jpg"   # inventory icon for stone and homework
+CODE_FONT = pygame.font.Font(None, 56)
 
-# inventory icons (both still point at the room background, see notes)
-STONE_ICON = "assets/gr.room.teacher.jpg"
-HOMEWORK_ICON = "assets/gr.room.teacher.jpg"
-
-# --- saved events (stored in player.completion["GhostRoom"]["all"]) ---
-DESCRIBED = "gr.described"
+# saved events (player.completion["GhostRoom"]["all"])
+DESCRIBED, UNLOCKED = "gr.described", "gr.cabinet_unlocked"
+HW_TAKEN, HW_DONE, STONE = "gr.homework_taken", "gr.homework_done", "gr.stone_taken"
 TALK = ("gr.talk_1", "gr.talk_2", "gr.talk_3")
-UNLOCKED = "gr.cabinet_unlocked"
-HW_TAKEN = "gr.homework_taken"
-HW_DONE = "gr.homework_done"
-STONE = "gr.stone_taken"
 
-# --- images ---
-_IMAGES = {
-    "room":           "assets/ghostRoom/gr.room.teacher.jpg",
-    "room_empty":     "assets/ghostRoom/gr.ghostRoom.no.teacher.png",
-    "teacher":        "assets/ghostRoom/gr.teacher.png",
-    "no_teacher":     "assets/ghostRoom/gr.bureau.no.teacher.png",
-    "whiteboard":     "assets/ghostRoom/gr.whiteboard.4537.png",
-    "cabinet_locked": "assets/ghostRoom/gr.cabinet.homework.png",
-    "cabinet_open":   "assets/ghostRoom/gr.cabinet.open.keypad.png",
-}
-
-_KEYPAD_LABELS = ["1", "2", "3",
-                  "4", "5", "6",
-                  "7", "8", "9",
-                  "C", "0", "E"]
-
-# --- module state ---
 next_room = None
-# Screen-only state, never saved. view is one of:
-# "room", "teacher", "cabinet", "keypad", "whiteboard"
-_ui = {"view": "room", "code": "", "dirty": False}
+_player = _fui = None
+_ui = {"view": "room", "code": ""}    # screen-only state: room/teacher/cabinet/keypad/whiteboard
 
 
 # ---------------------------------------------------------------- helpers
-def _done(player, event):
-    return event in player.getCompletion(ROOM)["all"]
+def done(event):
+    return event in _player.getCompletion(ROOM)["all"]
 
 
-def _save(player, event, msg=None):
-    """Record an event. Keeps the old msg when none is given."""
-    if msg is None:
-        msg = player.getCompletion(ROOM)["msg"]
-    player.addCompletion(ROOM, event, msg)
+def save(event, msg):
+    _player.addCompletion(ROOM, event, msg)
 
 
-def _say(fui, n, who="You"):
-    fui.sendMessage(who, ROOM, n)
+def say(n, who="You"):
+    _fui.sendMessage(who, ROOM, n)
 
 
-def _has_homework(player):
-    return _done(player, HW_TAKEN) and not _done(player, HW_DONE)
+def show(*numbers):
+    for n in numbers:
+        say(n)
 
 
-def _remove_item(player, kind, name):
-    for d in player.inventory[kind]:
-        if name in d:
-            player.inventory[kind].remove(d)
-            return
+def has_homework():
+    return done(HW_TAKEN) and not done(HW_DONE)
 
 
-def _set_view(view):
-    _ui["view"] = view
-    _ui["dirty"] = True
+def stone_visible():
+    """The stone floats behind the empty desk until it is picked up."""
+    return _ui["view"] == "teacher" and done(HW_DONE) and not done(STONE)
 
 
-def reset_view():
-    _ui.update(view="room", code="", dirty=False)
+def reset():
+    _ui.update(view="room", code="")
 
 
-def needs_refresh():
-    """True once after anything that changes images/masks/buttons."""
-    dirty = _ui["dirty"]
-    _ui["dirty"] = False
-    return dirty
-
-
-@lru_cache(maxsize=1)
-def _code_font():
-    return pygame.font.Font(None, 56)
+def state():
+    """Changes whenever the view or the saved progress changes -> room rebuilds."""
+    return _ui["view"], len(_player.getCompletion(ROOM)["all"])
 
 
 # ---------------------------------------------------------------- building
-def _image_key(player, view):
+def background():
+    view, hw = _ui["view"], done(HW_DONE)
     if view == "room":
-        return "room_empty" if _done(player, HW_DONE) else "room"
+        return A + ("gr.ghostRoom.no.teacher.png" if hw else "gr.room.teacher.jpg")
     if view == "teacher":
-        return "no_teacher" if _done(player, HW_DONE) else "teacher"
+        return A + ("gr.bureau.no.teacher.png" if hw else "gr.teacher.png")
     if view in ("cabinet", "keypad"):
-        return "cabinet_open" if _done(player, UNLOCKED) else "cabinet_locked"
-    return "whiteboard"
+        return A + ("gr.cabinet.open.keypad.png" if done(UNLOCKED) else "gr.cabinet.homework.png")
+    return A + "gr.whiteboard.4537.png"
 
 
-def _masks(player, fui, view):
-    """(mask image, callback, label) for the current view."""
+def masks():
+    """(mask file, callback, label)"""
+    view = _ui["view"]
     if view == "room":
-        return [
-            ("assets/ghostRoom/gr_room_teacher_ghost.png", partial(show_teacher, player, fui), "Teacher"),
-            ("assets/ghostRoom/gr_room_whiteboard.png", partial(show_whiteboard, fui), "Whiteboard"),
-            ("assets/ghostRoom/gr_room_cabinet.png", partial(show_cabinet, player, fui), "Cabinet"),
-        ]
-    if view == "teacher" and not _done(player, HW_DONE):
-        return [("assets/ghostRoom/gr_teacher_ghost.png", partial(talk, player, fui), "Talk to the ghost")]
-    if view == "cabinet" and not _done(player, UNLOCKED):
-        return [("assets/ghostRoom/gr_cabinet_homework_keypad.png", partial(open_keypad, fui), "Keypad")]
+        found = [("gr_room_whiteboard.png", show_whiteboard, "Whiteboard"),
+                 ("gr_room_cabinet.png", show_cabinet, "Cabinet")]
+        if not done(HW_DONE):            # the teacher is gone after the homework
+            found.insert(0, ("gr_room_teacher_ghost.png", show_teacher, "Teacher"))
+        return found
+    if view == "teacher" and not done(HW_DONE):
+        return [("gr_teacher_ghost.png", talk, "Talk to the ghost")]
+    if stone_visible():
+        # empty label: the stone is too small for text
+        return [("gr_white_stone_2.png", take_stone, "")]
+    if view == "cabinet" and not done(UNLOCKED):
+        return [("gr_cabinet_homework_keypad.png", open_keypad, "Keypad")]
     return []
 
 
-def _keypad_buttons(player, fui):
-    keys = []
-    x0, y0 = KEYPAD_ORIGIN
-    step = KEYPAD_SIZE + KEYPAD_GAP
-    for i, label in enumerate(_KEYPAD_LABELS):
-        x = x0 + (i % 3) * step
-        y = y0 + (i // 3) * step
-        if label == "C":
-            action = clear_code
-        elif label == "E":
-            action = partial(check_code, player, fui)
-        else:
-            action = partial(press_digit, player, fui, label)
-        keys.append((x, y, KEYPAD_SIZE, KEYPAD_SIZE, label, action))
-    keys.append((1000, 520, 140, 50, "Back", close_keypad))
-    return keys
-
-
-def _buttons(player, fui, view):
-    """(x, y, w, h, label, callback) for the current view."""
-    back = (1000, 520, 140, 50, "Return", partial(return_room, player, fui))
-
+def buttons():
+    """(x, y, w, h, label, callback)"""
+    view = _ui["view"]
+    back = (1000, 520, 140, 50, "Return", back_to_room)
     if view == "room":
-        return [(560, 650, 140, 50, "Return", return_corridor)]
-    if view == "teacher":
-        if not _done(player, HW_DONE):
-            return [(830, 660, 140, 50, "Give", partial(give_homework, player, fui)), back]
-        if not _done(player, STONE):
-            return [(830, 600, 180, 50, "Take stone", partial(collect_stone, player, fui)), back]
-        return [back]
-    if view == "cabinet":
-        if _done(player, UNLOCKED) and not _done(player, HW_TAKEN):
-            return [(550, 600, 180, 50, "Take Homework", partial(take_homework, player, fui)), back]
-        return [back]
+        return [(560, 650, 140, 50, "Return", leave)]
+    if view == "teacher" and not done(HW_DONE):
+        return [(830, 660, 140, 50, "Give", give_homework), back]
+    if view == "cabinet" and done(UNLOCKED) and not done(HW_TAKEN):
+        return [(550, 600, 180, 50, "Take Homework", take_homework), back]
     if view == "keypad":
-        return _keypad_buttons(player, fui)
-    return [back]   # whiteboard
+        keys = []
+        for i, label in enumerate("123456789C0E"):
+            action = clear_code if label == "C" else check_code if label == "E" \
+                else (lambda d=label: press_digit(d))
+            keys.append((KEYPAD_ORIGIN[0] + i % 3 * STEP, KEYPAD_ORIGIN[1] + i // 3 * STEP,
+                         KEY, KEY, label, action))
+        return keys + [(1000, 520, 140, 50, "Back", close_keypad)]
+    return [back]
 
 
 def getElements(player, fui, screen):
-    """Everything is rebuilt from saved state + current view."""
+    global _player, _fui
+    _player, _fui = player, fui
     size = screen.get_size()
-    view = _ui["view"]
-
-    images = [u.load_image(_IMAGES[_image_key(player, view)], size)]
-    masks = [u.Mask(path, size, (0, 0), cb, label)
-             for path, cb, label in _masks(player, fui, view)]
-    buttons = [u.Button(x, y, w, h, label, cb)
-               for x, y, w, h, label, cb in _buttons(player, fui, view)]
-    return images, masks, buttons
+    return ([u.load_image(background(), size)],
+            [u.Mask(A + f, size, (0, 0), cb, label) for f, cb, label in masks()],
+            [u.Button(*b) for b in buttons()])
 
 
 # ---------------------------------------------------------------- actions
-def on_enter(player, fui):
-    if _done(player, DESCRIBED):
-        return
-    _say(fui, 21)   # cold classroom
-    _say(fui, 22)
-    _save(player, DESCRIBED, 22)
+def on_enter():
+    if not done(DESCRIBED):
+        show(21, 22)                     # cold classroom
+        save(DESCRIBED, 22)
 
 
-def talk(player, fui):
-    if _done(player, HW_DONE):
-        _say(fui, 6, "Ghost")
+def talk():
+    if done(HW_DONE):
+        say(6, "Ghost")
         return
-    line = sum(_done(player, e) for e in TALK)
+    line = sum(done(e) for e in TALK)
     if line < 3:
-        _say(fui, line + 1, "Ghost")
-        _save(player, TALK[line], line + 1)
-    elif _has_homework(player):
-        _say(fui, 4, "Ghost")
+        say(line + 1, "Ghost")
+        save(TALK[line], line + 1)
     else:
-        _say(fui, 5, "Ghost")
+        say(4 if has_homework() else 5, "Ghost")
 
 
-def show_teacher(player, fui):
-    _set_view("teacher")
-    if _done(player, HW_DONE):
-        _say(fui, 26)   # the empty desk
-        _say(fui, 7 if _done(player, STONE) else 8)
+def show_teacher():                      # only reachable while the teacher is still there
+    _ui["view"] = "teacher"
+    say(25)
+    talk()
+
+
+def show_whiteboard():
+    _ui["view"] = "whiteboard"
+    say(27)
+
+
+def show_cabinet():
+    _ui["view"] = "cabinet"
+    if done(UNLOCKED):
+        say(32 if done(HW_TAKEN) else 31)
     else:
-        _say(fui, 25)   # ghost behind his desk
-        talk(player, fui)
+        show(29, 30, 11)                 # homework painted on doors, keypad, locked
 
 
-def collect_stone(player, fui):
-    if _done(player, STONE):
-        _say(fui, 9)
+def take_stone():
+    if done(STONE):
+        say(9)
         return
-    player.add_item("Stones", "White", STONE_ICON)
-    _save(player, STONE, 10)
-    _say(fui, 10)
-    _ui["dirty"] = True
+    _player.add_item("Stones", "White", ICON)
+    save(STONE, 10)
+    say(10)
 
 
-def show_cabinet(player, fui):
-    _set_view("cabinet")
-    if _done(player, UNLOCKED):
-        _say(fui, 32 if _done(player, HW_TAKEN) else 31)
-    else:
-        _say(fui, 29)   # HOMEWORK painted on the doors
-        _say(fui, 30)   # keypad on the front
-        _say(fui, 11)   # locked
-
-
-def open_keypad(fui):
-    _ui["code"] = ""
-    _set_view("keypad")
-    _say(fui, 33)
-    _say(fui, 12)
+def open_keypad():
+    _ui.update(view="keypad", code="")
+    show(33, 12)
 
 
 def close_keypad():
-    _ui["code"] = ""
-    _set_view("cabinet")
+    _ui.update(view="cabinet", code="")
 
 
-def press_digit(player, fui, digit):
-    if len(_ui["code"]) >= 4:
-        return
-    _ui["code"] += digit
-    if len(_ui["code"]) == 4:
-        check_code(player, fui)
+def press_digit(digit):
+    if len(_ui["code"]) < 4:
+        _ui["code"] += digit
+        if len(_ui["code"]) == 4:
+            check_code()
 
 
 def clear_code():
     _ui["code"] = ""
 
 
-def check_code(player, fui):
-    if _ui["code"] == CABINET_CODE:
-        _ui["code"] = ""
-        _save(player, UNLOCKED, 31)
-        _set_view("cabinet")
-        _say(fui, 13)   # clunk, the cabinet swings open
-        _say(fui, 31)
+def check_code():
+    correct = _ui["code"] == CABINET_CODE
+    _ui["code"] = ""
+    if correct:
+        save(UNLOCKED, 31)
+        _ui["view"] = "cabinet"
+        show(13, 31)                     # clunk, and what is inside
     else:
-        _ui["code"] = ""
-        _say(fui, 14)
+        say(14)
 
 
-def take_homework(player, fui):
-    if _done(player, HW_TAKEN):
-        _say(fui, 32)   # empty
+def take_homework():
+    if done(HW_TAKEN):
+        say(32)
         return
-    player.add_item("Items", "Homework", HOMEWORK_ICON)
-    _save(player, HW_TAKEN, 16)
-    _say(fui, 16)
-    _ui["dirty"] = True
+    _player.add_item("Items", "Homework", ICON)
+    save(HW_TAKEN, 16)
+    say(16)
 
 
-def give_homework(player, fui):
-    if _done(player, HW_DONE):
-        _say(fui, 17)
-        return
-    if not _has_homework(player):
-        _say(fui, 18)
-        return
-    _remove_item(player, "Items", "Homework")
-    _save(player, HW_DONE, 8)
-    _say(fui, 19)
-    _say(fui, 20, "Ghost")
-    _say(fui, 26)   # the desk he left behind
-    _say(fui, 8)    # he left something on it
-    _ui["dirty"] = True
+def give_homework():
+    if done(HW_DONE):
+        say(17)
+    elif not has_homework():
+        say(18)
+    else:
+        items = _player.inventory["Items"]
+        items[:] = [d for d in items if "Homework" not in d]
+        save(HW_DONE, 8)                 # view stays "teacher": the empty desk with the stone
+        show(19)
+        say(20, "Ghost")
+        show(26, 8)
 
 
-def show_whiteboard(fui):
-    _set_view("whiteboard")
-    _say(fui, 27)
+def back_to_room():
+    _ui.update(view="room", code="")
+    say(24 if done(HW_DONE) else 23)
 
 
-def return_room(player, fui):
-    _set_view("room")
-    _say(fui, 24 if _done(player, HW_DONE) else 23)
-
-
-def return_corridor():
+def leave():
     global next_room
     next_room = "corridor"
 
 
-def keyboard(event, player, fui):
-    """Typing works next to the on-screen keys, only while the keypad is open."""
-    if _ui["view"] != "keypad" or event.type != pygame.KEYDOWN:
-        return
-    if event.unicode.isdigit():
-        press_digit(player, fui, event.unicode)
-    elif event.key == pygame.K_BACKSPACE:
-        _ui["code"] = _ui["code"][:-1]
-    elif event.key == pygame.K_RETURN:
-        check_code(player, fui)
+def keyboard(event):
+    if _ui["view"] == "keypad" and event.type == pygame.KEYDOWN:
+        if event.unicode.isdigit():
+            press_digit(event.unicode)
+        elif event.key == pygame.K_BACKSPACE:
+            _ui["code"] = _ui["code"][:-1]
+        elif event.key == pygame.K_RETURN:
+            check_code()
 
 
 # ---------------------------------------------------------------- drawing
-def drawExtras(screen, player):
+def drawExtras(screen):
     view = _ui["view"]
-    if view == "teacher" and _done(player, HW_DONE) and not _done(player, STONE):
-        pygame.draw.circle(screen, (245, 245, 245), STONE_SPOT.center, STONE_SPOT.w // 2)
-    if view == "cabinet" and _done(player, UNLOCKED) and not _done(player, HW_TAKEN):
+    if view == "cabinet" and done(UNLOCKED) and not done(HW_TAKEN):
         pygame.draw.rect(screen, (235, 235, 235), HOMEWORK_SPOT)
     if view == "keypad":
-        shown = _ui["code"].ljust(4, "-")   # "45" -> "45--"
-        screen.blit(_code_font().render(shown, True, (0, 255, 120)), CODE_DISPLAY_POS)
+        shown = _ui["code"].ljust(4, "-")             # "45" -> "45--"
+        screen.blit(CODE_FONT.render(shown, True, (0, 255, 120)), CODE_POS)

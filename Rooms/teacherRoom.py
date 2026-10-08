@@ -41,9 +41,9 @@ STONE_LINE_FIRST = 15        # White = 15, Red = 16, Green = 17, Purple = 18, Ye
 MISSING_LINE_BASE = 15
 
 # Where the five stone slots are drawn on the chest close up.
-SLOT_ORIGIN = (520, 430)   # centre of the first (left) slot
-SLOT_SIZE = 70             # height of one stone, the width follows the picture
-SLOT_GAP = 26              # space between two slots
+SLOT_ORIGIN = (560, 430)   # centre of the first (left) slot
+SLOT_SIZE = 44             # height of one stone, the width follows the picture
+SLOT_GAP = 10              # space between two slots
 
 # Where the "3 / 5" counter is drawn on the chest close up.
 COUNTER_POS = (615, 205)
