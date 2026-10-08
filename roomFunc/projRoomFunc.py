@@ -58,7 +58,7 @@ def placed(room, shape):
 
 
 def carried(room, shape): # the player has the badge and it is not in the box yet
-    return room.player.has_item(shape) and not placed(room, shape)
+    return room.player.has_item("Items", shape) and not placed(room, shape)
 
 
 def say(room, who, messageID):
@@ -138,7 +138,7 @@ def tryPlace(room, shape):
 
 def complete(room): # all badges are in: they are used up and the stone is the reward
     for shape in SHAPES:
-        room.player.remove_item(shape)
+        room.player.remove_item("Items", shape)
     room.player.add_item("Stones", "Purple", STONE_PATH)
     add(room, "proj.stone")                                 # after add_item, so a failed pickup doesn't count as taken
     sayAll(room, OPEN)
