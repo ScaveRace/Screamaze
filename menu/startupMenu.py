@@ -1,4 +1,4 @@
-import functions.startupFunc as sF
+import roomFunc.startupFunc as sF
 
 
 class StartupMenu:
