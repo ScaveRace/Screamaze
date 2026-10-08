@@ -19,19 +19,17 @@ class Corridor:
 
 
     def getElements(self):
-        tmp = cF.getElements(self.p,self.fui,self.screen)
+        tmp = cF.getElements(self.p,self.fui,self.screen,self.goTo)
         self.image = tmp[0]
         self.elements = tmp[1]
 
-
-
+    def goTo(self, room):
+        self.next_room = room
 
 
     def handle_event(self, event):
         for e in self.elements:
             e.handle_event(event)
-        self.next_room = cF.next_room
-        cF.next_room = None
 
 
     def draw(self):

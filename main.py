@@ -8,6 +8,7 @@ import Rooms.vampireRoom as vp
 import Rooms.corridor as corri
 import Rooms.projectRoom as pR
 import Rooms.equinoxRoom as eq
+import Rooms.teacherRoom as tr
 
 import player as p
 import functions.savingFunc as load
@@ -37,7 +38,8 @@ ROOMS = {
     "storrR" : st.StorrageRoom,
     "vampR" : vp.VampireRoom,
     "equinR" : eq.EquinoxRoom,
-    "projRoom" : pR.ProjectRoom
+    "projRoom" : pR.ProjectRoom,
+    "teacherR" : tr.TeacherRoom
     #"lab" : lab.Lab2001
 }
 

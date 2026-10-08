@@ -9,14 +9,17 @@ font = pygame.font.Font(None, 36)
 
 
 class PauseMenu:
-    def __init__(self, screen,player):
+    def __init__(self, screen,player,canSave=True):
         self.screen = screen
         self.paused = False
         self.pauseButton = u.Button(1370, 20, 90, 36, "pause", self.toggle)
+        self.saveButton = u.Button(570, 385, 140, 44, "save game", self.saveGame)
         self.buttons = [
-            u.Button(570, 385, 140, 44, "save game", self.saveGame),
+            self.saveButton,
             u.Button(570, 440, 140, 44, "resume", self.toggle),
         ]
+        if not canSave:   # the startup menu has no game to save yet
+            self.buttons.remove(self.saveButton)
         self.player = player
         self.volumeSlider = u.Slider(490, 280, 300, 18, "volume",sett.setMusicVolume,self.saveAction,sett.getMusicVolume())
         self.sfxSlider = u.Slider(490, 335, 300, 18, "sound effects", sett.setSFXVolume, self.saveAction, sett.getSFXVolume())
@@ -25,12 +28,15 @@ class PauseMenu:
 
     def toggle(self):
         self.paused = not self.paused
-        self.buttons[0].label = "save game"
+        self.saveButton.label = "save game"
+        # the volume can also be changed from the other pause menu, so show the current one
+        self.volumeSlider.value = sett.getMusicVolume()
+        self.sfxSlider.value = sett.getSFXVolume()
 
 
     def saveGame(self):
         save.save(self.player,"data/savePlayer.json")
-        self.buttons[0].label = "saved!"
+        self.saveButton.label = "saved!"
 
 
 

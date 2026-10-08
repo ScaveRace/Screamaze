@@ -1,10 +1,5 @@
-import UI.uiElements as u
-import functions.sound as s
-import pygame
-from Rooms import frontDesk
-import functions.savingFunc as load
-from functions.settingsFunc import settings as sett
-from player import Player
+import roomFunc.startupFunc as sF
+import UI.pauseMenu as pause
 
 
 class StartupMenu:
@@ -12,36 +7,32 @@ class StartupMenu:
         self.screen = screen
         self.player = player
         self.next_room = None
-        self.bgMusic = "assets/music/niceThomas.mp3"
-        self.background = u.load_image("assets/startup.png", (screen.get_size()[0]+300,screen.get_size()[1]))
-        self.buttons = [
-            u.Button(120, 420, 150, 50, "New Game", self.new_game),
-            u.Button(120, 470, 150, 50, "Load Game", self.load_game),
-            u.Button(120, 520, 150, 50, "Settings",self.settings),
-        ]
-        s.play_music(self.bgMusic,sett)
+        self.image = []
+        self.buttons = []
+        self.pause = pause.PauseMenu(screen, player, False)
+        self.getElements()
 
-    def load_game(self):
-        load.load(self.player,"data/savePlayer.json")
-        self.player.setImage()
-        self.next_room = self.player.location
-        return
-        print("loading the game")
+    def getElements(self):
+        tmp = sF.getElements(self.player,self.screen,self.goTo,self.pause.toggle)
+        self.image = tmp[0]
+        self.buttons = tmp[1]
 
-    def new_game(self):
-        print("starting new game")
-        self.next_room = "frontD"
-
-    def settings(self):
-
-        print("entering settings menu")
+    def goTo(self, room):
+        self.next_room = room
 
     def handle_event(self, event):
-        for b in self.buttons:
-            b.handle_event(event)
+        if self.pause.paused:
+            self.pause.handle_event(event)
+        else:
+            for b in self.buttons:
+                b.handle_event(event)
 
     def draw(self):
-        self.screen.blit(self.background, (0, 0))
+        for i in self.image:
+            self.screen.blit(i, (0, 0))
 
         for b in self.buttons:
             b.draw2(self.screen)
+
+        if self.pause.paused:
+            self.pause.draw()
