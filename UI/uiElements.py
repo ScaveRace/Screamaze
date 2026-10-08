@@ -1,5 +1,7 @@
 import pygame
 from functions import uiFunc as uF
+import sqlite3
+
 pygame.font.init()  #### fonts need to be initialized before using them
 
 startX = 300
