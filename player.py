@@ -57,17 +57,17 @@ class Player:
 
 
 
-    def remove_item(self, item):
-        for element in self.inventory["Items"]:
+    def remove_item(self, category, item):
+        for element in self.inventory[category]:
             if item in element:
-                self.inventory["Items"].remove(element)
+                self.inventory[category].remove(element)
                 return True
 
     def setCurrent(self,current):
         self.lastLocation = self.location
 
-    def has_item(self, item):
-        for element in self.inventory["Items"]:
+    def has_item(self, category, item):
+        for element in self.inventory[category]:
             if item in element:
                 return True
         return False
