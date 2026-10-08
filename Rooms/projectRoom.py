@@ -1,39 +1,36 @@
 import pygame
 import roomFunc.projRoomFunc as pF
 
-fontBig = pygame.font.Font(None, 40)
+pygame.init()
 
 
-########## project room class ##########
 class ProjectRoom:
-    # class variable, so the progress stays when you leave and come back
-    memory = {
-        "visited": False,        # the intro line was said
-        "stoneTaken": False,     # the box was opened and the purple stone given
-        "placed": {"Circle": False, "Triangle": False, "Square": False},   # badges already in the box
-    }
-
-    def __init__(self, screen, p, fui):
+    def __init__(self, screen, player, fui):
+        self.fui = fui
         self.screen = screen
+        self.player = player
         self.next_room = None
-        self.image = pF.getElements(p, fui, screen, ProjectRoom.memory)
 
-    ########## only the buttons of the current view get clicks ##########
+        self.view = "room"
+        self.holding = None             # the badge in your hand
+
+        self.font = pygame.font.Font(None, 40)
+        self.image, self.boxImage = pF.loadImages(screen)
+        self.btn = pF.buildButtons(self)
+        self.buttons = []
+
+        pF.intro(self)
+        self.getElements()
+
+    def getElements(self):
+        self.buttons = pF.getElements(self)
+
     def handle_event(self, event):
-        for b in pF.currentButtons():
+        for b in self.buttons:
             b.handle_event(event)
-        self.next_room = pF.next_room
-        pF.next_room = None
+        self.getElements()
 
-    ########## draw the current project room view ##########
     def draw(self):
-        self.screen.blit(self.image, (pF.X, 0))
-
-        if pF.view == "room":
-            self.screen.blit(fontBig.render("PROJECT ROOM 1", True, (230, 225, 235)), (pF.X + 60, 50))
-        else:
-            self.screen.blit(pF.boxImage, (pF.X + 420, 180))
-            pygame.draw.rect(self.screen, (170, 150, 120), pygame.Rect(pF.X + 420, 180, 420, 300), 1)
-
-        for b in pF.currentButtons():
+        pF.drawScene(self)
+        for b in self.buttons:
             b.draw2(self.screen)

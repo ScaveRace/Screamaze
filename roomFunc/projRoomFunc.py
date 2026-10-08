@@ -1,167 +1,153 @@
+import pygame
 import UI.uiElements as u
 
-ROOM = "ProjectRoom"                          # table name in the story database
-STONE_ICON = "assets/stones/purple.png"
+SHAPES = ("Circle", "Triangle", "Square")                                   # item names, found in other rooms
+OWNERS = {"Circle": "Mina", "Triangle": "Sam", "Square": "Jorn"}            # whose badge it is, see the whiteboard
+STONE_PATH = "assets/stones/purple.png"
+HOLDING_COLOUR = (110, 95, 60)
 
-########## the chat takes the left 300px, so the room starts here ##########
-X = u.startX
-
-# a plain +300 would push the right-hand buttons (230 wide) past the 1480px screen,
-# so they sit 60px from the right edge instead
+# the chat takes the left 300px, so the right-hand buttons sit 60px from the screen edge instead of a plain +300
 RIGHT_X = 1480 - 60 - 230
 
-########## the three badges, found in other rooms as items with exactly these names ##########
-SHAPES = ("Circle", "Triangle", "Square")
-owners = {"Circle": "Mina", "Triangle": "Sam", "Square": "Jorn"}    # whose badge it is, see the whiteboard
+# you'll notice some lambdas below in the code, that is to prevent buttons from firing their functions upon being built.
 
-image = None
-boxImage = None
-roomButtons = []
-slotButtons = {}         # shape -> the slot in the box that belongs to it
-badgeButtons = []        # the badges the player carries, rebuilt when they change
-backButton = None
-next_room = None
-
-view = "room"            # "room" or "box"
-holding = None
-player = None
-fui = None
-memory = {}              # ProjectRoom.memory, so progress survives leaving the room
+DB_TABLE = "ProjectRoom"
+INTRO = [(None, "intro_1")]
+PHONE = [(None, "phone"), ("Voicemail", "voicemail_1"), ("Voicemail", "voicemail_2")]
+BOARD = [(None, "board"), ("Whiteboard", "board_mina"), ("Whiteboard", "board_jorn"), ("Whiteboard", "board_sam")]
+OPEN = [(None, "open"), (None, "stone")]
 
 
-def getElements(p, f, screen, mem):
-    global player, fui, memory, image, boxImage, roomButtons, slotButtons, backButton, view, holding
-    player, fui, memory = p, f, mem
-    view = "room"
-    holding = None
-
+def loadImages(screen):
     image = u.load_image("assets/project_room.png", screen.get_size(), (22, 20, 26))
     boxImage = u.load_alpha_image("assets/", (420, 300), (40, 32, 26))
-
-    roomButtons = [
-        u.Button(X + 60, 120, 230, 60, "Bookshelf", searchShelf),
-        u.Button(RIGHT_X, 120, 230, 60, "Whiteboard", readBoard),
-        u.Button(X + 60, 560, 230, 60, "Beanbags", checkPhone),
-        u.Button(RIGHT_X, 560, 230, 60, "Locked box", openBox),
-        u.Button(X + 540, 650, 200, 45, "Leave the room", leave),
-    ]
-    backButton = u.Button(X + 60, 650, 160, 45, "Back", backToRoom)
-
-    # one slot per badge, it shows the name of its owner until the badge is in
-    slotButtons = {}
-    for i, shape in enumerate(SHAPES):
-        label = shape if memory["placed"][shape] else owners[shape]
-        slotButtons[shape] = u.Button(X + 450 + 130 * i, 300, 100, 100, label,
-                                      lambda shape=shape: tryPlace(shape))
-
-    if memory["stoneTaken"]:
-        say(19)
-    elif not memory["visited"]:
-        say(1)
-    memory["visited"] = True
-    return image
+    return image, boxImage
 
 
-def currentButtons():
-    if view == "room":
-        return list(roomButtons)
-    return list(slotButtons.values()) + badgeButtons + [backButton]
+def buildButtons(room):
+    x = u.startX
+    return {
+        "bookshelf": u.Button(x + 60, 120, 230, 60, "Bookshelf", lambda: say(room, None, "binder")),
+        "board": u.Button(RIGHT_X, 120, 230, 60, "Whiteboard", lambda: sayAll(room, BOARD)),
+        "phone": u.Button(x + 60, 560, 230, 60, "Beanbags", lambda: sayAll(room, PHONE)),
+        "box": u.Button(RIGHT_X, 560, 230, 60, "Locked box", lambda: openBox(room)),
+        "leave": u.Button(x + 540, 650, 200, 45, "Leave the room", lambda: leave(room)),
+        "back": u.Button(x + 60, 650, 160, 45, "Back", lambda: toRoom(room)),
+        # one slot and one badge button per shape, the badge only shows up while the player carries it
+        "slot": {s: u.Button(x + 450 + 130 * i, 300, 100, 100, OWNERS[s], lambda s=s: tryPlace(room, s))
+                 for i, s in enumerate(SHAPES)},
+        "badge": {s: u.Button(x + 420 + 110 * i, 500, 100, 50, s, lambda s=s: pickUp(room, s))
+                  for i, s in enumerate(SHAPES)},
+    }
 
 
-########## chat line from the database ##########
-def say(n, who="You"):
-    fui.sendMessage(who, ROOM, n)
+def progress(room): # just points to specific room project from completion
+    return room.player.getCompletion("ProjectRoom")
 
 
-########## story hotspots ##########
-def searchShelf():
-    say(2)
+def has(room, event): # easy check to see if something already happened.
+    return event in progress(room)["all"]
 
 
-def checkPhone():
-    say(3)
-    say(4, "Voicemail")
-    say(5, "Voicemail")
+def add(room, event):
+    room.player.addCompletion("ProjectRoom", event, "")
 
 
-def readBoard():
-    say(6)
-    say(7, "Whiteboard")
-    say(8, "Whiteboard")
-    say(9, "Whiteboard")
+def placed(room, shape):
+    return has(room, "proj.placed." + shape)
 
 
-########## open the locked box ##########
-def openBox():
-    global view
-    view = "box"
-    refreshBadges()
-    if memory["stoneTaken"]:
-        say(18)
-    else:
-        say(10)
-        if not badgeButtons:
-            say(11)
+def carried(room, shape): # the player has the badge and it is not in the box yet
+    return room.player.has_item(shape) and not placed(room, shape)
 
 
-########## one button per badge the player carries and has not put in the box yet ##########
-def refreshBadges():
-    global badgeButtons
-    badgeButtons = []
+def say(room, who, messageID):
+    text = room.fui.db.chatMessage(DB_TABLE, messageID)
+    room.fui.chat.say(f"{who} > {text}" if who else text)
+
+
+def sayAll(room, lines):
+    for who, messageID in lines:
+        say(room, who, messageID)
+
+
+def intro(room):
+    if has(room, "proj.stone"):
+        say(room, None, "intro_done")
+    elif not has(room, "proj.visited"):
+        add(room, "proj.visited")
+        sayAll(room, INTRO)
+
+
+def getElements(room): # basically the logic
+    if room.view == "room":
+        return [room.btn[name] for name in ("bookshelf", "board", "phone", "box", "leave")]
+
+    buttons = [room.btn["back"]]
     for shape in SHAPES:
-        if player.has_item(shape) and not memory["placed"][shape]:
-            b = u.Button(X + 420 + 110 * len(badgeButtons), 500, 100, 50, shape,
-                         lambda shape=shape: pickUp(shape))
-            if shape == holding:
-                b.bgCol = (110, 95, 60)       # the badge in your hand
-            badgeButtons.append(b)
+        slot = room.btn["slot"][shape]
+        slot.label = shape if placed(room, shape) else OWNERS[shape]    # the name turns into the badge
+        buttons.append(slot)
+
+        if carried(room, shape):
+            badge = room.btn["badge"][shape]
+            badge.bgCol = HOLDING_COLOUR if room.holding == shape else (0, 0, 0)
+            buttons.append(badge)
+    return buttons
 
 
-def pickUp(shape):
-    global holding
-    holding = shape
-    refreshBadges()
-    say(13)
+def toRoom(room):
+    room.view = "room"
+    room.holding = None
 
 
-########## place the badge in a slot ##########
-def tryPlace(shape):
-    global holding
-    if memory["stoneTaken"] or memory["placed"][shape]:
+def leave(room):
+    room.next_room = "corridor"
+
+
+def openBox(room):
+    room.view = "box"
+    if has(room, "proj.stone"):
+        say(room, None, "box_empty")
         return
-    if holding is None:
-        say(12)
-    elif holding == shape:
-        memory["placed"][shape] = True
-        slotButtons[shape].label = shape
-        holding = None
-        say(15)
-        if all(memory["placed"].values()):
-            finishBox()
+    say(room, None, "box")
+    if not any(carried(room, s) for s in SHAPES):
+        say(room, None, "box_nobadges")
+
+
+def pickUp(room, shape):
+    room.holding = shape
+    say(room, None, "pickup")
+
+
+def tryPlace(room, shape):
+    if placed(room, shape):
+        return
+    if room.holding is None:
+        say(room, None, "pick_first")
+    elif room.holding == shape:
+        add(room, "proj.placed." + shape)
+        room.holding = None
+        say(room, None, "place")
+        if all(placed(room, s) for s in SHAPES):
+            complete(room)
     else:
-        holding = None
-        say(14)
-    refreshBadges()
+        room.holding = None
+        say(room, None, "wrong")
 
 
-########## all badges are in: they are used up and the stone is the reward ##########
-def finishBox():
+def complete(room): # all badges are in: they are used up and the stone is the reward
     for shape in SHAPES:
-        player.remove_item(shape)
-    player.add_item("Stones", "Purple", STONE_ICON)
-    memory["stoneTaken"] = True       # after add_item, so a failed pickup doesn't count as taken
-    say(16)
-    say(17)
+        room.player.remove_item(shape)
+    room.player.add_item("Stones", "Purple", STONE_PATH)
+    add(room, "proj.stone")                                 # after add_item, so a failed pickup doesn't count as taken
+    sayAll(room, OPEN)
 
 
-########## return to the main room ##########
-def backToRoom():
-    global view, holding
-    view = "room"
-    holding = None
-
-
-########## leave project room and go to corridor ##########
-def leave():
-    global next_room
-    next_room = "corridor"
+def drawScene(room):
+    room.screen.blit(room.image, (u.startX, 0))
+    if room.view == "room":
+        room.screen.blit(room.font.render("PROJECT ROOM 1", True, (230, 225, 235)), (u.startX + 60, 50))
+    else:
+        room.screen.blit(room.boxImage, (u.startX + 420, 180))
+        pygame.draw.rect(room.screen, (170, 150, 120), pygame.Rect(u.startX + 420, 180, 420, 300), 1)
