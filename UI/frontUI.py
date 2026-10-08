@@ -26,9 +26,11 @@ class FrontUI:
         print(self.chat.messages)
         return
     def handleEvenet(self,event):
+        if self.pause.handle_event(event):
+            return True
         self.inventory.handle_event(event)
-        self.pause.handle_event(event)
         self.chat.handle_event(event)
+        return False
 
     def draw(self):
 

@@ -66,10 +66,8 @@ while running:
             running = False
 
         else:
-            frontui.handleEvenet(event)
-            room.handle_event(event)
-
-
+            if not frontui.handleEvenet(event) and not (current != "startup" and current != "frontD"):
+                room.handle_event(event)
 
     if room.next_room is not None:
         name = room.next_room
