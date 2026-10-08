@@ -75,3 +75,4 @@ class StorrageRoom:
 
         if sF.view == sF.View.ROOM:
             self.fieldoftext.draw(self.screen)
+            print("uahjkeihdabhuenabhuefnaefi")
