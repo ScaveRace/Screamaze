@@ -6,13 +6,13 @@ class InventoryMenu:
         self.screen = screen
         self.p = player
         self.open = False
-        self.panel =  pygame.Rect(440,140,400,440)
+        self.panel =  pygame.Rect(740,140,400,440)
         self.images = {}
         self.font = pygame.font.Font(None,36)
         self.small_font = pygame.font.Font(None, 28)
 
         self.openButton = u.Button(1270,20,90,36,"Inventory",self.toggle)
-        self.closeButton = u.Button(570,520,140,44,"Close",self.toggle)
+        self.closeButton = u.Button(870,520,140,44,"Close",self.toggle)
 
     def toggle(self):
         self.open = not self.open
@@ -41,14 +41,14 @@ class InventoryMenu:
         pygame.draw.rect(self.screen, (0, 0, 0), self.panel)
         pygame.draw.rect(self.screen, (255, 255, 255), self.panel, 1)
         title = self.font.render("INVENTORY", True, (255, 255, 255))
-        self.screen.blit(title, title.get_rect(center=(640, 175)))
+        self.screen.blit(title, title.get_rect(center=(940, 175)))
 
         y = self.panel.y + 70
         items = self.p.inventory["Items"]
 
         if not items:  # no items yet
             empty = self.small_font.render("Nothing here yet.", True, (150, 150, 142))
-            self.screen.blit(empty, empty.get_rect(center=(640, y + 20)))
+            self.screen.blit(empty, empty.get_rect(center=(940, y + 20)))
 
         for entry in items:  # entry = {"Fuse": "assets/fuse_item.png"}
             for name, path in entry.items():  # one dict = one item

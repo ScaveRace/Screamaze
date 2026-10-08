@@ -15,7 +15,6 @@ def getElements(player,fui,screen,goTo):
     return images,masks
 
 def current(screen,goTo):
-    doPress = door(goTo,"vampR")
     storr = door(goTo,"storrR")
     vamp = door(goTo,"vampR")
     ghost = door(goTo,"ghostR")
@@ -23,21 +22,21 @@ def current(screen,goTo):
     equin = door(goTo,"equinR")
     teachRoom = door(goTo,"teacherR")
     return [
-        makeMask(screen, "assets/corridor/room_01.png", (105, 144), doPress, "LAB 2.001"),
+        makeMask(screen, "assets/corridor/room_01.png", (105, 144), door(goTo,"lab2001R"), "LAB 2.001"),
         makeMask(screen, "assets/corridor/room_02.png", (271, 144), ghost, "LAB 2.003"),
-        makeMask(screen, "assets/corridor/room_03.png", (736, 144), doPress, "Front Desk Office"),
+        makeMask(screen, "assets/corridor/room_03.png", (736, 144), door(goTo,"frontDeskR"), "Front Desk Office"),
         makeMask(screen, "assets/corridor/room_04.png", (872, 143), vamp, "Classroom 2.015"),
-        makeMask(screen, "assets/corridor/room_05.png", (1028, 143), doPress, "Classroom 2.021"),
+        makeMask(screen, "assets/corridor/room_05.png", (1028, 143), door(goTo,"class2021R"), "Classroom 2.021"),
         makeMask(screen, "assets/corridor/room_06.png", (1212, 143), teachRoom, "Teachers Room 4"),
-        makeMask(screen, "assets/corridor/room_07.png", (1397, 143), doPress, "Classroom 2.031"),
-        makeMask(screen, "assets/corridor/room_08.png", (1213, 211), doPress, "Stair Exit"),
-        makeMask(screen, "assets/corridor/room_09.png", (765, 383), doPress, "Teachers Room 1"),
-        makeMask(screen, "assets/corridor/room_10.png", (872, 384), doPress, "Teachers Room 2"),
-        makeMask(screen, "assets/corridor/room_11.png", (960, 383), doPress, "Teachers Room 3"),
+        makeMask(screen, "assets/corridor/room_07.png", (1397, 143), door(goTo,"class2031R"), "Classroom 2.031"),
+        makeMask(screen, "assets/corridor/room_08.png", (1213, 211), door(goTo,"stairR"), "Stair Exit"),
+        makeMask(screen, "assets/corridor/room_09.png", (765, 383), door(goTo,"teach1R"), "Teachers Room 1"),
+        makeMask(screen, "assets/corridor/room_10.png", (872, 384), door(goTo,"teach2R"), "Teachers Room 2"),
+        makeMask(screen, "assets/corridor/room_11.png", (960, 383), door(goTo,"teach3R"), "Teachers Room 3"),
         makeMask(screen, "assets/corridor/room_12.png", (1051, 383), equin, "Equinox Student Society"),
         makeMask(screen, "assets/corridor/room_13.png", (1141, 383), projRoom, "Project Room 3"),
         makeMask(screen, "assets/corridor/room_14.png", (1224, 383), storr, "Storage"),
-        makeMask(screen, "assets/corridor/room_15.png", (1397, 340), doPress, "Classroom 2.035"),
+        makeMask(screen, "assets/corridor/room_15.png", (1397, 340), door(goTo,"class2035R"), "Classroom 2.035"),
         makeMask(screen, "assets/corridor/room_16.png", (455, 438), projRoom, "Project Room 1"),
         makeMask(screen, "assets/corridor/room_17.png", (551, 438), projRoom, "Project Room 2"),
     ]
