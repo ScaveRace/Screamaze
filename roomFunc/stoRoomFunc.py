@@ -1,5 +1,4 @@
 import sqlite3
-import pygame
 import UI.uiElements as u
 from functions.settingsFunc import settings as sett
 
@@ -55,7 +54,7 @@ MASK_DIR = "assets/storrageRoom/masks/"
 
 # icons used in the inventory
 STONE_IMAGE = "assets/stones/green.png"
-FUSE_ICON = "assets/fuse_item.png"
+FUSE_ICON = "assets/vampire/masks/fuse.png"
 
 
 class View:
@@ -78,6 +77,7 @@ class Quiz:
     def answer(self, choice):
         _, _, correct = self.current_question()
         if choice != correct:
+            self.index = 0
             return False, False
 
         self.index += 1
@@ -186,7 +186,7 @@ def setView(newView, message=None):
     if view == View.QUIZ:
         buttons[View.QUIZ] = quizButtons()
 
-    #if message:
+    if message:
         say(message)
 
 
@@ -254,6 +254,7 @@ def checkAnswer(choice):
 
     if not correct:
         say("You > " + T(MSG_WRONG))
+        setView(View.QUIZ)
         return
 
     if justCompleted:
