@@ -1,19 +1,17 @@
-import sqlite3
-import pygame
 import UI.uiElements as u
+import functions.language as lang
 
 ########## constants ##########
-DB_PATH = "data/database/storyDB.db"
-TABLE = "SorrageRoom"   # (sic) the table name in storyDB.db
+TABLE = "SorrageRoom"   # (sic) the name of this room in the language files
 
-# ids of the quiz texts in the database table: (question id, [answer ids], index of the correct answer)
+# ids of the quiz texts in the language files: (question id, [answer ids], index of the correct answer)
 QUESTION_IDS = [
     (11, [12, 13, 14], 1),
     (15, [16, 17, 18], 2),
     (19, [20, 21, 22], 0),
 ]
 
-# ids of the chat messages in the database table
+# ids of the chat messages in the language files
 MSG_FUSE_BOX = 1
 MSG_FUSE_TAKEN = 2
 MSG_DRAWER_LOCKED_QUIZ = 3
@@ -29,14 +27,9 @@ texts = {}      # id -> text, filled by loadTexts()
 
 
 def loadTexts():
-    # read every line of this room from the database once, when the room starts
+    # read every line of this room from the language files once, when the room starts
     global texts
-    con = sqlite3.connect(DB_PATH)
-    try:
-        rows = con.execute(f'SELECT id, text_en FROM "{TABLE}"').fetchall()
-    finally:
-        con.close()
-    texts = {int(i): t for i, t in rows}
+    texts = {int(i): lang.chatMessage(TABLE, i) for i in lang.texts["en"][TABLE]}
 
 
 def T(textId):
@@ -53,7 +46,7 @@ MASK_DIR = "assets/storrageRoom/masks/"
 
 # icons used in the inventory
 STONE_IMAGE = "assets/stones/green.png"
-FUSE_ICON = "assets/fuse_item.png"
+FUSE_ICON = "assets/vampire/masks/fuse.png"
 
 
 class View:
@@ -76,6 +69,7 @@ class Quiz:
     def answer(self, choice):
         _, _, correct = self.current_question()
         if choice != correct:
+            self.index = 0
             return False, False
 
         self.index += 1
@@ -184,7 +178,7 @@ def setView(newView, message=None):
     if view == View.QUIZ:
         buttons[View.QUIZ] = quizButtons()
 
-    #if message:
+    if message:
         say(message)
 
 
@@ -252,6 +246,7 @@ def checkAnswer(choice):
 
     if not correct:
         say("You > " + T(MSG_WRONG))
+        setView(View.QUIZ)
         return
 
     if justCompleted:

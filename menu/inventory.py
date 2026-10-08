@@ -44,13 +44,13 @@ class InventoryMenu:
         self.screen.blit(title, title.get_rect(center=(940, 175)))
 
         y = self.panel.y + 70
-        items = self.p.inventory["Items"]
+        entries = self.p.inventory["Items"] + self.p.inventory["Stones"]
 
-        if not items:  # no items yet
+        if not entries:  # no items yet
             empty = self.small_font.render("Nothing here yet.", True, (150, 150, 142))
             self.screen.blit(empty, empty.get_rect(center=(940, y + 20)))
 
-        for entry in items:  # entry = {"Fuse": "assets/fuse_item.png"}
+        for entry in entries:  # entry = {"Fuse": "assets/fuse_item.png"}
             for name, path in entry.items():  # one dict = one item
                 self.screen.blit(self.get_image(path), (self.panel.x + 40, y))
                 self.screen.blit(self.small_font.render(name, True, (222, 222, 214)),
