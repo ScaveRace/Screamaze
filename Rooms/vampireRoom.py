@@ -1,5 +1,5 @@
 import pygame
-import roomFunc.vampireRoomFunc as vF
+import roomFunc.VampFunc as vF
 
 pygame.init()
 pygame.mixer.init()
