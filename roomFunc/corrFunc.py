@@ -22,8 +22,8 @@ def current(screen,goTo):
     projRoom = door(goTo,"projRoom")
     equin = door(goTo,"equinR")
     return [
-        makeMask(screen, "assets/corridor/room_01.png", (105, 144), ghost, "LAB 2.001"),
-        makeMask(screen, "assets/corridor/room_02.png", (271, 144), doPress, "LAB 2.003"),
+        makeMask(screen, "assets/corridor/room_01.png", (105, 144), doPress, "LAB 2.001"),
+        makeMask(screen, "assets/corridor/room_02.png", (271, 144), ghost, "LAB 2.003"),
         makeMask(screen, "assets/corridor/room_03.png", (736, 144), doPress, "Front Desk Office"),
         makeMask(screen, "assets/corridor/room_04.png", (872, 143), vamp, "Classroom 2.015"),
         makeMask(screen, "assets/corridor/room_05.png", (1028, 143), doPress, "Classroom 2.021"),
