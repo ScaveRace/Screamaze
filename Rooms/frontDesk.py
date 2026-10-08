@@ -11,11 +11,11 @@ smallFont = pygame.font.Font(None, 20)
 
 from functions.settingsFunc import settings as sett
 import functions.sound as s
-import functions.loreFunctions as lF
+import functions.language as lang
 from functions import uiFunc as uF
 running = True
 
-# the story before the game starts: (who says it, id in the FrontDesk table of the database)
+# the story before the game starts: (who says it, id of the text under FrontDesk in the language files)
 STORY = [
     ("", "story_1"),
     ("", "story_2"),
@@ -41,9 +41,7 @@ class FrontDesk:
         self.animation = False ### button animation switch
         self.alpha = 0
         self.startAnim = 0 ### animation start time, set when the story reaches LOOK_UP
-        db = lF.StoryDB()
-        self.story = [(who, db.chatMessage("FrontDesk", msg_id) or "") for who, msg_id in STORY]
-        db.close()
+        self.story = [(who, lang.chatMessage("FrontDesk", msg_id) or "") for who, msg_id in STORY]
         self.part = 0 ### which part of the story is on screen
         self.partStart = pygame.time.get_ticks()
         self.next_room = None

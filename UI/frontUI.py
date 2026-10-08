@@ -2,7 +2,7 @@ import pygame
 import UI.uiElements as u
 import menu.inventory as i
 import UI.pauseMenu as pause
-import functions.loreFunctions as lF
+import functions.language as lang
 
 
 font = pygame.font.Font(None, 24)
@@ -16,7 +16,7 @@ class FrontUI:
         self.pause = pause.PauseMenu(screen,p)
         self.pauseButton = u.Button(1370, 20, 90, 36, "pause", self.pause.toggle)
         self.chat = u.Chatbox(0,60,300,660,font)
-        self.db = lF.StoryDB()
+        self.db = lang   # the rooms get their texts with fui.db.chatMessage(room, id)
 
 
     def sendMessage(self,npc,roomName,msg_id):

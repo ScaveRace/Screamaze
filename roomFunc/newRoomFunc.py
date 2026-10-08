@@ -2,7 +2,7 @@ import json
 import UI.uiElements as u
 
 # every new room is described in rooms.json: its picture and its elements
-# the text of each element is in the database, in the table below
+# the text of each element is in the language files, under the name below
 with open("data/rooms.json") as f:
     ROOMS = {room["key"]: room for room in json.load(f)["rooms"]}
 
@@ -33,7 +33,7 @@ def getElements(room):
     return images, masks, buttons
 
 
-# the id of a text in the database is "room key.view", for example "lab2001R.window.changed"
+# the id of a text in the language files is "room key.view", for example "lab2001R.window.changed"
 def say(room):
     room.fui.sendMessage("You", DB_TABLE, room.key + "." + room.view)
 
