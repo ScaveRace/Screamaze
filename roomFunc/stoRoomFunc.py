@@ -1,6 +1,7 @@
 import sqlite3
 import pygame
 import UI.uiElements as u
+from functions.settingsFunc import settings as sett
 
 ########## constants ##########
 DB_PATH = "data/database/storyDB.db"
@@ -33,7 +34,8 @@ def loadTexts():
     global texts
     con = sqlite3.connect(DB_PATH)
     try:
-        rows = con.execute(f'SELECT id, text_en FROM "{TABLE}"').fetchall()
+        column = "text_nl" if sett.getLanguage() == "nl" else "text_en"
+        rows = con.execute(f'SELECT id, COALESCE({column}, text_en) FROM "{TABLE}"').fetchall()
     finally:
         con.close()
     texts = {int(i): t for i, t in rows}

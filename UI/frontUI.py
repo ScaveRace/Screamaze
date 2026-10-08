@@ -15,13 +15,12 @@ class FrontUI:
         self.inventory = i.InventoryMenu(screen,p)
         self.pause = pause.PauseMenu(screen,p)
         self.pauseButton = u.Button(1370, 20, 90, 36, "pause", self.pause.toggle)
-        self.chat = u.Chatbox(0,0,300,720,font)
+        self.chat = u.Chatbox(0,60,300,660,font)
         self.db = lF.StoryDB()
-        self.lang = "en"
 
 
     def sendMessage(self,npc,roomName,msg_id):
-        self.chat.handle_event_npc(npc,self.db.chatMessage(roomName,msg_id,self.lang))
+        self.chat.handle_event_npc(npc,self.db.chatMessage(roomName,msg_id))
 
     def getMessage(self):
         print(self.chat.messages)
