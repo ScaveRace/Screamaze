@@ -1,9 +1,22 @@
-
 #####  player data  #####
 #  use: from player import player
 #  call function like: player.add_item("testitem")
 import UI.uiElements as u
 import data.playerLogistics as pL
+
+# TESTING ONLY: True = the player starts the game with all five stones in the
+# inventory, so the teacher room can be tested without playing the other rooms.
+# Set it back to False before the real game!
+DEBUG_ALL_STONES = True
+
+# The stones and their pictures, the same paths the teacher room uses.
+DEBUG_STONES = {
+    "White":  "assets/stones/white.png",
+    "Red":    "assets/stones/red.png",
+    "Green":  "assets/stones/green.png",
+    "Purple": "assets/stones/purple.png",
+    "Yellow": "assets/stones/yellow.png",
+}
 
 
 class Player:
@@ -26,6 +39,11 @@ class Player:
                            "Corridor":{"all":[],"current": "corr.start", "msg":""},
                            "FrontDesk":{"all":[],"current": "", "msg":""}
         }
+
+        # testing: start with every stone already in the inventory
+        if DEBUG_ALL_STONES:
+            for name, path in DEBUG_STONES.items():
+                self.inventory["Stones"].append({name: path})
 
 
 
@@ -85,5 +103,3 @@ class Player:
         if self.location == "corridor":
             self.position = pL.DOOR_SPAWNS[self.lastLocation]
         screen.blit(self.pImage,self.position)
-
-

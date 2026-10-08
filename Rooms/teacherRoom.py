@@ -10,9 +10,11 @@ pygame.mixer.init()
 # THE FIVE STONES
 # ----------------------------------------------------------------------
 
-# The five stones that have to go into the chest, in the order of the holes.
+# The five stones that have to go into the chest.
 # These names must match exactly what the other rooms put in the inventory,
 # for example GhostRoom does: player.add_item("Stones", "White", ...)
+# The ORDER here is only used to pick the dialogue line of each stone
+# (White = 15, Red = 16, Green = 17, Purple = 18, Yellow = 19).
 REQUIRED_STONES = ["White", "Red", "Green", "Purple", "Yellow"]
 
 # The picture that belongs to every stone. ## placeholder folder
@@ -33,6 +35,11 @@ STONE_COLOURS = {
     "Yellow": (225, 180, 45),
 }
 
+# TESTING ONLY: set to True and the player gets all five stones the moment
+# the teacher room is entered, so every hole can be checked without playing
+# the other rooms. Set it back to False before the real game!
+DEBUG_GIVE_ALL_STONES = False
+
 # Dialogue ids, so the numbers below stay readable.
 # One "stone placed" line per stone, in the order of REQUIRED_STONES.
 STONE_LINE_FIRST = 15        # White = 15, Red = 16, Green = 17, Purple = 18, Yellow = 19
@@ -40,16 +47,33 @@ STONE_LINE_FIRST = 15        # White = 15, Red = 16, Green = 17, Purple = 18, Ye
 # line id = MISSING_LINE_BASE - missing  ->  5 missing = 10, 1 missing = 14
 MISSING_LINE_BASE = 15
 
-# Where the five stone slots are drawn on the chest close up.
-SLOT_ORIGIN = (560, 430)   # centre of the first (left) slot
-SLOT_SIZE = 44             # height of one stone, the width follows the picture
-SLOT_GAP = 10              # space between two slots
+# ----------------------------------------------------------------------
+# THE FIVE HOLES ON THE LID (left to right, like the picture)
+# ----------------------------------------------------------------------
+# Every hole belongs to ONE stone colour and has its own mask picture.
+# "centre" is where the middle of the hole is on the ORIGINAL 1024 x 572
+# chest picture, the code scales it to your screen by itself.
+CHEST_PICTURE_SIZE = (1024, 572)
+
+STONE_HOLES = [
+    {"colour": "Green",  "mask": "assets/teacherRoom/tr_cutout_2_stone_1_left.png",   "centre": (379, 250)},
+    {"colour": "Purple", "mask": "assets/teacherRoom/tr_cutout_3_stone_2.png",        "centre": (455, 250)},
+    {"colour": "Red",    "mask": "assets/teacherRoom/tr_cutout_4_stone_3_middle.png", "centre": (514, 247)},
+    {"colour": "White",  "mask": "assets/teacherRoom/tr_cutout_5_stone_4.png",        "centre": (572, 248)},
+    {"colour": "Yellow", "mask": "assets/teacherRoom/tr_cutout_6_stone_5_right.png",  "centre": (651, 249)},
+]
+
+# Height of a stone when it sits in its hole, on the ORIGINAL 572 high picture.
+STONE_HEIGHT = 50
 
 # Where the "3 / 5" counter is drawn on the chest close up.
 COUNTER_POS = (615, 205)
 
+# The room picture is drawn this far from the left edge of the window.
+IMAGE_OFFSET_X = 300
 
-# Loads one stone picture and scales it to the height of a slot.
+
+# Loads one stone picture and scales it to the given height.
 # The stones are tall and thin, so scaling on height keeps them from squashing.
 def load_stone(path, height):
     try:
@@ -78,10 +102,18 @@ class TeacherRoom:
         self.chest_closed_image = u.load_image("assets/teacherRoom/tr_chest_closed.jpeg", self.screensize)
         self.chest_open_image = u.load_image("assets/teacherRoom/tr_chest_open.jpeg", self.screensize)
 
-        # The five stone pictures, loaded once and kept at slot size.
+        # How much the 1024 x 572 chest picture is stretched on this screen.
+        # Measured on the picture that is really drawn, NOT on the whole window,
+        # because the window is wider than the picture (the chat panel is next to it).
+        shown_w, shown_h = self.chest_closed_image.get_size()
+        self.scale_x = shown_w / CHEST_PICTURE_SIZE[0]
+        self.scale_y = shown_h / CHEST_PICTURE_SIZE[1]
+
+        # The five stone pictures, loaded once and kept at hole size.
+        icon_height = max(1, round(STONE_HEIGHT * self.scale_y))
         self.stone_icons = {}
         for name in REQUIRED_STONES:
-            self.stone_icons[name] = load_stone(STONE_IMAGES[name], SLOT_SIZE)
+            self.stone_icons[name] = load_stone(STONE_IMAGES[name], icon_height)
 
         # Fonts used in this room.
         self.font = pygame.font.Font(None, 28)
@@ -92,9 +124,13 @@ class TeacherRoom:
         self.chest_described = False
 
         # Game state: which stones are already inside the chest.
-        self.stones_placed = []          # grows with "White", "Red", ...
+        self.stones_placed = []          # grows with "Green", "Purple", ...
         self.chest_unlocked = False      # True the moment all five are in
         self.reward_taken = False        # so you can't take the necklace twice
+
+        # Set to True while one click is being handled by a stone hole,
+        # so the lid mask behind it does not react to the same click.
+        self.hole_clicked = False
 
         self.reward_spot = pygame.Rect(600, 330, 56, 56)  # placeholder for the necklace
 
@@ -103,10 +139,23 @@ class TeacherRoom:
             u.Mask("assets/teacherRoom/tr_room_chest_mask.png", self.screensize, (0, 0), self.chest, "Chest"),
         ]
 
+        # MASKS on the chest close up.
+        # The five holes come FIRST, then the lid behind them.
+        self.chest_masks = []
+        for hole in STONE_HOLES:
+            colour = hole["colour"]
+            # colour=colour freezes the colour inside this one button,
+            # without it every hole would place the last colour of the loop.
+            self.chest_masks.append(
+                u.Mask(hole["mask"], self.screensize, (0, 0),
+                       lambda colour=colour: self.place_stone(colour),
+                       colour + " stone hole")
+            )
+
         # the lid in the close up -> clicking it tries to open the chest
-        self.chest_masks = [
-            u.Mask("assets/teacherRoom/tr_chest_closed_mask.png", self.screensize, (0, 0), self.try_open, "Chest lid"),
-        ]
+        self.chest_masks.append(
+            u.Mask("assets/teacherRoom/tr_cutout_1_whole_chest.png", self.screensize, (0, 0), self.try_open, "Chest lid")
+        )
 
         self.no_masks = []
         self.current_masks = self.masks
@@ -120,9 +169,8 @@ class TeacherRoom:
         self.returnr_buttons = [
             u.Button(1000, 520, 140, 50, "Return", self.returnr)]
 
-        self.chest_buttons = [
-                                 u.Button(550, 600, 180, 50, "Place stone", self.place_stone),
-                             ] + self.returnr_buttons
+        # No "Place stone" button any more, the holes are the buttons.
+        self.chest_buttons = self.returnr_buttons
 
         self.reward_buttons = [
                                   u.Button(830, 600, 180, 50, "Take necklace", self.take_reward),
@@ -135,12 +183,23 @@ class TeacherRoom:
     # Called once, the first time the player sets foot in the lounge.
     # Describes the whole room so the player knows what can be clicked.
     def on_enter(self):
+        if DEBUG_GIVE_ALL_STONES:
+            self.give_debug_stones()
+
         if self.room_described:
             return
         self.room_described = True
         self.fui.sendMessage("You", "TeacherRoom", 1)   # dark lounge, candles, old paper
         self.fui.sendMessage("You", "TeacherRoom", 2)   # table / couches / chalkboard layout
         self.fui.sendMessage("You", "TeacherRoom", 3)   # the glowing chest on the red rug
+
+    # Testing helper: puts every stone that is not yet owned or placed in the inventory.
+    def give_debug_stones(self):
+        for name in REQUIRED_STONES:
+            if name in self.stones_placed:
+                continue  # already inside the chest
+            if not self.player.has_item("Stones", name):
+                self.player.add_item("Stones", name, STONE_IMAGES[name])
 
     # ------------------------------------------------------------------
     # chest
@@ -181,6 +240,9 @@ class TeacherRoom:
 
     # Clicking the lid itself, only works when every stone is in place.
     def try_open(self):
+        # the click was meant for a stone hole, not for the lid behind it
+        if self.hole_clicked:
+            return
         missing = len(REQUIRED_STONES) - len(self.stones_placed)
         if missing > 0:
             # 5 missing -> 10, 4 -> 11, 3 -> 12, 2 -> 13, 1 -> 14
@@ -188,27 +250,30 @@ class TeacherRoom:
         else:
             self.unlock()
 
-    # Puts one stone from the inventory into the next free hole.
-    def place_stone(self):
+    # Called when the player clicks one hole. The hole knows its own colour.
+    def place_stone(self, colour):
+        self.hole_clicked = True
+
         if self.chest_unlocked:
             self.fui.sendMessage("You", "TeacherRoom", 21)      # the chest is already open
             return
 
-        for i in range(len(REQUIRED_STONES)):
-            stone = REQUIRED_STONES[i]
-            if stone in self.stones_placed:
-                continue  # that hole is already filled
-            if self.player.has_item("Stones", stone):
-                self.player.remove_item("Stones", stone)
-                self.stones_placed.append(stone)
-                # White = 15, Red = 16, Green = 17, Purple = 18, Yellow = 19
-                self.fui.sendMessage("You", "TeacherRoom", STONE_LINE_FIRST + i)
-                # The fifth stone opens the chest by itself.
-                if len(self.stones_placed) == len(REQUIRED_STONES):
-                    self.unlock()
-                return  # one stone per click
+        if colour in self.stones_placed:
+            self.describe_slots()                               # that hole is already filled
+            return
 
-        self.fui.sendMessage("You", "TeacherRoom", 20)          # no stone that fits
+        if not self.player.has_item("Stones", colour):
+            self.fui.sendMessage("You", "TeacherRoom", 20)      # you don't have that stone
+            return
+
+        self.player.remove_item("Stones", colour)
+        self.stones_placed.append(colour)
+        # White = 15, Red = 16, Green = 17, Purple = 18, Yellow = 19
+        self.fui.sendMessage("You", "TeacherRoom", STONE_LINE_FIRST + REQUIRED_STONES.index(colour))
+
+        # The fifth stone opens the chest by itself.
+        if len(self.stones_placed) == len(REQUIRED_STONES):
+            self.unlock()
 
     # Everything that happens the moment the last stone goes in.
     def unlock(self):
@@ -257,59 +322,63 @@ class TeacherRoom:
 
     # Sends mouse events to the active masks and buttons.
     def handle_event(self, event):
+        self.hole_clicked = False   # new event, nothing clicked yet
+
         for m in self.current_masks:
             m.handle_event(event)
 
         for b in self.current_buttons:
             b.handle_event(event)
 
-    # Gives back the middle point of hole number i, left to right.
-    def slot_center(self, i):
-        x0, y0 = SLOT_ORIGIN
-        step = SLOT_SIZE + SLOT_GAP  # one slot plus one gap
-        return (x0 + i * step, y0)
+    # Gives back the screen position of the middle of hole number i, left to right.
+    def hole_center(self, i):
+        cx, cy = STONE_HOLES[i]["centre"]
+        x = IMAGE_OFFSET_X + round(cx * self.scale_x)
+        y = round(cy * self.scale_y)
+        return (x, y)
 
-    # Draws the five holes, filled ones get their stone picture.
-    def draw_slots(self):
-        for i in range(len(REQUIRED_STONES)):
-            name = REQUIRED_STONES[i]
-            cx, cy = self.slot_center(i)
+    # Draws the stone of every hole that is already filled.
+    # Empty holes are not drawn at all, the picture itself already shows them.
+    def draw_stones(self):
+        for i in range(len(STONE_HOLES)):
+            colour = STONE_HOLES[i]["colour"]
+            if colour not in self.stones_placed:
+                continue
 
-            if name in self.stones_placed:
-                icon = self.stone_icons[name]
-                if icon is not None:
-                    # put the middle of the picture on the middle of the hole
-                    rect = icon.get_rect(center=(cx, cy))
-                    self.screen.blit(icon, rect)
-                else:
-                    # picture missing -> fall back to a coloured circle
-                    pygame.draw.circle(self.screen, STONE_COLOURS[name], (cx, cy), SLOT_SIZE // 2)
+            cx, cy = self.hole_center(i)
+            icon = self.stone_icons[colour]
+            if icon is not None:
+                # put the middle of the picture on the middle of the hole
+                self.screen.blit(icon, icon.get_rect(center=(cx, cy)))
             else:
-                # empty hole, just a dark ring
-                pygame.draw.circle(self.screen, (60, 50, 40), (cx, cy), SLOT_SIZE // 2, 3)
+                # picture missing -> fall back to a coloured circle
+                radius = round(STONE_HEIGHT * self.scale_y / 2)
+                pygame.draw.circle(self.screen, STONE_COLOURS[colour], (cx, cy), radius)
 
-    # Draws the current room, the slots, the counter and the buttons.
+    # Draws the current room, the stones, the counter and the buttons.
     def draw(self):
         # safety net, in case the main loop never calls on_enter
         if not self.room_described:
             self.on_enter()
 
-        self.screen.blit(self.current_image, (300, 0))
-
-        # The holes and the counter only exist on the closed chest screen.
-        if self.current_image is self.chest_closed_image:
-            self.draw_slots()
-            shown = str(len(self.stones_placed)) + " / " + str(len(REQUIRED_STONES))
-            text = self.slotFont.render(shown, True, (0, 255, 120))
-            self.screen.blit(text, COUNTER_POS)
+        self.screen.blit(self.current_image, (IMAGE_OFFSET_X, 0))
 
         # Draw the necklace inside the open chest until the player takes it.
         if self.current_image is self.chest_open_image and not self.reward_taken:
             pygame.draw.rect(self.screen, (220, 220, 230), self.reward_spot)
 
-        # masks now get drawn,
+        # masks get drawn first. The tr_cutout pictures are real pictures of the
+        # chest, so anything drawn BEFORE them is hidden underneath.
         for m in self.current_masks:
             m.draw(self.screen)
+
+        # The stones and the counter only exist on the closed chest screen.
+        # They are drawn AFTER the masks, so they end up on top of the chest.
+        if self.current_image is self.chest_closed_image:
+            self.draw_stones()
+            shown = str(len(self.stones_placed)) + " / " + str(len(REQUIRED_STONES))
+            text = self.slotFont.render(shown, True, (0, 255, 120))
+            self.screen.blit(text, COUNTER_POS)
 
         # Draw the buttons currently available to the player.
         for b in self.current_buttons:
