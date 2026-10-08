@@ -1,4 +1,5 @@
 import sqlite3
+import pygame
 import UI.uiElements as u
 
 ########## constants ##########
@@ -13,16 +14,22 @@ QUESTION_IDS = [
 ]
 
 # ids of the chat messages in the database table
-MSG_FUSE_BOX = 1
 MSG_FUSE_TAKEN = 2
-MSG_DRAWER_LOCKED_QUIZ = 3
-MSG_DRAWER_UNLOCKED = 4
 MSG_DRAWER_LOCKED_HINT = 5
-MSG_DRAWER_EMPTY = 6
-MSG_DRAWER_STONE = 7
 MSG_QUIZ_DONE = 8
 MSG_STONE_TAKEN = 9
 MSG_WRONG = 10
+MSG_LEAVE = 31
+
+# ids of the "what is on screen" descriptions
+DESC_ROOM = 23
+DESC_DESK_LOCKED = 24
+DESC_DESK_OPEN = 25
+DESC_RACK_FUSE = 26
+DESC_RACK_EMPTY = 27
+DESC_DRAWER_STONE = 28
+DESC_DRAWER_EMPTY = 29
+DESC_QUIZ = 30      # contains {n} and {total}
 
 texts = {}      # id -> text, filled by loadTexts()
 
@@ -39,11 +46,14 @@ def loadTexts():
 
 
 def T(textId):
-    return texts.get(textId, f"[missing text {textId}]")
+    text = texts.get(textId)
+    if text is None or text == "":
+        return text if text else f"[missing text {textId}]"
+    return str(text)
 
 
 def buildQuestions():
-    # (question, answers, index of the correct answer), same shape as before
+    # (question, answers, index of the correct answer)
     return [(T(q), [T(a) for a in answers], correct) for q, answers, correct in QUESTION_IDS]
 
 
@@ -75,7 +85,7 @@ class Quiz:
     def answer(self, choice):
         _, _, correct = self.current_question()
         if choice != correct:
-            self.index = 0
+            self.index = 0          # wrong answer: back to question 1
             return False, False
 
         self.index += 1
@@ -139,6 +149,8 @@ def start(p, f, screen):
     # the room pictures are drawn at x=300, so the picture's centre is here
     centerX = 300 + (size[0] - 300) // 2
 
+    describe()      # say what the room looks like when it starts
+
 
 def current():
     global buttons
@@ -176,16 +188,32 @@ def activeMasks():
     return []
 
 
+def describe():
+    # say what is on screen right now
+    if view == View.ROOM:
+        text = T(DESC_ROOM)
+    elif view == View.DESK:
+        text = T(DESC_DESK_OPEN if quiz.completed else DESC_DESK_LOCKED)
+    elif view == View.RACK:
+        text = T(DESC_RACK_EMPTY if fuse_collected else DESC_RACK_FUSE)
+    elif view == View.DRAWER:
+        text = T(DESC_DRAWER_EMPTY if stone_collected else DESC_DRAWER_STONE)
+    elif view == View.QUIZ:
+        text = T(DESC_QUIZ).format(n=quiz.index + 1, total=len(quiz.questions))
+    else:
+        return
+    say("You > " + text)
+
+
 ########## view transitions ##########
-def setView(newView, message=None):
+def setView(newView):
     global view
     view = newView
 
     if view == View.QUIZ:
         buttons[View.QUIZ] = quizButtons()
 
-    if message:
-        say(message)
+    describe()
 
 
 def quizButtons():
@@ -201,6 +229,7 @@ def quizButtons():
 ########## room ##########
 def leave():
     global next_room
+    say("You > " + T(MSG_LEAVE))
     next_room = "corridor"
 
 
@@ -209,15 +238,12 @@ def gotoRoom():
 
 
 def gotoDesk():
-    msg = "You > " + (T(MSG_DRAWER_UNLOCKED) if quiz.completed else T(MSG_DRAWER_LOCKED_QUIZ))
-    setView(View.DESK, msg)
+    setView(View.DESK)
 
 
 ########## storage rack ##########
 def openRack():
     setView(View.RACK)
-    if not fuse_collected:
-        say("You > " + T(MSG_FUSE_BOX))
 
 
 def takeFuse():
@@ -228,22 +254,21 @@ def takeFuse():
     # add_item(category, name, icon path)
     player.add_item("Items", "Fuse", FUSE_ICON)
     say("You > " + T(MSG_FUSE_TAKEN))
+    describe()      # the rack looks different now
 
 
 ########## desk ##########
 def openQuiz():
     if quiz.completed:
         return
-    setView(View.QUIZ, "Desk > " + quiz.current_question()[0])
+    setView(View.QUIZ)
 
 
 def openDrawer():
     if not quiz.completed:
-        say("You > " + T(MSG_DRAWER_LOCKED_HINT))
-    elif stone_collected:
-        setView(View.DRAWER, "You > " + T(MSG_DRAWER_EMPTY))
+        say("You > " + T(MSG_DRAWER_LOCKED_HINT))   # no view change, so no description
     else:
-        setView(View.DRAWER, "You > " + T(MSG_DRAWER_STONE))
+        setView(View.DRAWER)
 
 
 ########## quiz ##########
@@ -252,7 +277,7 @@ def checkAnswer(choice):
 
     if not correct:
         say("You > " + T(MSG_WRONG))
-        setView(View.QUIZ)
+        setView(View.QUIZ)      # rebuilds the buttons and describes question 1
         return
 
     if justCompleted:
@@ -260,7 +285,7 @@ def checkAnswer(choice):
         say("You > " + T(MSG_QUIZ_DONE))
         setView(View.DESK)
     else:
-        setView(View.QUIZ, "Desk > " + quiz.current_question()[0])
+        setView(View.QUIZ)
 
 
 ########## stone ##########
@@ -270,5 +295,5 @@ def collectStone():
         return
     stone_collected = True
     player.add_item("Stones", "Green", STONE_IMAGE)
-    say("You > " + T(MSG_STONE_TAKEN))
+    #say("You > " + T(MSG_STONE_TAKEN))
     setView(View.DRAWER)
