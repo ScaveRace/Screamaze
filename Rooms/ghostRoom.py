@@ -6,348 +6,48 @@ import UI.frontUI as Fui
 pygame.init()
 pygame.mixer.init()
 
-# The correct 4-digit code for the cabinet.
-CABINET_CODE = "4537"   ## a string to avoid strange behaviour
-
-# Position where the entered code will be displayed on the cabinet keypad.
-# where the typed digits get drawn on top of gr.cabinet.homework.png -> tune to your art
-CODE_DISPLAY_POS = (615, 205)
-
-# keypad grid -> tune these three numbers to your art
-KEYPAD_ORIGIN = (500, 300)   # top left corner of the "1" key
-KEYPAD_SIZE = 70             # width and height of one key
-KEYPAD_GAP = 10              # space between keys
+# rooms/ghostRoom.py
+import roomFunc.ghoRoomFunc as gF
 
 
-# Controls everything that happens inside the ghost classroom.
 class GhostRoom:
-    def __init__(self, screen,player, fui):
-        self.screensize = screen.get_size()
+    def __init__(self, screen, player, fui):
         self.screen = screen
-        self.next_room = None
         self.player = player
         self.fui = fui
+        self.next_room = None
+        self.images = []
+        self.masks = []
+        self.buttons = []
+        gF.reset_view()
+        self.getElements()
 
-        # Load the different images used throughout the room.
-        self.room_image = u.load_image("assets/ghostRoom/gr.room.teacher.jpg", self.screensize)
-        self.room_empty = u.load_image("assets/ghostRoom/gr.ghostRoom.no.teacher.png", self.screensize)
-        self.current_image = self.room_image
-
-        self.teacher_image = u.load_image("assets/ghostRoom/gr.teacher.png", self.screensize)
-        self.no_teacher_image = u.load_image("assets/ghostRoom/gr.bureau.no.teacher.png", self.screensize)
-
-        self.whiteboard_image = u.load_image("assets/ghostRoom/gr.whiteboard.4537.png", self.screensize)
-
-        self.cabinet_locked_image = u.load_image("assets/ghostRoom/gr.cabinet.homework.png", self.screensize)
-        self.cabinet_open_image = u.load_image("assets/ghostRoom/gr.cabinet.open.keypad.png", self.screensize)
-
-        # Fonts and the dialogue box used for messages.
-        self.font = pygame.font.Font(None, 28)
-        self.codeFont = pygame.font.Font(None, 56)
-
-        self.line = 0
-
-        self.room_described = False
-
-
-        # Game state: inventory and whether important objects/tasks are completed.
-        self.homework_taken = False #so you can't take the homework
-        self.homework_spot = pygame.Rect(600, 400, 56, 56)
-
-        self.task_done = False #memory for has the homework been handed in
-
-        self.stone_collected = False
-        self.stone_spot = pygame.Rect(750, 400, 44, 44) # position stone on empty desk
-
-        # Cabinet/keypad state.
-        self.cabinet_unlocked = False
-        self.code_entry = "" #string that grows as you type
-        self.keypad_open  = False
-
-        self.masks = [
-            u.Mask("assets/ghostRoom/gr_room_teacher_ghost.png", self.screensize, (0,0), self.teacher, "Teacher"),
-            u.Mask("assets/ghostRoom/gr_room_whiteboard.png", self.screensize, (0,0), self.whiteboard, "Whiteboard"),
-            u.Mask("assets/ghostRoom/gr_room_cabinet.png", self.screensize, (0,0), self.cabinet, "Cabinet"),
-        ]
-
-        # the ghost himself, only in the teacher view -> clicking him talks
-        self.teacher_masks = [
-            u.Mask("assets/ghostRoom/gr_teacher_ghost.png", self.screensize, (0,0), self.talk, "Talk to the ghost"),
-        ]
-
-        # the keypad on the locked cabinet -> clicking it opens the keypad
-        self.keypad_masks = [
-            u.Mask("assets/ghostRoom/gr_cabinet_homework_keypad.png", self.screensize, (0,0), self.open_keypad, "Keypad"),
-        ]
-
-        self.no_masks = []
-        self.current_masks = self.masks
-
-
-        # BUTTONS - only the things that have no shape on screen
-        self.buttons = [
-            u.Button(560, 650, 140, 50, "Return", self.returnc),
-        ]
-        self.current_buttons = self.buttons
-
-        self.returnr_buttons = [
-            u.Button(1000, 520, 140, 50, "Return", self.returnr)]
-        self.teacher_buttons = [
-                                   u.Button(830, 660, 140, 50, "Give", self.give_homework),
-                               ] + self.returnr_buttons
-        self.cabinet_buttons = [
-                                   u.Button(550, 600, 180, 50, "Take Homework", self.take_homework),
-                               ] + self.returnr_buttons
-        self.stone_buttons = [
-                                 u.Button(830, 600, 180, 50, "Take stone", self.collect_stone)
-                             ] + self.returnr_buttons
-        self.keypad_buttons = self.build_keypad()
-
-
-    def build_keypad(self):
-        keys = []
-        labels = ["1", "2", "3",
-                  "4", "5", "6",
-                  "7", "8", "9",
-                  "C", "0", "E"]
-        x0, y0 = KEYPAD_ORIGIN
-        step = KEYPAD_SIZE + KEYPAD_GAP # one key plus one gap
-
-        for i in range(len(labels)):
-            label = labels[i]
-            column = i % 3  #remainder -> 0,1,2, 0,1,2, ... left to right
-            row = i // 3  #whole division -> 0,0,0, 1,1,1, ... top to bottom
-            x = x0 + column * step
-            y = y0 + row * step
-
-            if label == "C":
-                action = self.clear_code
-            elif label == "E":
-                action = self.check_code
-            else:
-                # d=label freezes this label, otherwise every key would type "E"
-                action = lambda d=label: self.press_digit(d)
-
-            keys.append(u.Button(x, y, KEYPAD_SIZE, KEYPAD_SIZE, label, action))
-
-        keys.append(u.Button(1000, 520, 140, 50, "Back", self.close_keypad))
-        return keys
+    def getElements(self):
+        self.images, self.masks, self.buttons = gF.getElements(self.player, self.fui, self.screen)
 
     def on_enter(self):
-        if self.room_described:
-            return
-        self.room_described = True
-        self.fui.sendMessage("You", "GhostRoom", 21)  # cold classroom
-        self.fui.sendMessage("You", "GhostRoom", 22)
+        gF.reset_view()
+        gF.on_enter(self.player, self.fui)
+        self.getElements()
 
-    # Controls the ghost's dialogue and checks whether the player has the homework.
-    def talk(self):
-        if self.task_done:
-            self.fui.sendMessage("Ghost", "GhostRoom", 6)
-        elif self.line < 3:
-            self.fui.sendMessage("Ghost", "GhostRoom", self.line + 1)
-            self.line += 1
-# elif "homework" in self.inventory:
-        elif self.player.has_item( "Homework"):
-            self.fui.sendMessage("Ghost", "GhostRoom", 4)
-        else:
-            self.fui.sendMessage("Ghost", "GhostRoom", 5)
-
-
-    # Changes what the player sees when searching the teacher's area.
-    def teacher(self):
-        if self.task_done:
-            self.current_image= self.no_teacher_image
-            self.current_masks = self.no_masks
-            self.fui.sendMessage("You", "GhostRoom", 26)  # the empty desk described
-            # Once the teacher leaves, the stone becomes available.
-            if self.stone_collected:
-                self.current_buttons = self.returnr_buttons # nobody to talk to so only return
-                self.fui.sendMessage("You", "GhostRoom", 7)
-            else:
-                self.current_buttons = self.stone_buttons
-                self.fui.sendMessage("You", "GhostRoom", 8)
-        else:
-            self.current_image = self.teacher_image
-            self.current_masks = self.teacher_masks
-            self.current_buttons = self.teacher_buttons
-            self.fui.sendMessage("You", "GhostRoom", 25)  # ghost teacher behind his desk
-            self.talk() #line appears moment you walk up, talk button advances it after wards
-
-
-    # Adds the stone to the player's inventory if it has not already been collected.
-    def collect_stone(self):
-        if self.stone_collected:
-            self.fui.sendMessage("You", "GhostRoom", 9)
-        else:
-            self.stone_collected = True
-# change the picture of the item
-            self.player.add_item("Stones", "White", "assets/gr.room.teacher.jpg")
-            self.fui.sendMessage("You", "GhostRoom", 10)
-            self.current_buttons = self.returnr_buttons
-
-
-    # Opens the cabinet. The player needs to enter the code first if it is locked.
-    def cabinet(self):
-        self.keypad_open = False #always start on the plain cabinet screen
-        if self.cabinet_unlocked:
-            self.current_image = self.cabinet_open_image
-            self.current_masks = self.no_masks#closed or open picture?
-            if self.homework_taken:
-                self.current_buttons = self.returnr_buttons
-                self.fui.sendMessage("You", "GhostRoom", 32)  # open and empty
-            else:
-                self.current_buttons = self.cabinet_buttons
-                self.fui.sendMessage("You", "GhostRoom", 31)  # stack of papers on the shelf
-        else:
-            self.current_image = self.cabinet_locked_image
-            self.current_masks = self.keypad_masks
-            self.current_buttons = self.returnr_buttons
-            self.fui.sendMessage("You", "GhostRoom", 29)  # HOMEWORK painted on the doors
-            self.fui.sendMessage("You", "GhostRoom", 30)  # keypad on the front
-            self.fui.sendMessage("You", "GhostRoom", 11)  # it is locked
-
-
-    # Opens the keypad and clears any previously entered code.
-    def open_keypad(self):
-        self.keypad_open = True
-        self.code_entry = ""
-        self.current_buttons = self.keypad_buttons
-        self.current_masks = self.no_masks
-        self.fui.sendMessage("You", "GhostRoom", 33)  # close up on the twelve keys
-        self.fui.sendMessage("You", "GhostRoom", 12)  # type the four digit code
-
-
-    # Closes the keypad and returns to the locked cabinet.
-    def close_keypad(self):
-        self.keypad_open = False
-        self.code_entry = ""
-        self.current_masks = self.keypad_masks
-        self.current_buttons = self.cabinet_locked_buttons
-
-    # Adds a digit to the code and automatically checks it after 4 digits.
-    def press_digit(self, digit):
-        if len(self.code_entry) >= 4:
-            return # already full
-        self.code_entry = self.code_entry + digit
-        if len(self.code_entry) == 4:
-            self.check_code() #check by itself once four digits are in
-
-    # Checks the entered code against the correct cabinet code.
-    def check_code(self):
-        if self.code_entry == CABINET_CODE:
-            self.cabinet_unlocked = True
-            self.keypad_open = False
-            self.current_image = self.cabinet_open_image
-            self.current_masks = self.no_masks
-            self.current_buttons = self.cabinet_buttons
-            self.fui.sendMessage("You", "GhostRoom", 13)  # clunk, the cabinet swings open
-            self.fui.sendMessage("You", "GhostRoom", 31)  # and this is what is inside
-        else:
-            self.code_entry = ""
-            self.fui.sendMessage("You", "GhostRoom", 14)
-
-
-    def clear_code(self):
-        self.code_entry = ""
-
-
-    # Takes the homework from the cabinet and adds it to the inventory.
-    def take_homework(self):  ## don't try at home
-        if self.homework_taken:
-            self.chatbox.say("You > The cabinet is empty now")
-            return
-        self.homework_taken = True
-        self.player.add_item("Items", "Homework", "assets/gr.room.teacher.jpg")
-        self.fui.sendMessage("You", "GhostRoom", 16)
-        self.current_buttons = self.returnr_buttons
-
-    # Gives the homework to the ghost and completes the main task.
-    def give_homework(self):  ##🥲
-        if self.task_done:
-            self.fui.sendMessage("You", "GhostRoom", 17)
-            return
-# if "homework" not in self.inventory:
-        if not self.player.has_item("Homework"):
-            self.fui.sendMessage("You", "GhostRoom", 18)
-            return
-
-        self.player.remove_item( "Homework")
-        self.task_done = True
-        self.fui.sendMessage("You", "GhostRoom", 19)
-        self.fui.sendMessage("Ghost", "GhostRoom", 20)
-        # After the homework is delivered, the teacher disappears.
-        self.current_image = self.no_teacher_image
-        self.current_masks = self.no_masks
-        self.current_buttons = self.stone_buttons
-        self.fui.sendMessage("You", "GhostRoom", 26)  # the desk he left behind
-        self.fui.sendMessage("You", "GhostRoom", 8)  # he left something on it
-
-
-    def whiteboard(self):
-        self.current_image = self.whiteboard_image
-        self.current_masks = self.no_masks
-        self.current_buttons = self.returnr_buttons
-        self.fui.sendMessage("You", "GhostRoom", 27)  # a whiteboard with something on it
-
-    # Tells the main game that the player wants to move to the corridor.
-    def returnc(self):
-        self.next_room = "corridor"
-
-
-    # Returns from a searched area to the main classroom.
-    def returnr(self):
-        if self.task_done:
-            self.current_image = self.room_empty
-            self.fui.sendMessage("You", "GhostRoom", 24)  # classroom feels lighter now
-        else:
-            self.current_image = self.room_image
-            self.fui.sendMessage("You", "GhostRoom", 23)  # back in the classroom
-        self.current_masks = self.masks
-        self.current_buttons = self.buttons
-
-
-    # Sends mouse/keyboard events to the active buttons and keypad.
     def handle_event(self, event):
-        for m in self.current_masks:
+        for m in self.masks:
             m.handle_event(event)
-
-        for b in self.current_buttons:
+        for b in self.buttons:
             b.handle_event(event)
+        gF.keyboard(event, self.player, self.fui)
 
-        # Keyboard input only matters when the keypad is open.
-        # keyboard still works next to the 12 keys, both call the same press_digit
-        if self.keypad_open and event.type == pygame.KEYDOWN:
-            if event.unicode.isdigit():
-                self.press_digit(event.unicode)
-            elif event.key == pygame.K_BACKSPACE:
-                self.code_entry = self.code_entry[:-1] #everything except the last letter
-            elif event.key == pygame.K_RETURN:
-                self.check_code()
+        if gF.next_room is not None:
+            self.next_room = gF.next_room
+            gF.next_room = None
+        if gF.needs_refresh():
+            self.getElements()
 
-
-    # Draws the current room, objects, keypad code, buttons and chatbox.
     def draw(self):
-        self.screen.blit(self.current_image, (300, 0))
-        # Draw the stone only after the teacher has left and before it is collected.
-        if self.current_image is self.no_teacher_image and not self.stone_collected:
-            pygame.draw.circle(self.screen, (245,245,245), self.stone_spot.center, self.stone_spot.w // 2)
-
-        # Draw the homework inside the open cabinet until the player takes it.
-        if self.current_image is self.cabinet_open_image and not self.homework_taken:
-            pygame.draw.rect(self.screen, (235,235,235),  self.homework_spot )
-
-        # Display the entered keypad code, using dashes for empty spaces.
-        if self.keypad_open:
-            shown = self.code_entry.ljust(4, "-") # "" -> "----", "45" -> "45--"
-            text = self.codeFont.render(shown, True, (0, 255,120))
-            self.screen.blit(text, CODE_DISPLAY_POS)
-
-        # masks now get drawn,
-        for m in self.current_masks:
+        for i in self.images:
+            self.screen.blit(i, (300, 0))
+        gF.drawExtras(self.screen, self.player)
+        for m in self.masks:
             m.draw(self.screen)
-
-        # Draw the buttons currently available to the player.
-        for b in self.current_buttons:
+        for b in self.buttons:
             b.draw2(self.screen)
-
