@@ -1,13 +1,52 @@
+import sqlite3
 import pygame
 import UI.uiElements as u
 
 ########## constants ##########
-# (question, answers, index of the correct answer)
-QUESTIONS = [
-    ("What planet is closest to the Sun?", ["Venus", "Mercury", "Mars"], 1),
-    ("What gas do plants take in?", ["Oxygen", "Nitrogen", "Carbon dioxide"], 2),
-    ("What is H2O?", ["Water", "Salt", "Hydrogen"], 0),
+DB_PATH = "data/database/storyDB.db"
+TABLE = "SorrageRoom"   # (sic) the table name in storyDB.db
+
+# ids of the quiz texts in the database table: (question id, [answer ids], index of the correct answer)
+QUESTION_IDS = [
+    (11, [12, 13, 14], 1),
+    (15, [16, 17, 18], 2),
+    (19, [20, 21, 22], 0),
 ]
+
+# ids of the chat messages in the database table
+MSG_FUSE_BOX = 1
+MSG_FUSE_TAKEN = 2
+MSG_DRAWER_LOCKED_QUIZ = 3
+MSG_DRAWER_UNLOCKED = 4
+MSG_DRAWER_LOCKED_HINT = 5
+MSG_DRAWER_EMPTY = 6
+MSG_DRAWER_STONE = 7
+MSG_QUIZ_DONE = 8
+MSG_STONE_TAKEN = 9
+MSG_WRONG = 10
+
+texts = {}      # id -> text, filled by loadTexts()
+
+
+def loadTexts():
+    # read every line of this room from the database once, when the room starts
+    global texts
+    con = sqlite3.connect(DB_PATH)
+    try:
+        rows = con.execute(f'SELECT id, text_en FROM "{TABLE}"').fetchall()
+    finally:
+        con.close()
+    texts = {int(i): t for i, t in rows}
+
+
+def T(textId):
+    return texts.get(textId, f"[missing text {textId}]")
+
+
+def buildQuestions():
+    # (question, answers, index of the correct answer), same shape as before
+    return [(T(q), [T(a) for a in answers], correct) for q, answers, correct in QUESTION_IDS]
+
 
 # mask images: full picture size, transparent except for the clickable area
 MASK_DIR = "assets/storrageRoom/masks/"
@@ -15,7 +54,6 @@ MASK_DIR = "assets/storrageRoom/masks/"
 # icons used in the inventory
 STONE_IMAGE = "assets/stones/green.png"
 FUSE_ICON = "assets/fuse_item.png"
-Hadi = "Goat"
 
 
 class View:
@@ -92,7 +130,8 @@ def start(p, f, screen):
         "drawer": u.Mask(MASK_DIR + "drawer.png", size, (0, 0), openDrawer),
     }
 
-    quiz = Quiz(QUESTIONS)
+    loadTexts()
+    quiz = Quiz(buildQuestions())
     stone_collected = False
     fuse_collected = False
     view = View.ROOM
@@ -146,7 +185,7 @@ def setView(newView, message=None):
         buttons[View.QUIZ] = quizButtons()
 
     #if message:
-        #say(message)
+        say(message)
 
 
 def quizButtons():
@@ -170,8 +209,7 @@ def gotoRoom():
 
 
 def gotoDesk():
-    msg = "You > The drawer is unlocked" if quiz.completed \
-        else "You > The drawer is locked, there is a quiz on the desk"
+    msg = "You > " + (T(MSG_DRAWER_UNLOCKED) if quiz.completed else T(MSG_DRAWER_LOCKED_QUIZ))
     setView(View.DESK, msg)
 
 
@@ -179,7 +217,7 @@ def gotoDesk():
 def openRack():
     setView(View.RACK)
     if not fuse_collected:
-        say("You > A box of fuses... one slot is empty")
+        say("You > " + T(MSG_FUSE_BOX))
 
 
 def takeFuse():
@@ -189,7 +227,7 @@ def takeFuse():
     fuse_collected = True
     # add_item(category, name, icon path)
     player.add_item("Items", "Fuse", FUSE_ICON)
-    say("You > A spare fuse. This could come in handy")
+    say("You > " + T(MSG_FUSE_TAKEN))
 
 
 ########## desk ##########
@@ -201,11 +239,11 @@ def openQuiz():
 
 def openDrawer():
     if not quiz.completed:
-        say("You > The drawer is locked, maybe the quiz on the desk opens it")
+        say("You > " + T(MSG_DRAWER_LOCKED_HINT))
     elif stone_collected:
-        setView(View.DRAWER, "You > The drawer is empty now")
+        setView(View.DRAWER, "You > " + T(MSG_DRAWER_EMPTY))
     else:
-        setView(View.DRAWER, "You > The drawer is open, there is a green stone inside")
+        setView(View.DRAWER, "You > " + T(MSG_DRAWER_STONE))
 
 
 ########## quiz ##########
@@ -213,12 +251,12 @@ def checkAnswer(choice):
     correct, justCompleted = quiz.answer(choice)
 
     if not correct:
-        #say("You > Wrong, try again :)")
+        say("You > " + T(MSG_WRONG))
         return
 
     if justCompleted:
         # quiz done: back to the desk, the drawer is unlocked but you still have to open it
-        say("You > 'click' the drawer unlocked")
+        say("You > " + T(MSG_QUIZ_DONE))
         setView(View.DESK)
     else:
         setView(View.QUIZ, "Desk > " + quiz.current_question()[0])
@@ -231,5 +269,5 @@ def collectStone():
         return
     stone_collected = True
     player.add_item("Stones", "Green", STONE_IMAGE)
-    #say("You > A green stone... one step closer")
+    say("You > " + T(MSG_STONE_TAKEN))
     setView(View.DRAWER)
