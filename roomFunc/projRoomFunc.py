@@ -1,184 +1,153 @@
 import pygame
 import UI.uiElements as u
 
-images = []
-buttons = {}
-next_room = None
+SHAPES = ("Circle", "Triangle", "Square")                                   # item names, found in other rooms
+OWNERS = {"Circle": "Mina", "Triangle": "Sam", "Square": "Jorn"}            # whose badge it is, see the whiteboard
+STONE_PATH = "assets/stones/purple.png"
+HOLDING_COLOUR = (110, 95, 60)
 
-########## shapes and items ##########
-found = {}
-placed = {}
-holding = None
-hasFlyer = False
+# the chat takes the left 300px, so the right-hand buttons sit 60px from the screen edge instead of a plain +300
+RIGHT_X = 1480 - 60 - 230
 
-########## room states ##########
-view = "room"
-riddleDone = False
+# you'll notice some lambdas below in the code, that is to prevent buttons from firing their functions upon being built.
 
-########## message system ##########
-message = ""
-messageUntil = 0
-
-########## positions of the box slots ##########
-slots = {
-    "circle": (450, 300),
-    "triangle": (580, 300),
-    "square": (710, 300),
-}
-slotSize = 100
+DB_TABLE = "ProjectRoom"
+INTRO = [(None, "intro_1")]
+PHONE = [(None, "phone"), ("Voicemail", "voicemail_1"), ("Voicemail", "voicemail_2")]
+BOARD = [(None, "board"), ("Whiteboard", "board_mina"), ("Whiteboard", "board_jorn"), ("Whiteboard", "board_sam")]
+OPEN = [(None, "open"), (None, "stone")]
 
 
-def getElements(player,fui,screen):
-    start(screen)
-    current()
-    return images,buttons
+def loadImages(screen):
+    image = u.load_image("assets/project_room.png", screen.get_size(), (22, 20, 26))
+    boxImage = u.load_alpha_image("assets/", (420, 300), (40, 32, 26))
+    return image, boxImage
 
-def current():
-    global buttons
-    buttons = {
-        ########## buttons in the main room ##########
-        "corners": [
-            u.Button(60, 120, 230, 60, "Bookshelf", searchShelf),
-            u.Button(990, 120, 230, 60, "Whiteboard", readRiddle),
-            u.Button(60, 560, 230, 60, "Beanbags", searchBeanbags),
-            u.Button(990, 560, 230, 60, "Locked box", openBox),
-        ],
-        ########## riddle answer buttons ##########
-        "riddle": [
-            u.Button(340, 420, 200, 50, "Four", riddleWrong),
-            u.Button(560, 420, 200, 50, "Three", riddleRight),
-            u.Button(780, 420, 200, 50, "Eight", riddleWrong),
-        ],
-        ########## navigation buttons ##########
-        "back": u.Button(60, 650, 160, 45, "Back", backToRoom),
-        "leave": u.Button(540, 650, 200, 45, "Leave the room", leave),
+
+def buildButtons(room):
+    x = u.startX
+    return {
+        "bookshelf": u.Button(x + 60, 120, 230, 60, "Bookshelf", lambda: say(room, None, "binder")),
+        "board": u.Button(RIGHT_X, 120, 230, 60, "Whiteboard", lambda: sayAll(room, BOARD)),
+        "phone": u.Button(x + 60, 560, 230, 60, "Beanbags", lambda: sayAll(room, PHONE)),
+        "box": u.Button(RIGHT_X, 560, 230, 60, "Locked box", lambda: openBox(room)),
+        "leave": u.Button(x + 540, 650, 200, 45, "Leave the room", lambda: leave(room)),
+        "back": u.Button(x + 60, 650, 160, 45, "Back", lambda: toRoom(room)),
+        # one slot and one badge button per shape, the badge only shows up while the player carries it
+        "slot": {s: u.Button(x + 450 + 130 * i, 300, 100, 100, OWNERS[s], lambda s=s: tryPlace(room, s))
+                 for i, s in enumerate(SHAPES)},
+        "badge": {s: u.Button(x + 420 + 110 * i, 500, 100, 50, s, lambda s=s: pickUp(room, s))
+                  for i, s in enumerate(SHAPES)},
     }
 
 
-########## load the images and reset the puzzle ##########
-def start(screen):
-    global images, found, placed, holding, hasFlyer, view, riddleDone, message, messageUntil
-    images = [
-        u.load_image("assets/project_room.png", screen.get_size(), (22, 20, 26)),
-        u.load_image("assets/", (420, 300), (40, 32, 26)),
-    ]
-    found = {"circle": False, "triangle": False, "square": False}
-    placed = {"circle": False, "triangle": False, "square": False}
-    holding = None
-    hasFlyer = False
-    view = "room"
-    riddleDone = False
-    message = ""
-    messageUntil = 0
+def progress(room): # just points to specific room project from completion
+    return room.player.getCompletion("ProjectRoom")
 
 
-########## search bookshelf for circle ##########
-def searchShelf():
-    if found["circle"]:
-        say("Nothing else behind the books.")
-    else:
-        found["circle"] = True
-        say("A round wooden disc was wedged between two folders.")
+def has(room, event): # easy check to see if something already happened.
+    return event in progress(room)["all"]
 
 
-########## search beanbags for square ##########
-def searchBeanbags():
-    if found["square"]:
-        say("Just crumbs down there.")
-    else:
-        found["square"] = True
-        say("Under the beanbag: a square block.")
+def add(room, event):
+    room.player.addCompletion("ProjectRoom", event, "")
 
 
-########## open the whiteboard riddle ##########
-def readRiddle():
-    global view
-    if found["triangle"]:
-        say("The whiteboard is wiped clean now.")
-    else:
-        view = "riddle"
+def placed(room, shape):
+    return has(room, "proj.placed." + shape)
 
 
-########## open the locked box ##########
-def openBox():
-    global view
-    view = "box"
+def carried(room, shape): # the player has the badge and it is not in the box yet
+    return room.player.has_item("Items", shape) and not placed(room, shape)
 
 
-########## correct riddle answer ##########
-def riddleRight():
-    global view, riddleDone
-    found["triangle"] = True
-    riddleDone = True
-    view = "room"
-    say("The marker tray slides open. A triangle falls out.")
+def say(room, who, messageID):
+    text = room.fui.db.chatMessage(DB_TABLE, messageID)
+    room.fui.chat.say(f"{who} > {text}" if who else text)
 
 
-########## wrong riddle answer ##########
-def riddleWrong():
-    say("Nothing happens.")
+def sayAll(room, lines):
+    for who, messageID in lines:
+        say(room, who, messageID)
 
 
-########## pick up a shape ##########
-def pickUp(shape):
-    global holding
-    if found[shape] and not placed[shape]:
-        holding = shape
+def intro(room):
+    if has(room, "proj.stone"):
+        say(room, None, "intro_done")
+    elif not has(room, "proj.visited"):
+        add(room, "proj.visited")
+        sayAll(room, INTRO)
 
 
-########## place shape into the matching slot ##########
-def tryPlace(slot):
-    global holding, hasFlyer
-    if holding is None:
+def getElements(room): # basically the logic
+    if room.view == "room":
+        return [room.btn[name] for name in ("bookshelf", "board", "phone", "box", "leave")]
+
+    buttons = [room.btn["back"]]
+    for shape in SHAPES:
+        slot = room.btn["slot"][shape]
+        slot.label = shape if placed(room, shape) else OWNERS[shape]    # the name turns into the badge
+        buttons.append(slot)
+
+        if carried(room, shape):
+            badge = room.btn["badge"][shape]
+            badge.bgCol = HOLDING_COLOUR if room.holding == shape else (0, 0, 0)
+            buttons.append(badge)
+    return buttons
+
+
+def toRoom(room):
+    room.view = "room"
+    room.holding = None
+
+
+def leave(room):
+    room.next_room = "corridor"
+
+
+def openBox(room):
+    room.view = "box"
+    if has(room, "proj.stone"):
+        say(room, None, "box_empty")
         return
+    say(room, None, "box")
+    if not any(carried(room, s) for s in SHAPES):
+        say(room, None, "box_nobadges")
 
-    if holding == slot:
-        placed[slot] = True
-        holding = None
-        say("It clicks into place.")
 
-        ########## check if all shapes have been placed ##########
-        if all(placed.values()):
-            hasFlyer = True
-            say("The lid springs open. Inside is a flyer: EQUINOX STUDENT SOCIETY.")
+def pickUp(room, shape):
+    room.holding = shape
+    say(room, None, "pickup")
 
+
+def tryPlace(room, shape):
+    if placed(room, shape):
+        return
+    if room.holding is None:
+        say(room, None, "pick_first")
+    elif room.holding == shape:
+        add(room, "proj.placed." + shape)
+        room.holding = None
+        say(room, None, "place")
+        if all(placed(room, s) for s in SHAPES):
+            complete(room)
     else:
-        holding = None
-        say("That does not fit.")
+        room.holding = None
+        say(room, None, "wrong")
 
 
-########## handle clicking shapes and box slots ##########
-def boxClick(pos):
-    x = 420
-
-    for shape in ("circle", "triangle", "square"):
-        if found[shape] and not placed[shape]:
-            if pygame.Rect(x, 470, 90, 90).collidepoint(pos):
-                pickUp(shape)
-            x = x + 110
-
-    for shape in slots:
-        sx, sy = slots[shape]
-
-        if pygame.Rect(sx, sy, slotSize, slotSize).collidepoint(pos):
-            tryPlace(shape)
+def complete(room): # all badges are in: they are used up and the stone is the reward
+    for shape in SHAPES:
+        room.player.remove_item("Items", shape)
+    room.player.add_item("Stones", "Purple", STONE_PATH)
+    add(room, "proj.stone")                                 # after add_item, so a failed pickup doesn't count as taken
+    sayAll(room, OPEN)
 
 
-########## return to the main room ##########
-def backToRoom():
-    global view, holding
-    view = "room"
-    holding = None
-
-
-########## leave project room and go to corridor ##########
-def leave():
-    global next_room
-    next_room = "corridor"
-
-
-########## display temporary message ##########
-def say(text):
-    global message, messageUntil
-    message = text
-    messageUntil = pygame.time.get_ticks() + 4000
+def drawScene(room):
+    room.screen.blit(room.image, (u.startX, 0))
+    if room.view == "room":
+        room.screen.blit(room.font.render("PROJECT ROOM 1", True, (230, 225, 235)), (u.startX + 60, 50))
+    else:
+        room.screen.blit(room.boxImage, (u.startX + 420, 180))
+        pygame.draw.rect(room.screen, (170, 150, 120), pygame.Rect(u.startX + 420, 180, 420, 300), 1)
