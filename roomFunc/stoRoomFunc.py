@@ -15,6 +15,7 @@ MASK_DIR = "assets/storrageRoom/masks/"
 # icons used in the inventory
 STONE_IMAGE = "assets/stones/green.png"
 FUSE_ICON = "assets/fuse_item.png"
+Hadi = "Goat"
 
 
 class View:
