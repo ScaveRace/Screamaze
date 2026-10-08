@@ -66,10 +66,9 @@ while running:
             running = False
 
         else:
-            frontui.handleEvenet(event)
-            room.handle_event(event)
-
-
+            inGame = current != "startup" and current != "frontD"  # only these rooms show the front UI
+            if not (inGame and frontui.handleEvenet(event)):
+                room.handle_event(event)
 
     if room.next_room is not None:
         name = room.next_room
