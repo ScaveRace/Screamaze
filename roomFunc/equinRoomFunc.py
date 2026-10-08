@@ -23,6 +23,16 @@ ITEMS = [
 
 # you'll notice some lambdas below in the code, that is to prevent buttons and masks from firing their functions upon being built.
 
+STUDENT = {"regular": ("assets/equinoxRoom/student_regular.png", 60), # state, path, width. regular -> angry1 -> angry2 per mistake
+           "angry1": ("assets/equinoxRoom/student_angry1.png", 60),
+           "angry2": ("assets/equinoxRoom/student_angry2.png", 60),
+           "demonTrans": ("assets/equinoxRoom/student_demon_trans.png", 73), # after the sandwich: transforms, then the demon
+           "demon": ("assets/equinoxRoom/student_demon.png", 68)}
+STUDENT_POS = (600, 350) # centre of the student in the room, change to move him
+TRANSFORM_TIME = 1500 # how long the transform sprite shows before the demon
+DEMON_TIME = 2500 # how long the demon stands there before the blink
+BLINK_FRAMES = 40 # frames the screen takes to go black, and to come back
+
 STONE_PATH = "assets/stones/yellow.png"
 LAYER_STEP = 14
 PLATE_CENTRE = (600, 493)
@@ -57,7 +67,8 @@ def loadImages(screen):
     fade = pygame.Surface(screen.get_size())
     fade.fill((0, 0, 0))
     layers = [u.load_alpha_image(path, fitWidth(path, width)) for name, path, width in RECIPE]
-    return roomImage, tableImage, fade, layers
+    demon = {s: u.load_alpha_image(STUDENT[s][0], fitWidth(*STUDENT[s])) for s in ("demonTrans", "demon")}
+    return roomImage, tableImage, fade, layers, demon
 
 
 def buildMasks(room):
@@ -70,17 +81,18 @@ def buildMasks(room):
     stone = {"view": "stone", "name": "stone", "file": STONE_PATH}
     stone["mask"] = makeMask(STONE_PATH, 40, (640, 175), lambda: takeStone(room))
     masks.append(stone)
+    for state in ("regular", "angry1", "angry2"): # only the one that fits the mistakes made is shown
+        path, width = STUDENT[state]
+        masks.append({"view": "student", "name": state, "file": path,
+                      "mask": makeMask(path, width, STUDENT_POS, lambda: talkToStudent(room))})
     return masks
 
 
 def buildButtons(room):
     return {
         "corridor": u.Button(1250, 650, 170, 50, "corridor", lambda: corridor(room)),
-        "talk": u.Button(1040, 650, 200, 50, "talk to student", lambda: talk(room)),
-        "recipe": u.Button(1040, 650, 200, 50, "recipe?", lambda: recipe(room)),
         "plate": u.Button(820, 650, 200, 50, "to the plate", lambda: toTable(room)),
         "room": u.Button(820, 650, 200, 50, "back to the room", lambda: toRoom(room)),
-        "lookAway": u.Button(1040, 650, 200, 50, "look away", lambda: lookAway(room)),
     }
 
 
@@ -153,21 +165,17 @@ def getElements(room): # basically the logic
     elif has(room, "equin.lookaway"):
         masks += [m["mask"] for m in room.allMasks if m["view"] == "stone"]
     elif has(room, "equin.sandwich"):
-        buttons.append(room.btn["lookAway"])
-    elif has(room, "equin.talked"):
-        buttons.append(room.btn["recipe"])
-        if room.view == "room":
+        pass # nothing to click, the demon blinks away by itself (see blink)
+    elif has(room, "equin.talked") and room.view == "table":
+        buttons.append(room.btn["room"])
+        masks += [m["mask"] for m in room.allMasks if m["view"] == "table"
+                  and has(room, "equin.got." + m["file"]) and not has(room, "equin.placed." + m["file"])]
+    else: # in the room: the student is a mask, he says the recipe once you talked to him
+        if has(room, "equin.talked"):
             buttons.append(room.btn["plate"])
-            masks += [m["mask"] for m in room.allMasks
-                      if m["view"] == "room" and not has(room, "equin.got." + m["file"])]
-        else:
-            buttons.append(room.btn["room"])
-            masks += [m["mask"] for m in room.allMasks if m["view"] == "table"
-                      and has(room, "equin.got." + m["file"]) and not has(room, "equin.placed." + m["file"])]
-    else:
-        buttons.append(room.btn["talk"])
         masks += [m["mask"] for m in room.allMasks
                   if m["view"] == "room" and not has(room, "equin.got." + m["file"])]
+        masks += [m["mask"] for m in room.allMasks if m["view"] == "student" and m["name"] == studentState(room)]
     return pictures, masks, buttons
 
 
@@ -181,6 +189,17 @@ def toTable(room):
 
 def toRoom(room):
     room.view = "room"
+
+
+def studentState(room): # he gets angrier with every mistake
+    return ("regular", "angry1", "angry2")[min(getMistakes(room), 2)]
+
+
+def talkToStudent(room): # clicking the student: talk first, the recipe after
+    if has(room, "equin.talked"):
+        recipe(room)
+    else:
+        talk(room)
 
 
 def talk(room):
@@ -244,8 +263,17 @@ def fail(room):
 
 def complete(room):
     add(room, "equin.sandwich")
+    room.transformStart = pygame.time.get_ticks()
     room.view = "room"
     sayAll(room, COMPLETE)
+
+
+def drawDemon(room): # the sandwich is done: he transforms, then the demon stays until you look away
+    if room.view != "room" or not has(room, "equin.sandwich") or has(room, "equin.lookaway"):
+        return
+    state = "demonTrans" if pygame.time.get_ticks() - room.transformStart < TRANSFORM_TIME else "demon"
+    image = room.demon[state]
+    room.screen.blit(image, image.get_rect(center=(STUDENT_POS[0] + u.startX, STUDENT_POS[1])))
 
 
 def drawInfo(room):
@@ -254,8 +282,22 @@ def drawInfo(room):
         room.screen.blit(room.font.render(f"Mistakes left: {left}", True, (222, 222, 214)), (320, 60))
 
 
+def blink(room): # sandwich done: the demon stands there, the screen fades to black, he is gone, the screen fades back
+    if has(room, "equin.sandwich") and not has(room, "equin.lookaway"):
+        room.fadeAlpha = u.storyImageAnim(room.transformStart + TRANSFORM_TIME + DEMON_TIME, room.fadeAlpha, BLINK_FRAMES)
+        if room.fadeAlpha >= 255:
+            lookAway(room) # in the dark: he is gone and the stone lies there
+            room.getElements()
+    else:
+        room.fadeAlpha = max(room.fadeAlpha - 255 / BLINK_FRAMES, 0)
+    if room.fadeAlpha > 0:
+        room.fade.set_alpha(int(room.fadeAlpha))
+        room.screen.blit(room.fade, (0, 0))
+
+
 def drawFade(room):
     if not room.failing:
+        blink(room)
         return
     room.fadeAlpha = u.storyImageAnim(room.fadeStart + FADE_DELAY, room.fadeAlpha, FADE_FRAMES)
     if room.fadeAlpha > 0:

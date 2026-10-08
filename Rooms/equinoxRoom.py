@@ -19,7 +19,8 @@ class EquinoxRoom:
         self.fadeEnd = None
 
         self.font = pygame.font.Font(None, 22)
-        self.roomImage, self.tableImage, self.fade, self.layers = eF.loadImages(screen)
+        self.transformStart = 0
+        self.roomImage, self.tableImage, self.fade, self.layers, self.demon = eF.loadImages(screen)
         self.allMasks = eF.buildMasks(self)
         self.btn = eF.buildButtons(self)
         self.images, self.masks, self.buttons = [], [], []
@@ -41,6 +42,7 @@ class EquinoxRoom:
     def draw(self):
         for image, pos in self.images:
             self.screen.blit(image, pos)
+        eF.drawDemon(self)
         for m in self.masks:
             m.draw(self.screen)
         eF.drawInfo(self)
