@@ -19,7 +19,7 @@ MASKS = {
     "reset": "assets/vampire/masks/red_button.png",
     "drawer": "assets/vampire/masks/cabinet_drawer.png",
     "fuse": "assets/vampire/masks/fuse.png",
-    "stone": "assets/stones/red.png",
+    "stone": "assets/vampire/masks/red.png",
 }
 
 def loadImages(screen):
