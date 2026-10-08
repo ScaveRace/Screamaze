@@ -1,4 +1,4 @@
-{
+ {
  "picture_size": [
   1672,
   941
@@ -28,162 +28,136 @@
      "id": "window",
      "label": "Window",
      "mask": "assets/lab_2001/masks/window.png",
-     "cutout": "assets/lab_2001/cutouts/window.png",
      "pos": [
-      758,
-      26
+      771,
+      30
      ],
      "size": [
-      139,
+      132,
       56
      ],
-     "text": "You pull two slats apart and look out. Only darkness, and your own reflection staring back.",
      "pov": {
       "image": "assets/lab_2001/window/pov.png",
       "changed": "assets/lab_2001/window/pov_changed.png",
-      "changed_text": "Something outside is looking back at you.",
-      "hotspot": {
-       "cutout": "assets/lab_2001/window/hotspot.png",
-       "pos": [
-        854,
-        331
-       ],
-       "size": [
-        169,
-        99
-       ]
-      }
+      "mask": "assets/lab_2001/window/mask.png",
+      "pos": [
+       576,
+       72
+      ],
+      "size": [
+       481,
+       429
+      ]
      }
     },
     {
      "id": "whiteboard",
      "label": "Whiteboard",
      "mask": "assets/lab_2001/masks/whiteboard.png",
-     "cutout": "assets/lab_2001/cutouts/whiteboard.png",
      "pos": [
-      653,
-      58
+      670,
+      67
      ],
      "size": [
-      49,
-      274
+      36,
+      249
      ],
-     "text": "Half-wiped network diagrams. Someone circled one machine in red.",
      "pov": {
       "image": "assets/lab_2001/whiteboard/pov.png",
       "changed": "assets/lab_2001/whiteboard/pov_changed.png",
-      "changed_text": "That was not there a second ago.",
-      "hotspot": {
-       "cutout": "assets/lab_2001/whiteboard/hotspot.png",
-       "pos": [
-        464,
-        269
-       ],
-       "size": [
-        293,
-        278
-       ]
-      }
+      "mask": "assets/lab_2001/whiteboard/mask.png",
+      "pos": [
+       0,
+       0
+      ],
+      "size": [
+       447,
+       771
+      ]
      }
     },
     {
      "id": "server_rack",
      "label": "Server Rack",
      "mask": "assets/lab_2001/masks/server_rack.png",
-     "cutout": "assets/lab_2001/cutouts/server_rack.png",
      "pos": [
-      660,
-      698
+      672,
+      700
      ],
      "size": [
-      84,
-      139
+      72,
+      137
      ],
-     "text": "The server rack is still humming. Little lights blink in a pattern that almost looks deliberate.",
      "pov": {
       "image": "assets/lab_2001/server_rack/pov.png",
       "changed": "assets/lab_2001/server_rack/pov_changed.png",
-      "changed_text": "A key, hidden in an empty drive bay.",
-      "hotspot": {
-       "cutout": "assets/lab_2001/server_rack/hotspot.png",
-       "pos": [
-        1044,
-        893
-       ],
-       "size": [
-        227,
-        48
-       ]
-      }
+      "mask": "assets/lab_2001/server_rack/mask.png",
+      "pos": [
+       652,
+       94
+      ],
+      "size": [
+       313,
+       663
+      ]
      }
     },
     {
      "id": "metal_cabinet",
      "label": "Metal Cabinet",
      "mask": "assets/lab_2001/masks/metal_cabinet.png",
-     "cutout": "assets/lab_2001/cutouts/metal_cabinet.png",
      "pos": [
-      918,
-      78
+      922,
+      80
      ],
      "size": [
-      69,
+      63,
       119
      ],
-     "text": "Locked. Something inside shifts when you knock.",
      "pov": {
       "image": "assets/lab_2001/metal_cabinet/pov.png",
       "changed": "assets/lab_2001/metal_cabinet/pov_changed.png",
-      "changed_text": "Cables, dust and a fuse that is still warm.",
-      "hotspot": {
-       "cutout": "assets/lab_2001/metal_cabinet/hotspot.png",
-       "pos": [
-        478,
-        174
-       ],
-       "size": [
-        354,
-        410
-       ]
-      }
+      "mask": "assets/lab_2001/metal_cabinet/mask.png",
+      "pos": [
+       628,
+       168
+      ],
+      "size": [
+       274,
+       608
+      ]
      }
     },
     {
      "id": "computers",
      "label": "Computers",
      "mask": "assets/lab_2001/masks/computers.png",
-     "cutout": "assets/lab_2001/cutouts/computers.png",
      "pos": [
-      666,
-      233
+      675,
+      228
      ],
      "size": [
-      74,
-      359
+      72,
+      372
      ],
-     "text": "Rows of dead monitors. One of them flickers on for a second, then goes dark.",
      "pov": {
       "image": "assets/lab_2001/computers/pov.png",
       "changed": "assets/lab_2001/computers/pov_changed.png",
-      "changed_text": "The machine is asking for a password.",
-      "hotspot": {
-       "cutout": "assets/lab_2001/computers/hotspot.png",
-       "pos": [
-        580,
-        174
-       ],
-       "size": [
-        533,
-        383
-       ]
-      }
+      "mask": "assets/lab_2001/computers/mask.png",
+      "pos": [
+       0,
+       178
+      ],
+      "size": [
+       566,
+       531
+      ]
      }
     },
     {
      "id": "door",
      "label": "Leave room",
      "mask": "assets/lab_2001/masks/door.png",
-     "cutout": "assets/lab_2001/cutouts/door.png",
      "pos": [
       830,
       871
@@ -191,8 +165,7 @@
      "size": [
       118,
       62
-     ],
-     "text": null
+     ]
     }
    ]
   },
@@ -220,193 +193,162 @@
      "id": "window",
      "label": "Window",
      "mask": "assets/front_desk_office/masks/window.png",
-     "cutout": "assets/front_desk_office/cutouts/window.png",
      "pos": [
-      653,
-      36
+      657,
+      41
      ],
      "size": [
-      354,
-      82
+      358,
+      81
      ],
-     "text": "You pull two slats apart and look out. Only darkness, and your own reflection staring back.",
      "pov": {
       "image": "assets/front_desk_office/window/pov.png",
       "changed": "assets/front_desk_office/window/pov_changed.png",
-      "changed_text": "Someone is standing under the lamp. Not moving.",
-      "hotspot": {
-       "cutout": "assets/front_desk_office/window/hotspot.png",
-       "pos": [
-        295,
-        251
-       ],
-       "size": [
-        855,
-        280
-       ]
-      }
+      "mask": "assets/front_desk_office/window/mask.png",
+      "pos": [
+       558,
+       51
+      ],
+      "size": [
+       552,
+       441
+      ]
      }
     },
     {
      "id": "filing_cabinets",
      "label": "Filing Cabinets",
      "mask": "assets/front_desk_office/masks/filing_cabinets.png",
-     "cutout": "assets/front_desk_office/cutouts/filing_cabinets.png",
      "pos": [
       465,
-      184
+      187
      ],
      "size": [
-      121,
-      496
+      133,
+      490
      ],
-     "text": "Student files, alphabetical. Your own folder is missing.",
      "pov": {
       "image": "assets/front_desk_office/filing_cabinets/pov.png",
       "changed": "assets/front_desk_office/filing_cabinets/pov_changed.png",
-      "changed_text": "One folder is red. All the others are brown.",
-      "hotspot": {
-       "cutout": "assets/front_desk_office/filing_cabinets/hotspot.png",
-       "pos": [
-        584,
-        408
-       ],
-       "size": [
-        427,
-        257
-       ]
-      }
+      "mask": "assets/front_desk_office/filing_cabinets/mask.png",
+      "pos": [
+       100,
+       266
+      ],
+      "size": [
+       906,
+       570
+      ]
      }
     },
     {
      "id": "reception_desk",
      "label": "Reception Desk",
      "mask": "assets/front_desk_office/masks/reception_desk.png",
-     "cutout": "assets/front_desk_office/cutouts/reception_desk.png",
      "pos": [
-      658,
-      344
+      660,
+      346
      ],
      "size": [
-      365,
-      297
+      361,
+      321
      ],
-     "text": "The front desk. The computer asks for a password and the bell is sticky.",
      "pov": {
       "image": "assets/front_desk_office/reception_desk/pov.png",
       "changed": "assets/front_desk_office/reception_desk/pov_changed.png",
-      "changed_text": "A visitor badge. The name on it is yours.",
-      "hotspot": {
-       "cutout": "assets/front_desk_office/reception_desk/hotspot.png",
-       "pos": [
-        395,
-        471
-       ],
-       "size": [
-        1022,
-        279
-       ]
-      }
+      "mask": "assets/front_desk_office/reception_desk/mask.png",
+      "pos": [
+       332,
+       420
+      ],
+      "size": [
+       1162,
+       521
+      ]
      }
     },
     {
      "id": "key_cabinet",
      "label": "Key Cabinet",
      "mask": "assets/front_desk_office/masks/key_cabinet.png",
-     "cutout": "assets/front_desk_office/cutouts/key_cabinet.png",
      "pos": [
-      1032,
-      186
+      1028,
+      188
      ],
      "size": [
-      125,
-      186
+      126,
+      189
      ],
-     "text": "Dozens of keys on little hooks. Most of the labels have been scratched off.",
      "pov": {
       "image": "assets/front_desk_office/key_cabinet/pov.png",
       "changed": "assets/front_desk_office/key_cabinet/pov_changed.png",
-      "changed_text": "Every hook has a key. Except number 15.",
-      "hotspot": {
-       "cutout": "assets/front_desk_office/key_cabinet/hotspot.png",
-       "pos": [
-        881,
-        183
-       ],
-       "size": [
-        175,
-        250
-       ]
-      }
+      "mask": "assets/front_desk_office/key_cabinet/mask.png",
+      "pos": [
+       594,
+       183
+      ],
+      "size": [
+       556,
+       706
+      ]
      }
     },
     {
      "id": "wall_clock",
      "label": "Wall Clock",
      "mask": "assets/front_desk_office/masks/wall_clock.png",
-     "cutout": "assets/front_desk_office/cutouts/wall_clock.png",
      "pos": [
-      1026,
-      140
+      1022,
+      121
      ],
      "size": [
-      51,
-      40
+      60,
+      60
      ],
-     "text": "The clock has stopped. It still ticks.",
      "pov": {
       "image": "assets/front_desk_office/wall_clock/pov.png",
       "changed": "assets/front_desk_office/wall_clock/pov_changed.png",
-      "changed_text": "Midnight. It was ten past ten a moment ago.",
-      "hotspot": {
-       "cutout": "assets/front_desk_office/wall_clock/hotspot.png",
-       "pos": [
-        645,
-        188
-       ],
-       "size": [
-        355,
-        473
-       ]
-      }
+      "mask": "assets/front_desk_office/wall_clock/mask.png",
+      "pos": [
+       719,
+       50
+      ],
+      "size": [
+       295,
+       305
+      ]
      }
     },
     {
      "id": "printer",
      "label": "Printer",
      "mask": "assets/front_desk_office/masks/printer.png",
-     "cutout": "assets/front_desk_office/cutouts/printer.png",
      "pos": [
-      1090,
-      606
+      1091,
+      608
      ],
      "size": [
-      56,
-      62
+      54,
+      66
      ],
-     "text": "The printer is warm. The last page is completely black.",
      "pov": {
       "image": "assets/front_desk_office/printer/pov.png",
       "changed": "assets/front_desk_office/printer/pov_changed.png",
-      "changed_text": "It printed a photo of the corridor. You are in it.",
-      "hotspot": {
-       "cutout": "assets/front_desk_office/printer/hotspot.png",
-       "pos": [
-        657,
-        479
-       ],
-       "size": [
-        350,
-        228
-       ]
-      }
+      "mask": "assets/front_desk_office/printer/mask.png",
+      "pos": [
+       673,
+       338
+      ],
+      "size": [
+       346,
+       112
+      ]
      }
     },
     {
      "id": "door",
      "label": "Leave room",
      "mask": "assets/front_desk_office/masks/door.png",
-     "cutout": "assets/front_desk_office/cutouts/door.png",
      "pos": [
       603,
       871
@@ -414,8 +356,7 @@
      "size": [
       154,
       62
-     ],
-     "text": null
+     ]
     }
    ]
   },
@@ -443,162 +384,136 @@
      "id": "window",
      "label": "Window",
      "mask": "assets/classroom_2021/masks/window.png",
-     "cutout": "assets/classroom_2021/cutouts/window.png",
      "pos": [
-      533,
-      36
+      556,
+      41
      ],
      "size": [
-      574,
-      74
+      554,
+      79
      ],
-     "text": "You pull two slats apart and look out. Only darkness, and your own reflection staring back.",
      "pov": {
       "image": "assets/classroom_2021/window/pov.png",
       "changed": "assets/classroom_2021/window/pov_changed.png",
-      "changed_text": "A handprint. On the outside. This is the second floor.",
-      "hotspot": {
-       "cutout": "assets/classroom_2021/window/hotspot.png",
-       "pos": [
-        727,
-        290
-       ],
-       "size": [
-        106,
-        131
-       ]
-      }
+      "mask": "assets/classroom_2021/window/mask.png",
+      "pos": [
+       494,
+       70
+      ],
+      "size": [
+       684,
+       423
+      ]
      }
     },
     {
      "id": "teacher_desk",
      "label": "Teacher Desk",
      "mask": "assets/classroom_2021/masks/teacher_desk.png",
-     "cutout": "assets/classroom_2021/cutouts/teacher_desk.png",
      "pos": [
-      706,
-      181
+      723,
+      193
      ],
      "size": [
-      201,
-      136
+      195,
+      153
      ],
-     "text": "An old computer on the teacher's desk. The cursor blinks, waiting.",
      "pov": {
       "image": "assets/classroom_2021/teacher_desk/pov.png",
       "changed": "assets/classroom_2021/teacher_desk/pov_changed.png",
-      "changed_text": "An apple, keys and a notebook full of names.",
-      "hotspot": {
-       "cutout": "assets/classroom_2021/teacher_desk/hotspot.png",
-       "pos": [
-        392,
-        575
-       ],
-       "size": [
-        822,
-        198
-       ]
-      }
+      "mask": "assets/classroom_2021/teacher_desk/mask.png",
+      "pos": [
+       135,
+       235
+      ],
+      "size": [
+       1314,
+       706
+      ]
      }
     },
     {
      "id": "chalkboard",
      "label": "Chalkboard",
      "mask": "assets/classroom_2021/masks/chalkboard.png",
-     "cutout": "assets/classroom_2021/cutouts/chalkboard.png",
      "pos": [
-      309,
-      265
+      311,
+      260
      ],
      "size": [
-      133,
-      359
+      139,
+      375
      ],
-     "text": "The chalkboard was wiped in a hurry. You can still make out a few numbers.",
      "pov": {
       "image": "assets/classroom_2021/chalkboard/pov.png",
       "changed": "assets/classroom_2021/chalkboard/pov_changed.png",
-      "changed_text": "Someone started a game of hangman. Five letters.",
-      "hotspot": {
-       "cutout": "assets/classroom_2021/chalkboard/hotspot.png",
-       "pos": [
-        614,
-        190
-       ],
-       "size": [
-        441,
-        400
-       ]
-      }
+      "mask": "assets/classroom_2021/chalkboard/mask.png",
+      "pos": [
+       148,
+       0
+      ],
+      "size": [
+       867,
+       451
+      ]
      }
     },
     {
      "id": "fridge",
      "label": "Fridge",
      "mask": "assets/classroom_2021/masks/fridge.png",
-     "cutout": "assets/classroom_2021/cutouts/fridge.png",
      "pos": [
-      1161,
-      92
+      1163,
+      94
      ],
      "size": [
-      126,
-      195
+      135,
+      200
      ],
-     "text": "An old fridge in a classroom. There is a handprint on the door.",
      "pov": {
       "image": "assets/classroom_2021/fridge/pov.png",
       "changed": "assets/classroom_2021/fridge/pov_changed.png",
-      "changed_text": "You should not have opened it.",
-      "hotspot": {
-       "cutout": "assets/classroom_2021/fridge/hotspot.png",
-       "pos": [
-        129,
-        75
-       ],
-       "size": [
-        870,
-        787
-       ]
-      }
+      "mask": "assets/classroom_2021/fridge/mask.png",
+      "pos": [
+       614,
+       57
+      ],
+      "size": [
+       423,
+       793
+      ]
      }
     },
     {
      "id": "notice_board",
      "label": "Notice Board",
      "mask": "assets/classroom_2021/masks/notice_board.png",
-     "cutout": "assets/classroom_2021/cutouts/notice_board.png",
      "pos": [
-      1278,
-      240
+      1288,
+      238
      ],
      "size": [
-      69,
-      362
+      70,
+      374
      ],
-     "text": "Timetables, a lost-and-found note, and a class photo with one face cut out.",
      "pov": {
       "image": "assets/classroom_2021/notice_board/pov.png",
       "changed": "assets/classroom_2021/notice_board/pov_changed.png",
-      "changed_text": "A class photo. One face is scratched away.",
-      "hotspot": {
-       "cutout": "assets/classroom_2021/notice_board/hotspot.png",
-       "pos": [
-        730,
-        429
-       ],
-       "size": [
-        250,
-        255
-       ]
-      }
+      "mask": "assets/classroom_2021/notice_board/mask.png",
+      "pos": [
+       547,
+       59
+      ],
+      "size": [
+       705,
+       367
+      ]
      }
     },
     {
      "id": "door",
      "label": "Leave room",
      "mask": "assets/classroom_2021/masks/door.png",
-     "cutout": "assets/classroom_2021/cutouts/door.png",
      "pos": [
       925,
       871
@@ -606,8 +521,7 @@
      "size": [
       154,
       62
-     ],
-     "text": null
+     ]
     }
    ]
   },
@@ -635,193 +549,162 @@
      "id": "window",
      "label": "Window",
      "mask": "assets/teachers_room_4/masks/window.png",
-     "cutout": "assets/teachers_room_4/cutouts/window.png",
      "pos": [
-      388,
-      196
+      424,
+      203
      ],
      "size": [
-      849,
-      98
+      816,
+      108
      ],
-     "text": "You pull two slats apart and look out. Only darkness, and your own reflection staring back.",
      "pov": {
       "image": "assets/teachers_room_4/window/pov.png",
       "changed": "assets/teachers_room_4/window/pov_changed.png",
-      "changed_text": "Rain. You did not hear any rain.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_4/window/hotspot.png",
-       "pos": [
-        176,
-        23
-       ],
-       "size": [
-        899,
-        595
-       ]
-      }
+      "mask": "assets/teachers_room_4/window/mask.png",
+      "pos": [
+       311,
+       98
+      ],
+      "size": [
+       952,
+       336
+      ]
      }
     },
     {
      "id": "sofa",
      "label": "Sofa",
      "mask": "assets/teachers_room_4/masks/sofa.png",
-     "cutout": "assets/teachers_room_4/cutouts/sofa.png",
      "pos": [
-      156,
-      315
+      158,
+      317
      ],
      "size": [
-      156,
-      272
+      170,
+      307
      ],
-     "text": "A cracked leather sofa. The cushion is still warm.",
      "pov": {
       "image": "assets/teachers_room_4/sofa/pov.png",
       "changed": "assets/teachers_room_4/sofa/pov_changed.png",
-      "changed_text": "A pocket watch under the cushion, still ticking.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_4/sofa/hotspot.png",
-       "pos": [
-        956,
-        584
-       ],
-       "size": [
-        291,
-        182
-       ]
-      }
+      "mask": "assets/teachers_room_4/sofa/mask.png",
+      "pos": [
+       354,
+       358
+      ],
+      "size": [
+       980,
+       377
+      ]
      }
     },
     {
      "id": "coffee_table",
      "label": "Coffee Table",
      "mask": "assets/teachers_room_4/masks/coffee_table.png",
-     "cutout": "assets/teachers_room_4/cutouts/coffee_table.png",
      "pos": [
-      313,
-      453
+      331,
+      464
      ],
      "size": [
-      74,
-      94
+      62,
+      80
      ],
-     "text": "Cold coffee and a half-finished crossword. Every answer is the same word.",
      "pov": {
       "image": "assets/teachers_room_4/coffee_table/pov.png",
       "changed": "assets/teachers_room_4/coffee_table/pov_changed.png",
-      "changed_text": "The mug is knocked over. That is not coffee on the newspaper.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_4/coffee_table/hotspot.png",
-       "pos": [
-        535,
-        477
-       ],
-       "size": [
-        351,
-        266
-       ]
-      }
+      "mask": "assets/teachers_room_4/coffee_table/mask.png",
+      "pos": [
+       564,
+       461
+      ],
+      "size": [
+       526,
+       330
+      ]
      }
     },
     {
      "id": "meeting_table",
      "label": "Meeting Table",
      "mask": "assets/teachers_room_4/masks/meeting_table.png",
-     "cutout": "assets/teachers_room_4/cutouts/meeting_table.png",
      "pos": [
-      657,
-      385
+      640,
+      388
      ],
      "size": [
-      270,
-      152
+      298,
+      150
      ],
-     "text": "A long meeting table. Six chairs, none of them pushed in.",
      "pov": {
       "image": "assets/teachers_room_4/meeting_table/pov.png",
       "changed": "assets/teachers_room_4/meeting_table/pov_changed.png",
-      "changed_text": "A floor plan. One room is circled, and it is not on the door signs.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_4/meeting_table/hotspot.png",
-       "pos": [
-        250,
-        407
-       ],
-       "size": [
-        1178,
-        534
-       ]
-      }
+      "mask": "assets/teachers_room_4/meeting_table/mask.png",
+      "pos": [
+       358,
+       418
+      ],
+      "size": [
+       833,
+       268
+      ]
      }
     },
     {
      "id": "coffee_machine",
      "label": "Coffee Machine",
      "mask": "assets/teachers_room_4/masks/coffee_machine.png",
-     "cutout": "assets/teachers_room_4/cutouts/coffee_machine.png",
      "pos": [
-      1343,
-      450
+      1341,
+      448
      ],
      "size": [
-      141,
-      240
+      145,
+      246
      ],
-     "text": "The coffee machine gurgles by itself. You decide you are not thirsty.",
      "pov": {
       "image": "assets/teachers_room_4/coffee_machine/pov.png",
       "changed": "assets/teachers_room_4/coffee_machine/pov_changed.png",
-      "changed_text": "That is not coffee.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_4/coffee_machine/hotspot.png",
-       "pos": [
-        692,
-        51
-       ],
-       "size": [
-        737,
-        715
-       ]
-      }
+      "mask": "assets/teachers_room_4/coffee_machine/mask.png",
+      "pos": [
+       551,
+       157
+      ],
+      "size": [
+       373,
+       313
+      ]
      }
     },
     {
      "id": "bookshelf",
      "label": "Bookshelf",
      "mask": "assets/teachers_room_4/masks/bookshelf.png",
-     "cutout": "assets/teachers_room_4/cutouts/bookshelf.png",
      "pos": [
-      1328,
-      233
+      1339,
+      234
      ],
      "size": [
-      164,
-      209
+      167,
+      213
      ],
-     "text": "Teaching manuals and yearbooks. One year is missing from the row.",
      "pov": {
       "image": "assets/teachers_room_4/bookshelf/pov.png",
       "changed": "assets/teachers_room_4/bookshelf/pov_changed.png",
-      "changed_text": "A hollowed out yearbook with a vial inside.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_4/bookshelf/hotspot.png",
-       "pos": [
-        847,
-        291
-       ],
-       "size": [
-        174,
-        160
-       ]
-      }
+      "mask": "assets/teachers_room_4/bookshelf/mask.png",
+      "pos": [
+       151,
+       0
+      ],
+      "size": [
+       570,
+       736
+      ]
      }
     },
     {
      "id": "door",
      "label": "Leave room",
      "mask": "assets/teachers_room_4/masks/door.png",
-     "cutout": "assets/teachers_room_4/cutouts/door.png",
      "pos": [
       1107,
       719
@@ -829,8 +712,7 @@
      "size": [
       154,
       62
-     ],
-     "text": null
+     ]
     }
    ]
   },
@@ -858,193 +740,162 @@
      "id": "window",
      "label": "Window",
      "mask": "assets/classroom_2031/masks/window.png",
-     "cutout": "assets/classroom_2031/cutouts/window.png",
      "pos": [
-      643,
-      20
+      642,
+      32
      ],
      "size": [
-      374,
-      60
+      386,
+      52
      ],
-     "text": "You pull two slats apart and look out. Only darkness, and your own reflection staring back.",
      "pov": {
       "image": "assets/classroom_2031/window/pov.png",
       "changed": "assets/classroom_2031/window/pov_changed.png",
-      "changed_text": "The moon is far too big tonight.",
-      "hotspot": {
-       "cutout": "assets/classroom_2031/window/hotspot.png",
-       "pos": [
-        345,
-        143
-       ],
-       "size": [
-        410,
-        341
-       ]
-      }
+      "mask": "assets/classroom_2031/window/mask.png",
+      "pos": [
+       561,
+       52
+      ],
+      "size": [
+       553,
+       440
+      ]
      }
     },
     {
      "id": "teacher_desk",
      "label": "Teacher Desk",
      "mask": "assets/classroom_2031/masks/teacher_desk.png",
-     "cutout": "assets/classroom_2031/cutouts/teacher_desk.png",
      "pos": [
-      703,
-      88
+      709,
+      94
      ],
      "size": [
-      184,
-      74
+      176,
+      76
      ],
-     "text": "A grade book lies open on the desk. Every single mark is a fail.",
      "pov": {
       "image": "assets/classroom_2031/teacher_desk/pov.png",
       "changed": "assets/classroom_2031/teacher_desk/pov_changed.png",
-      "changed_text": "Everyone failed. One name is circled.",
-      "hotspot": {
-       "cutout": "assets/classroom_2031/teacher_desk/hotspot.png",
-       "pos": [
-        429,
-        435
-       ],
-       "size": [
-        825,
-        370
-       ]
-      }
+      "mask": "assets/classroom_2031/teacher_desk/mask.png",
+      "pos": [
+       293,
+       588
+      ],
+      "size": [
+       1207,
+       353
+      ]
      }
     },
     {
      "id": "globe",
      "label": "Globe",
      "mask": "assets/classroom_2031/masks/globe.png",
-     "cutout": "assets/classroom_2031/cutouts/globe.png",
      "pos": [
-      521,
-      80
+      520,
+      81
      ],
      "size": [
-      54,
-      57
+      53,
+      54
      ],
-     "text": "You spin the globe. It stops with your finger on a place that does not exist.",
      "pov": {
       "image": "assets/classroom_2031/globe/pov.png",
       "changed": "assets/classroom_2031/globe/pov_changed.png",
-      "changed_text": "The globe opens. There is a note inside.",
-      "hotspot": {
-       "cutout": "assets/classroom_2031/globe/hotspot.png",
-       "pos": [
-        805,
-        80
-       ],
-       "size": [
-        140,
-        533
-       ]
-      }
+      "mask": "assets/classroom_2031/globe/mask.png",
+      "pos": [
+       580,
+       91
+      ],
+      "size": [
+       327,
+       403
+      ]
      }
     },
     {
      "id": "projector",
      "label": "Projector",
      "mask": "assets/classroom_2031/masks/projector.png",
-     "cutout": "assets/classroom_2031/cutouts/projector.png",
      "pos": [
-      543,
-      728
+      551,
+      737
      ],
      "size": [
-      109,
-      74
+      100,
+      67
      ],
-     "text": "An old slide projector. The last slide is still inside.",
      "pov": {
       "image": "assets/classroom_2031/projector/pov.png",
       "changed": "assets/classroom_2031/projector/pov_changed.png",
-      "changed_text": "The last slide is still in there.",
-      "hotspot": {
-       "cutout": "assets/classroom_2031/projector/hotspot.png",
-       "pos": [
-        0,
-        0
-       ],
-       "size": [
-        1672,
-        941
-       ]
-      }
+      "mask": "assets/classroom_2031/projector/mask.png",
+      "pos": [
+       605,
+       181
+      ],
+      "size": [
+       406,
+       649
+      ]
      }
     },
     {
      "id": "chalkboard",
      "label": "Chalkboard",
      "mask": "assets/classroom_2031/masks/chalkboard.png",
-     "cutout": "assets/classroom_2031/cutouts/chalkboard.png",
      "pos": [
-      1100,
-      151
+      1107,
+      153
      ],
      "size": [
-      85,
-      411
+      81,
+      417
      ],
-     "text": "Someone wrote the same sentence over and over, getting smaller each time.",
      "pov": {
       "image": "assets/classroom_2031/chalkboard/pov.png",
       "changed": "assets/classroom_2031/chalkboard/pov_changed.png",
-      "changed_text": "Someone wiped a hole in the writing. From the inside, it seems.",
-      "hotspot": {
-       "cutout": "assets/classroom_2031/chalkboard/hotspot.png",
-       "pos": [
-        650,
-        210
-       ],
-       "size": [
-        416,
-        371
-       ]
-      }
+      "mask": "assets/classroom_2031/chalkboard/mask.png",
+      "pos": [
+       0,
+       64
+      ],
+      "size": [
+       853,
+       385
+      ]
      }
     },
     {
      "id": "lockers",
      "label": "Lockers",
      "mask": "assets/classroom_2031/masks/lockers.png",
-     "cutout": "assets/classroom_2031/cutouts/lockers.png",
      "pos": [
-      1093,
+      1099,
       563
      ],
      "size": [
-      61,
-      284
+      54,
+      288
      ],
-     "text": "A row of student lockers. One of them is slightly open.",
      "pov": {
       "image": "assets/classroom_2031/lockers/pov.png",
       "changed": "assets/classroom_2031/lockers/pov_changed.png",
-      "changed_text": "A backpack, still packed for a school day.",
-      "hotspot": {
-       "cutout": "assets/classroom_2031/lockers/hotspot.png",
-       "pos": [
-        710,
-        83
-       ],
-       "size": [
-        297,
-        387
-       ]
-      }
+      "mask": "assets/classroom_2031/lockers/mask.png",
+      "pos": [
+       162,
+       0
+      ],
+      "size": [
+       914,
+       699
+      ]
      }
     },
     {
      "id": "door",
      "label": "Leave room",
      "mask": "assets/classroom_2031/masks/door.png",
-     "cutout": "assets/classroom_2031/cutouts/door.png",
      "pos": [
       610,
       871
@@ -1052,8 +903,7 @@
      "size": [
       154,
       62
-     ],
-     "text": null
+     ]
     }
    ]
   },
@@ -1081,162 +931,136 @@
      "id": "staircase",
      "label": "Staircase",
      "mask": "assets/stair_exit/masks/staircase.png",
-     "cutout": "assets/stair_exit/cutouts/staircase.png",
      "pos": [
-      733,
-      102
+      737,
+      108
      ],
      "size": [
-      232,
-      410
+      244,
+      399
      ],
-     "text": "The stairs go down further than this building should allow.",
      "pov": {
       "image": "assets/stair_exit/staircase/pov.png",
       "changed": "assets/stair_exit/staircase/pov_changed.png",
-      "changed_text": "Wet footprints, going down. None coming back.",
-      "hotspot": {
-       "cutout": "assets/stair_exit/staircase/hotspot.png",
-       "pos": [
-        631,
-        441
-       ],
-       "size": [
-        397,
-        204
-       ]
-      }
+      "mask": "assets/stair_exit/staircase/mask.png",
+      "pos": [
+       370,
+       622
+      ],
+      "size": [
+       1008,
+       319
+      ]
      }
     },
     {
      "id": "fire_door",
      "label": "Fire Door",
      "mask": "assets/stair_exit/masks/fire_door.png",
-     "cutout": "assets/stair_exit/cutouts/fire_door.png",
      "pos": [
-      478,
-      66
+      475,
+      68
      ],
      "size": [
-      162,
-      191
+      179,
+      197
      ],
-     "text": "A heavy fire door. It is chained from the other side.",
      "pov": {
       "image": "assets/stair_exit/fire_door/pov.png",
       "changed": "assets/stair_exit/fire_door/pov_changed.png",
-      "changed_text": "The chain is off. You did not do that.",
-      "hotspot": {
-       "cutout": "assets/stair_exit/fire_door/hotspot.png",
-       "pos": [
-        273,
-        0
-       ],
-       "size": [
-        1092,
-        941
-       ]
-      }
+      "mask": "assets/stair_exit/fire_door/mask.png",
+      "pos": [
+       587,
+       45
+      ],
+      "size": [
+       426,
+       745
+      ]
      }
     },
     {
      "id": "fire_extinguisher",
      "label": "Fire Extinguisher",
      "mask": "assets/stair_exit/masks/fire_extinguisher.png",
-     "cutout": "assets/stair_exit/cutouts/fire_extinguisher.png",
      "pos": [
-      1098,
-      163
+      1105,
+      186
      ],
      "size": [
-      74,
-      79
+      55,
+      58
      ],
-     "text": "A fire extinguisher. The inspection tag expired years ago.",
      "pov": {
       "image": "assets/stair_exit/fire_extinguisher/pov.png",
       "changed": "assets/stair_exit/fire_extinguisher/pov_changed.png",
-      "changed_text": "Behind it, a key taped to the wall.",
-      "hotspot": {
-       "cutout": "assets/stair_exit/fire_extinguisher/hotspot.png",
-       "pos": [
-        660,
-        0
-       ],
-       "size": [
-        363,
-        632
-       ]
-      }
+      "mask": "assets/stair_exit/fire_extinguisher/mask.png",
+      "pos": [
+       809,
+       94
+      ],
+      "size": [
+       128,
+       408
+      ]
      }
     },
     {
      "id": "cardboard_boxes",
      "label": "Cardboard Boxes",
      "mask": "assets/stair_exit/masks/cardboard_boxes.png",
-     "cutout": "assets/stair_exit/cutouts/cardboard_boxes.png",
      "pos": [
-      1068,
-      668
+      1114,
+      588
      ],
      "size": [
-      124,
-      137
+      146,
+      256
      ],
-     "text": "Boxes of old exam papers. They smell damp.",
      "pov": {
       "image": "assets/stair_exit/cardboard_boxes/pov.png",
       "changed": "assets/stair_exit/cardboard_boxes/pov_changed.png",
-      "changed_text": "Exam papers. And a crowbar.",
-      "hotspot": {
-       "cutout": "assets/stair_exit/cardboard_boxes/hotspot.png",
-       "pos": [
-        553,
-        105
-       ],
-       "size": [
-        518,
-        665
-       ]
-      }
+      "mask": "assets/stair_exit/cardboard_boxes/mask.png",
+      "pos": [
+       577,
+       230
+      ],
+      "size": [
+       405,
+       565
+      ]
      }
     },
     {
      "id": "emergency_light",
      "label": "Emergency Light",
      "mask": "assets/stair_exit/masks/emergency_light.png",
-     "cutout": "assets/stair_exit/cutouts/emergency_light.png",
      "pos": [
-      1058,
-      238
+      1065,
+      258
      ],
      "size": [
-      69,
-      69
+      48,
+      50
      ],
-     "text": "A green emergency light, flickering in a bucket of murky water.",
      "pov": {
       "image": "assets/stair_exit/emergency_light/pov.png",
       "changed": "assets/stair_exit/emergency_light/pov_changed.png",
-      "changed_text": "Nope.",
-      "hotspot": {
-       "cutout": "assets/stair_exit/emergency_light/hotspot.png",
-       "pos": [
-        364,
-        170
-       ],
-       "size": [
-        1308,
-        771
-       ]
-      }
+      "mask": "assets/stair_exit/emergency_light/mask.png",
+      "pos": [
+       627,
+       439
+      ],
+      "size": [
+       447,
+       458
+      ]
      }
     },
     {
      "id": "door",
      "label": "Leave room",
      "mask": "assets/stair_exit/masks/door.png",
-     "cutout": "assets/stair_exit/cutouts/door.png",
      "pos": [
       681,
       871
@@ -1244,8 +1068,7 @@
      "size": [
       154,
       62
-     ],
-     "text": null
+     ]
     }
    ]
   },
@@ -1273,162 +1096,136 @@
      "id": "bookshelf",
      "label": "Bookshelf",
      "mask": "assets/teachers_room_1/masks/bookshelf.png",
-     "cutout": "assets/teachers_room_1/cutouts/bookshelf.png",
      "pos": [
-      550,
-      88
+      544,
+      93
      ],
      "size": [
-      92,
+      94,
       504
      ],
-     "text": "Dusty textbooks. A gap shows where one was pulled out recently.",
      "pov": {
       "image": "assets/teachers_room_1/bookshelf/pov.png",
       "changed": "assets/teachers_room_1/bookshelf/pov_changed.png",
-      "changed_text": "The books are gone. On the wall beside the shelf, a lever.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_1/bookshelf/hotspot.png",
-       "pos": [
-        622,
-        74
-       ],
-       "size": [
-        402,
-        179
-       ]
-      }
+      "mask": "assets/teachers_room_1/bookshelf/mask.png",
+      "pos": [
+       277,
+       54
+      ],
+      "size": [
+       744,
+       779
+      ]
      }
     },
     {
      "id": "desks",
      "label": "Desks",
      "mask": "assets/teachers_room_1/masks/desks.png",
-     "cutout": "assets/teachers_room_1/cutouts/desks.png",
      "pos": [
-      720,
-      303
+      721,
+      320
      ],
      "size": [
-      247,
-      244
+      239,
+      226
      ],
-     "text": "Two desks pushed together. Both screens show the same frozen camera feed of the corridor.",
      "pov": {
       "image": "assets/teachers_room_1/desks/pov.png",
       "changed": "assets/teachers_room_1/desks/pov_changed.png",
-      "changed_text": "Both screens show the corridor. Something moves in the corner.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_1/desks/hotspot.png",
-       "pos": [
-        996,
-        185
-       ],
-       "size": [
-        457,
-        316
-       ]
-      }
+      "mask": "assets/teachers_room_1/desks/mask.png",
+      "pos": [
+       318,
+       451
+      ],
+      "size": [
+       1073,
+       315
+      ]
      }
     },
     {
      "id": "safe",
      "label": "Safe",
      "mask": "assets/teachers_room_1/masks/safe.png",
-     "cutout": "assets/teachers_room_1/cutouts/safe.png",
      "pos": [
-      955,
-      666
+      953,
+      670
      ],
      "size": [
-      140,
-      137
+      139,
+      155
      ],
-     "text": "A steel safe with a combination dial. It will not budge.",
      "pov": {
       "image": "assets/teachers_room_1/safe/pov.png",
       "changed": "assets/teachers_room_1/safe/pov_changed.png",
-      "changed_text": "It opens. Inside, a stone that hums.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_1/safe/hotspot.png",
-       "pos": [
-        587,
-        299
-       ],
-       "size": [
-        353,
-        445
-       ]
-      }
+      "mask": "assets/teachers_room_1/safe/mask.png",
+      "pos": [
+       548,
+       190
+      ],
+      "size": [
+       489,
+       596
+      ]
      }
     },
     {
      "id": "notice_board",
      "label": "Notice Board",
      "mask": "assets/teachers_room_1/masks/notice_board.png",
-     "cutout": "assets/teachers_room_1/cutouts/notice_board.png",
      "pos": [
       1083,
-      352
+      340
      ],
      "size": [
-      47,
-      139
+      45,
+      165
      ],
-     "text": "A duty roster. Tonight's name has been crossed out.",
      "pov": {
       "image": "assets/teachers_room_1/notice_board/pov.png",
       "changed": "assets/teachers_room_1/notice_board/pov_changed.png",
-      "changed_text": "Someone has been connecting the dots.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_1/notice_board/hotspot.png",
-       "pos": [
-        1046,
-        471
-       ],
-       "size": [
-        100,
-        113
-       ]
-      }
+      "mask": "assets/teachers_room_1/notice_board/mask.png",
+      "pos": [
+       569,
+       82
+      ],
+      "size": [
+       566,
+       360
+      ]
      }
     },
     {
      "id": "plant",
      "label": "Plant",
      "mask": "assets/teachers_room_1/masks/plant.png",
-     "cutout": "assets/teachers_room_1/cutouts/plant.png",
      "pos": [
-      998,
-      117
+      1000,
+      119
      ],
      "size": [
-      64,
-      67
+      62,
+      89
      ],
-     "text": "A potted plant, somehow still alive. The soil is dark and wet.",
      "pov": {
       "image": "assets/teachers_room_1/plant/pov.png",
       "changed": "assets/teachers_room_1/plant/pov_changed.png",
-      "changed_text": "The pot is smashed. A key lies in the soil.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_1/plant/hotspot.png",
-       "pos": [
-        87,
-        65
-       ],
-       "size": [
-        1355,
-        876
-       ]
-      }
+      "mask": "assets/teachers_room_1/plant/mask.png",
+      "pos": [
+       623,
+       150
+      ],
+      "size": [
+       374,
+       572
+      ]
      }
     },
     {
      "id": "door",
      "label": "Leave room",
      "mask": "assets/teachers_room_1/masks/door.png",
-     "cutout": "assets/teachers_room_1/cutouts/door.png",
      "pos": [
       759,
       871
@@ -1436,8 +1233,7 @@
      "size": [
       154,
       62
-     ],
-     "text": null
+     ]
     }
    ]
   },
@@ -1465,162 +1261,136 @@
      "id": "filing_cabinets",
      "label": "Filing Cabinets",
      "mask": "assets/teachers_room_2/masks/filing_cabinets.png",
-     "cutout": "assets/teachers_room_2/cutouts/filing_cabinets.png",
      "pos": [
-      603,
-      98
+      608,
+      107
      ],
      "size": [
-      89,
-      544
+      92,
+      547
      ],
-     "text": "Drawer after drawer of exam results. One drawer is labelled with your name.",
      "pov": {
       "image": "assets/teachers_room_2/filing_cabinets/pov.png",
       "changed": "assets/teachers_room_2/filing_cabinets/pov_changed.png",
-      "changed_text": "One of the phones is ringing. Silently.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_2/filing_cabinets/hotspot.png",
-       "pos": [
-        616,
-        576
-       ],
-       "size": [
-        433,
-        170
-       ]
-      }
+      "mask": "assets/teachers_room_2/filing_cabinets/mask.png",
+      "pos": [
+       287,
+       79
+      ],
+      "size": [
+       723,
+       839
+      ]
      }
     },
     {
      "id": "desk",
      "label": "Desk",
      "mask": "assets/teachers_room_2/masks/desk.png",
-     "cutout": "assets/teachers_room_2/cutouts/desk.png",
      "pos": [
-      750,
-      233
+      756,
+      244
      ],
      "size": [
-      197,
-      314
+      191,
+      306
      ],
-     "text": "Stacks of ungraded exams under a lamp that should not have power.",
      "pov": {
       "image": "assets/teachers_room_2/desk/pov.png",
       "changed": "assets/teachers_room_2/desk/pov_changed.png",
-      "changed_text": "A big red zero. The ink is still wet.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_2/desk/hotspot.png",
-       "pos": [
-        327,
-        525
-       ],
-       "size": [
-        822,
-        305
-       ]
-      }
+      "mask": "assets/teachers_room_2/desk/mask.png",
+      "pos": [
+       176,
+       523
+      ],
+      "size": [
+       1397,
+       418
+      ]
      }
     },
     {
      "id": "notice_board",
      "label": "Notice Board",
      "mask": "assets/teachers_room_2/masks/notice_board.png",
-     "cutout": "assets/teachers_room_2/cutouts/notice_board.png",
      "pos": [
-      1006,
-      213
+      1009,
+      223
      ],
      "size": [
-      54,
-      344
+      51,
+      339
      ],
-     "text": "Pinned notes, all in the same handwriting: 'Do not stay after six.'",
      "pov": {
       "image": "assets/teachers_room_2/notice_board/pov.png",
       "changed": "assets/teachers_room_2/notice_board/pov_changed.png",
-      "changed_text": "One note left. Pinned with a knife.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_2/notice_board/hotspot.png",
-       "pos": [
-        747,
-        379
-       ],
-       "size": [
-        194,
-        278
-       ]
-      }
+      "mask": "assets/teachers_room_2/notice_board/mask.png",
+      "pos": [
+       586,
+       65
+      ],
+      "size": [
+       491,
+       458
+      ]
      }
     },
     {
      "id": "book_pile",
      "label": "Book Pile",
      "mask": "assets/teachers_room_2/masks/book_pile.png",
-     "cutout": "assets/teachers_room_2/cutouts/book_pile.png",
      "pos": [
-      608,
-      653
+      609,
+      668
      ],
      "size": [
       109,
-      194
+      184
      ],
-     "text": "A pile of confiscated things. Phones, notes, a single shoe.",
      "pov": {
       "image": "assets/teachers_room_2/book_pile/pov.png",
       "changed": "assets/teachers_room_2/book_pile/pov_changed.png",
-      "changed_text": "A tape recorder on the pile. The red light is on.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_2/book_pile/hotspot.png",
-       "pos": [
-        864,
-        162
-       ],
-       "size": [
-        418,
-        352
-       ]
-      }
+      "mask": "assets/teachers_room_2/book_pile/mask.png",
+      "pos": [
+       315,
+       409
+      ],
+      "size": [
+       522,
+       393
+      ]
      }
     },
     {
      "id": "plant",
      "label": "Plant",
      "mask": "assets/teachers_room_2/masks/plant.png",
-     "cutout": "assets/teachers_room_2/cutouts/plant.png",
      "pos": [
-      918,
-      123
+      923,
+      133
      ],
      "size": [
-      84,
-      104
+      77,
+      89
      ],
-     "text": "The leaves are all turned towards the door, not the light.",
      "pov": {
       "image": "assets/teachers_room_2/plant/pov.png",
       "changed": "assets/teachers_room_2/plant/pov_changed.png",
-      "changed_text": "It was alive when you came in.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_2/plant/hotspot.png",
-       "pos": [
-        914,
-        677
-       ],
-       "size": [
-        480,
-        264
-       ]
-      }
+      "mask": "assets/teachers_room_2/plant/mask.png",
+      "pos": [
+       725,
+       228
+      ],
+      "size": [
+       262,
+       533
+      ]
      }
     },
     {
      "id": "door",
      "label": "Leave room",
      "mask": "assets/teachers_room_2/masks/door.png",
-     "cutout": "assets/teachers_room_2/cutouts/door.png",
      "pos": [
       758,
       871
@@ -1628,8 +1398,7 @@
      "size": [
       154,
       62
-     ],
-     "text": null
+     ]
     }
    ]
   },
@@ -1657,162 +1426,136 @@
      "id": "sofa",
      "label": "Sofa",
      "mask": "assets/teachers_room_3/masks/sofa.png",
-     "cutout": "assets/teachers_room_3/cutouts/sofa.png",
      "pos": [
-      626,
-      338
+      628,
+      340
      ],
      "size": [
-      96,
-      344
+      94,
+      353
      ],
-     "text": "A worn green sofa. There is a dent, as if someone just stood up.",
      "pov": {
       "image": "assets/teachers_room_3/sofa/pov.png",
       "changed": "assets/teachers_room_3/sofa/pov_changed.png",
-      "changed_text": "Someone hid a diary in the sofa.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_3/sofa/hotspot.png",
-       "pos": [
-        420,
-        578
-       ],
-       "size": [
-        397,
-        197
-       ]
-      }
+      "mask": "assets/teachers_room_3/sofa/mask.png",
+      "pos": [
+       345,
+       351
+      ],
+      "size": [
+       892,
+       363
+      ]
      }
     },
     {
      "id": "telephone",
      "label": "Telephone",
      "mask": "assets/teachers_room_3/masks/telephone.png",
-     "cutout": "assets/teachers_room_3/cutouts/telephone.png",
      "pos": [
-      713,
-      163
+      718,
+      172
      ],
      "size": [
-      154,
-      159
+      148,
+      152
      ],
-     "text": "The old phone rings once when you touch it. Nobody is on the line.",
      "pov": {
       "image": "assets/teachers_room_3/telephone/pov.png",
       "changed": "assets/teachers_room_3/telephone/pov_changed.png",
-      "changed_text": "The receiver is off the hook. Something drips from it.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_3/telephone/hotspot.png",
-       "pos": [
-        706,
-        363
-       ],
-       "size": [
-        793,
-        485
-       ]
-      }
+      "mask": "assets/teachers_room_3/telephone/mask.png",
+      "pos": [
+       440,
+       459
+      ],
+      "size": [
+       820,
+       482
+      ]
      }
     },
     {
      "id": "bookshelf",
      "label": "Bookshelf",
      "mask": "assets/teachers_room_3/masks/bookshelf.png",
-     "cutout": "assets/teachers_room_3/cutouts/bookshelf.png",
      "pos": [
-      918,
-      63
+      919,
+      72
      ],
      "size": [
-      134,
-      239
+      121,
+      242
      ],
-     "text": "The books are all turned spine-in.",
      "pov": {
       "image": "assets/teachers_room_3/bookshelf/pov.png",
       "changed": "assets/teachers_room_3/bookshelf/pov_changed.png",
-      "changed_text": "One book is glowing red.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_3/bookshelf/hotspot.png",
-       "pos": [
-        739,
-        453
-       ],
-       "size": [
-        213,
-        304
-       ]
-      }
+      "mask": "assets/teachers_room_3/bookshelf/mask.png",
+      "pos": [
+       656,
+       0
+      ],
+      "size": [
+       377,
+       768
+      ]
      }
     },
     {
      "id": "armchair",
      "label": "Armchair",
      "mask": "assets/teachers_room_3/masks/armchair.png",
-     "cutout": "assets/teachers_room_3/cutouts/armchair.png",
      "pos": [
-      663,
-      137
+      665,
+      140
      ],
      "size": [
-      62,
-      90
+      67,
+      97
      ],
-     "text": "A small green armchair, turned to face the wall.",
      "pov": {
       "image": "assets/teachers_room_3/armchair/pov.png",
       "changed": "assets/teachers_room_3/armchair/pov_changed.png",
-      "changed_text": "That doll was not there before.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_3/armchair/hotspot.png",
-       "pos": [
-        723,
-        324
-       ],
-       "size": [
-        294,
-        422
-       ]
-      }
+      "mask": "assets/teachers_room_3/armchair/mask.png",
+      "pos": [
+       613,
+       436
+      ],
+      "size": [
+       311,
+       342
+      ]
      }
     },
     {
      "id": "radio",
      "label": "Radio",
      "mask": "assets/teachers_room_3/masks/radio.png",
-     "cutout": "assets/teachers_room_3/cutouts/radio.png",
      "pos": [
-      948,
-      528
+      947,
+      540
      ],
      "size": [
-      59,
-      64
+      57,
+      48
      ],
-     "text": "The radio hisses. Under the static, somebody is counting.",
      "pov": {
       "image": "assets/teachers_room_3/radio/pov.png",
       "changed": "assets/teachers_room_3/radio/pov_changed.png",
-      "changed_text": "Static. And under it, a voice counting down.",
-      "hotspot": {
-       "cutout": "assets/teachers_room_3/radio/hotspot.png",
-       "pos": [
-        487,
-        320
-       ],
-       "size": [
-        678,
-        466
-       ]
-      }
+      "mask": "assets/teachers_room_3/radio/mask.png",
+      "pos": [
+       637,
+       359
+      ],
+      "size": [
+       381,
+       445
+      ]
      }
     },
     {
      "id": "door",
      "label": "Leave room",
      "mask": "assets/teachers_room_3/masks/door.png",
-     "cutout": "assets/teachers_room_3/cutouts/door.png",
      "pos": [
       776,
       871
@@ -1820,8 +1563,7 @@
      "size": [
       154,
       62
-     ],
-     "text": null
+     ]
     }
    ]
   },
@@ -1849,193 +1591,162 @@
      "id": "chalkboard",
      "label": "Chalkboard",
      "mask": "assets/classroom_2035/masks/chalkboard.png",
-     "cutout": "assets/classroom_2035/cutouts/chalkboard.png",
      "pos": [
-      695,
-      67
+      688,
+      61
      ],
      "size": [
-      234,
-      85
+      240,
+      91
      ],
-     "text": "A lesson that was never finished. The chalk is snapped in half.",
      "pov": {
       "image": "assets/classroom_2035/chalkboard/pov.png",
       "changed": "assets/classroom_2035/chalkboard/pov_changed.png",
-      "changed_text": "An arrow. Pointing down.",
-      "hotspot": {
-       "cutout": "assets/classroom_2035/chalkboard/hotspot.png",
-       "pos": [
-        697,
-        729
-       ],
-       "size": [
-        289,
-        212
-       ]
-      }
+      "mask": "assets/classroom_2035/chalkboard/mask.png",
+      "pos": [
+       390,
+       98
+      ],
+      "size": [
+       648,
+       355
+      ]
      }
     },
     {
      "id": "teacher_desk",
      "label": "Teacher Desk",
      "mask": "assets/classroom_2035/masks/teacher_desk.png",
-     "cutout": "assets/classroom_2035/cutouts/teacher_desk.png",
      "pos": [
-      738,
-      146
+      740,
+      159
      ],
      "size": [
-      156,
-      61
+      151,
+      50
      ],
-     "text": "A desk lamp and a single test paper. The grade is smeared.",
      "pov": {
       "image": "assets/classroom_2035/teacher_desk/pov.png",
       "changed": "assets/classroom_2035/teacher_desk/pov_changed.png",
-      "changed_text": "A small locked box in the drawer.",
-      "hotspot": {
-       "cutout": "assets/classroom_2035/teacher_desk/hotspot.png",
-       "pos": [
-        482,
-        472
-       ],
-       "size": [
-        457,
-        272
-       ]
-      }
+      "mask": "assets/classroom_2035/teacher_desk/mask.png",
+      "pos": [
+       565,
+       431
+      ],
+      "size": [
+       536,
+       383
+      ]
      }
     },
     {
      "id": "bookshelf",
      "label": "Bookshelf",
      "mask": "assets/classroom_2035/masks/bookshelf.png",
-     "cutout": "assets/classroom_2035/cutouts/bookshelf.png",
      "pos": [
-      1008,
-      73
+      1009,
+      90
      ],
      "size": [
-      69,
-      119
+      65,
+      91
      ],
-     "text": "Atlases and dictionaries. Something is wedged behind them.",
      "pov": {
       "image": "assets/classroom_2035/bookshelf/pov.png",
       "changed": "assets/classroom_2035/bookshelf/pov_changed.png",
-      "changed_text": "Rolled up maps where the books used to be.",
-      "hotspot": {
-       "cutout": "assets/classroom_2035/bookshelf/hotspot.png",
-       "pos": [
-        398,
-        232
-       ],
-       "size": [
-        404,
-        216
-       ]
-      }
+      "mask": "assets/classroom_2035/bookshelf/mask.png",
+      "pos": [
+       616,
+       288
+      ],
+      "size": [
+       420,
+       548
+      ]
      }
     },
     {
      "id": "metal_cabinet",
      "label": "Metal Cabinet",
      "mask": "assets/classroom_2035/masks/metal_cabinet.png",
-     "cutout": "assets/classroom_2035/cutouts/metal_cabinet.png",
      "pos": [
-      943,
-      669
+      944,
+      675
      ],
      "size": [
-      134,
-      148
+      131,
+      165
      ],
-     "text": "A grey metal cabinet with fresh scratches around the lock.",
      "pov": {
       "image": "assets/classroom_2035/metal_cabinet/pov.png",
       "changed": "assets/classroom_2035/metal_cabinet/pov_changed.png",
-      "changed_text": "Biology specimens. One jar is empty and the lid is off.",
-      "hotspot": {
-       "cutout": "assets/classroom_2035/metal_cabinet/hotspot.png",
-       "pos": [
-        833,
-        84
-       ],
-       "size": [
-        645,
-        740
-       ]
-      }
+      "mask": "assets/classroom_2035/metal_cabinet/mask.png",
+      "pos": [
+       573,
+       259
+      ],
+      "size": [
+       575,
+       491
+      ]
      }
     },
     {
      "id": "notice_board",
      "label": "Notice Board",
      "mask": "assets/classroom_2035/masks/notice_board.png",
-     "cutout": "assets/classroom_2035/cutouts/notice_board.png",
      "pos": [
-      1075,
-      383
+      1077,
+      390
      ],
      "size": [
-      35,
-      309
+      29,
+      306
      ],
-     "text": "Class rules. Rule seven has been added in red pen.",
      "pov": {
       "image": "assets/classroom_2035/notice_board/pov.png",
       "changed": "assets/classroom_2035/notice_board/pov_changed.png",
-      "changed_text": "Rule seven is new. It is about you.",
-      "hotspot": {
-       "cutout": "assets/classroom_2035/notice_board/hotspot.png",
-       "pos": [
-        773,
-        167
-       ],
-       "size": [
-        126,
-        85
-       ]
-      }
+      "mask": "assets/classroom_2035/notice_board/mask.png",
+      "pos": [
+       847,
+       33
+      ],
+      "size": [
+       581,
+       395
+      ]
      }
     },
     {
      "id": "globe",
      "label": "Globe",
      "mask": "assets/classroom_2035/masks/globe.png",
-     "cutout": "assets/classroom_2035/cutouts/globe.png",
      "pos": [
-      1020,
-      281
+      1024,
+      298
      ],
      "size": [
-      40,
-      54
+      29,
+      40
      ],
-     "text": "A small globe. Someone has scratched out one country.",
      "pov": {
       "image": "assets/classroom_2035/globe/pov.png",
       "changed": "assets/classroom_2035/globe/pov_changed.png",
-      "changed_text": "A pin, stuck in a place with no name.",
-      "hotspot": {
-       "cutout": "assets/classroom_2035/globe/hotspot.png",
-       "pos": [
-        1214,
-        614
-       ],
-       "size": [
-        239,
-        122
-       ]
-      }
+      "mask": "assets/classroom_2035/globe/mask.png",
+      "pos": [
+       986,
+       357
+      ],
+      "size": [
+       236,
+       258
+      ]
      }
     },
     {
      "id": "door",
      "label": "Leave room",
      "mask": "assets/classroom_2035/masks/door.png",
-     "cutout": "assets/classroom_2035/cutouts/door.png",
      "pos": [
       659,
       871
@@ -2043,8 +1754,7 @@
      "size": [
       154,
       62
-     ],
-     "text": null
+     ]
     }
    ]
   }
