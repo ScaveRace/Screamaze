@@ -1,6 +1,7 @@
 ##### import alllllll the rooms ######
 import pygame
 import menu.startupMenu as s
+import menu.endingScreen as ending
 import Rooms.frontDesk as fd
 import Rooms.ghostRoom as gr
 import Rooms.storrageRoom as st
@@ -33,6 +34,7 @@ running = True
 ######## dictionary of rooms  ########
 ROOMS = {
     "startup": s.StartupMenu,
+    "ending": ending.EndingScreen,
     "frontD": fd.FrontDesk,
     "corridor": corri.Corridor,
     "ghostR" : gr.GhostRoom,
@@ -54,6 +56,8 @@ ROOMS = {
     "projRoom1R" : nr.ProjectRoom1,
     "projRoom2R" : nr.ProjectRoom2
 }
+
+NO_UI = ("startup", "frontD", "ending")      # rooms that do not show the front UI (chat, pause, inventory)
 
 if not load.is_json_empty("data/gameSettings.json"):
     load.load(sett,"data/gameSettings.json")
@@ -78,7 +82,7 @@ while running:
             running = False
 
         else:
-            inGame = current != "startup" and current != "frontD"  # only these rooms show the front UI
+            inGame = current not in NO_UI                            # only these rooms show the front UI
             if not (inGame and frontui.handleEvenet(event)):
                 room.handle_event(event)
 
@@ -86,7 +90,7 @@ while running:
         name = room.next_room
         if name not in ROOMS:
             raise KeyError(f"No room named {name!r}. Known: {sorted(ROOMS)}")
-        if name != "startup" and name != "frontD":
+        if name not in NO_UI:
             room = ROOMS[name](screen, player,frontui)
         else:
             room = ROOMS[name](screen, player)
@@ -95,7 +99,7 @@ while running:
 
 
     room.draw()
-    if current != "startup" and current != "frontD":
+    if current not in NO_UI:
         if not frontui.pause.paused:
             # clock only advances while unpaused
             ms_buffer += dt

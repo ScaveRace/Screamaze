@@ -13,3 +13,9 @@ ELEMENTS = [
     ("printer", "Printer"),
     ("door", "Leave room"),
 ]
+
+# buttons this room has besides its elements: (label, (x, y, width, height), name of the action in newRoomFunc.ACTIONS)
+# this one is a placeholder for the lady at the front desk, she takes the necklace and the game ends
+BUTTONS = [
+    ("Give the necklace", (770, 130, 260, 50), "giveNecklace"),
+]

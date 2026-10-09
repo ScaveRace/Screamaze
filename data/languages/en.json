@@ -189,6 +189,7 @@
     "frontDeskR.wall_clock.changed": "Midnight. It was ten past ten a moment ago.",
     "frontDeskR.printer": "The printer is warm. The last page is completely black.",
     "frontDeskR.printer.changed": "It printed a photo of the corridor. You are in it.",
+    "frontDeskR.necklace_missing": "I have nothing to give her yet.",
     "class2021R.window": "You pull two slats apart and look out. Only darkness, and your own reflection staring back.",
     "class2021R.window.changed": "A handprint. On the outside. This is the second floor.",
     "class2021R.teacher_desk": "An old computer on the teacher's desk. The cursor blinks, waiting.",
@@ -303,5 +304,11 @@
     "projRoom2R.robot.changed": "It turned to look at you.",
     "projRoom2R.cardboard_boxes": "Boxes of spare parts. One of them is taped shut many times over.",
     "projRoom2R.cardboard_boxes.changed": "Something in the box is looking back."
+  },
+  "Ending": {
+    "wake": "You wake up in your bed..... was this real?",
+    "skip": "Perhaps I should skip school tomorrow.",
+    "thanks": "Thank you for playing",
+    "menu": "main menu"
   }
 }

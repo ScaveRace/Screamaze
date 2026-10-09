@@ -33,7 +33,10 @@ def getElements(room):
         masks[name] = [u.Mask(folder + name + "/mask.png", size, (0, 0), inspect(room, name))]
         masks[name + ".changed"] = []
     buttons = [u.Button(1320, 650, 140, 50, "Back", lambda: back(room))]
-    return images, masks, buttons
+    # the buttons a room has besides its elements, they are in the room view only
+    extra = [u.Button(x, y, w, h, label, lambda action=ACTIONS[action]: action(room))
+             for label, (x, y, w, h), action in getattr(room.data, "BUTTONS", [])]
+    return images, masks, buttons, extra
 
 
 # the id of a text in the language files is "room key.view", for example "lab2001R.window.changed"
@@ -68,3 +71,17 @@ def door(room, to):
 
 def back(room):
     room.view = "room"
+
+
+# the lady at the front desk takes the necklace, and the game ends
+def giveNecklace(room):
+    if not room.player.has_item("Items", "Necklace"):
+        room.fui.sendMessage("You", DB_TABLE, room.key + ".necklace_missing")
+        return
+    room.player.remove_item("Items", "Necklace")
+    room.player.addCompletion("SecondaryRooms", room.key + ".necklace", "")
+    room.goTo("ending")
+
+
+# the actions a room can give to its buttons, by the name used in the BUTTONS of its file
+ACTIONS = {"giveNecklace": giveNecklace}
