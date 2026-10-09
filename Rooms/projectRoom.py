@@ -17,7 +17,7 @@ class ProjectRoom:
         self.font = pygame.font.Font(None, 40)
         self.image, self.boxImage = pF.loadImages(screen)
         self.btn = pF.buildButtons(self)
-        self.stoneMask = pF.buildMasks(self)
+        self.allMasks = pF.buildMasks(self)
         self.buttons, self.masks = [], []
 
         pF.intro(self)

@@ -8,8 +8,7 @@ STONE_WIDTH = 50
 STONE_POS = (630, 240)                                                      # centre of the stone in the open box, relative to the room picture
 HOLDING_COLOUR = (110, 95, 60)
 
-# the chat takes the left 300px, so the right-hand buttons sit 60px from the screen edge instead of a plain +300
-RIGHT_X = 1480 - 60 - 230
+MASK_DIR = "assets/project_room/masks/"                                    # the things in the room you can press: cut out of the room picture
 
 # you'll notice some lambdas below in the code, that is to prevent buttons from firing their functions upon being built.
 
@@ -26,20 +25,23 @@ def loadImages(screen):
     return image, boxImage
 
 
-def buildMasks(room): # the stone is a mask, it lies in the box once it is open
+def buildMasks(room): # the things in the room are masks, so is the stone: it lies in the box once it is open
+    size = room.screen.get_size()
     w, h = pygame.image.load(STONE_PATH).get_size()
-    size = (STONE_WIDTH, round(STONE_WIDTH * h / w))
-    return u.Mask(STONE_PATH, (size[0] + u.startX, size[1]), (STONE_POS[0] - size[0] // 2, STONE_POS[1] - size[1] // 2),
-                  lambda: takeStone(room))
+    stone = (STONE_WIDTH, round(STONE_WIDTH * h / w))
+    return {
+        "bookshelf": u.Mask(MASK_DIR + "bookshelf.png", size, (0, 0), lambda: say(room, None, "binder"), "Bookshelf"),
+        "board": u.Mask(MASK_DIR + "whiteboard.png", size, (0, 0), lambda: sayAll(room, BOARD), "Whiteboard"),
+        "phone": u.Mask(MASK_DIR + "beanbags.png", size, (0, 0), lambda: sayAll(room, PHONE), "Beanbags"),
+        "box": u.Mask(MASK_DIR + "locked_box.png", size, (0, 0), lambda: openBox(room)),   # no label, it is too narrow for text
+        "stone": u.Mask(STONE_PATH, (stone[0] + u.startX, stone[1]), (STONE_POS[0] - stone[0] // 2, STONE_POS[1] - stone[1] // 2),
+                        lambda: takeStone(room)),
+    }
 
 
 def buildButtons(room):
     x = u.startX
     return {
-        "bookshelf": u.Button(x + 60, 120, 230, 60, "Bookshelf", lambda: say(room, None, "binder")),
-        "board": u.Button(RIGHT_X, 120, 230, 60, "Whiteboard", lambda: sayAll(room, BOARD)),
-        "phone": u.Button(x + 60, 560, 230, 60, "Beanbags", lambda: sayAll(room, PHONE)),
-        "box": u.Button(RIGHT_X, 560, 230, 60, "Locked box", lambda: openBox(room)),
         "leave": u.Button(x + 540, 650, 200, 45, "Leave the room", lambda: leave(room)),
         "back": u.Button(x + 60, 650, 160, 45, "Back", lambda: toRoom(room)),
         # one slot and one badge button per shape, the badge only shows up while the player carries it
@@ -90,10 +92,10 @@ def intro(room):
 
 def getElements(room): # basically the logic
     if room.view == "room":
-        return [room.btn[name] for name in ("bookshelf", "board", "phone", "box", "leave")], []
+        return [room.btn["leave"]], [room.allMasks[name] for name in ("bookshelf", "board", "phone", "box")]
 
     buttons = [room.btn["back"]]
-    masks = [room.stoneMask] if has(room, "proj.open") and not has(room, "proj.stone") else []
+    masks = [room.allMasks["stone"]] if has(room, "proj.open") and not has(room, "proj.stone") else []
     for shape in SHAPES:
         slot = room.btn["slot"][shape]
         slot.label = shape if placed(room, shape) else OWNERS[shape]    # the name turns into the badge
@@ -165,7 +167,7 @@ def takeStone(room): # pressing the stone in the open box
 def drawScene(room):
     room.screen.blit(room.image, (u.startX, 0))
     if room.view == "room":
-        room.screen.blit(room.font.render("PROJECT ROOM 3", True, (230, 225, 235)), (u.startX + 60, 50))
+        room.screen.blit(room.font.render("PROJECT ROOM 3", True, (230, 225, 235)), (u.startX + 60, 655))   # in the black below the room, the bookshelf mask is in the top corner
     else:
         room.screen.blit(room.boxImage, (u.startX + 420, 180))
         pygame.draw.rect(room.screen, (170, 150, 120), pygame.Rect(u.startX + 420, 180, 420, 300), 1)
