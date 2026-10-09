@@ -10,8 +10,10 @@ import UI.uiElements as u
 # the text of each element is in the language files, under the name below
 DB_TABLE = "NewRooms"
 
-# (room key, element id) of every element the player already changed, stays until the game closes
-changed = set()
+# every element the player already changed is saved in player.completion["SecondaryRooms"]["all"]
+# as "room key.element id", for example "lab2001R.window"
+def isChanged(room, name):
+    return room.key + "." + name in room.player.getCompletion("SecondaryRooms")["all"]
 
 
 # a view is "room", the id of the element you are looking at, or that id with ".changed" behind it
@@ -42,7 +44,7 @@ def say(room):
 # makes the action for an element: pressing it walks up to it and shows its close-up
 def look(room, name):
     def action():
-        room.view = name + ".changed" if (room.key, name) in changed else name
+        room.view = name + ".changed" if isChanged(room, name) else name
         say(room)
     return action
 
@@ -50,7 +52,7 @@ def look(room, name):
 # makes the action for a close-up: pressing it changes the picture and tells what you found
 def inspect(room, name):
     def action():
-        changed.add((room.key, name))
+        room.player.addCompletion("SecondaryRooms", room.key + "." + name, "")
         room.view = name + ".changed"
         say(room)
     return action

@@ -1,22 +1,9 @@
+
 #####  player data  #####
 #  use: from player import player
 #  call function like: player.add_item("testitem")
 import UI.uiElements as u
 import data.playerLogistics as pL
-
-# TESTING ONLY: True = the player starts the game with all five stones in the
-# inventory, so the teacher room can be tested without playing the other rooms.
-# Set it back to False before the real game!
-DEBUG_ALL_STONES = True
-
-# The stones and their pictures, the same paths the teacher room uses.
-DEBUG_STONES = {
-    "White":  "assets/stones/white.png",
-    "Red":    "assets/stones/red.png",
-    "Green":  "assets/stones/green.png",
-    "Purple": "assets/stones/purple.png",
-    "Yellow": "assets/stones/yellow.png",
-}
 
 
 class Player:
@@ -37,13 +24,9 @@ class Player:
                            "StorrageRoom":{"all":[],"current": "", "msg":""},
                            "ProjectRoom":{"all":[],"current": "", "msg":""},
                            "Corridor":{"all":[],"current": "corr.start", "msg":""},
-                           "FrontDesk":{"all":[],"current": "", "msg":""}
+                           "FrontDesk":{"all":[],"current": "", "msg":""},
+                           "SecondaryRooms":{"all":[],"current": "", "msg":""}
         }
-
-        # testing: start with every stone already in the inventory
-        if DEBUG_ALL_STONES:
-            for name, path in DEBUG_STONES.items():
-                self.inventory["Stones"].append({name: path})
 
 
 
@@ -66,11 +49,14 @@ class Player:
 
 
     def addCompletion(self,room,current,msg):
-        self.completion[room]["all"].append(current)
+        self.getCompletion(room)["all"].append(current)
         self.completion[room]["current"] = current
         self.completion[room]["msg"] = msg
 
     def getCompletion(self,room):
+        # a save file from before a room was added doesn't have that room yet
+        if room not in self.completion:
+            self.completion[room] = {"all":[],"current": "", "msg":""}
         return self.completion[room]
 
 
@@ -103,3 +89,4 @@ class Player:
         if self.location == "corridor":
             self.position = pL.DOOR_SPAWNS[self.lastLocation]
         screen.blit(self.pImage,self.position)
+

@@ -2,6 +2,7 @@ import pygame
 import UI.uiElements as u
 from player import Player
 import UI.frontUI as Fui
+import functions.leaderboard as lb
 
 pygame.init()
 pygame.mixer.init()
@@ -10,11 +11,9 @@ pygame.mixer.init()
 # THE FIVE STONES
 # ----------------------------------------------------------------------
 
-# The five stones that have to go into the chest.
+# The five stones that have to go into the chest, in the order of the holes.
 # These names must match exactly what the other rooms put in the inventory,
 # for example GhostRoom does: player.add_item("Stones", "White", ...)
-# The ORDER here is only used to pick the dialogue line of each stone
-# (White = 15, Red = 16, Green = 17, Purple = 18, Yellow = 19).
 REQUIRED_STONES = ["White", "Red", "Green", "Purple", "Yellow"]
 
 # The picture that belongs to every stone. ## placeholder folder
@@ -119,14 +118,20 @@ class TeacherRoom:
         self.font = pygame.font.Font(None, 28)
         self.slotFont = pygame.font.Font(None, 56)
 
+        # What the player already did here is saved in player.completion,
+        # so it is still done after leaving the room or loading a save.
+        done = self.player.getCompletion("TeacherRoom")["all"]
+
         # Description memory, so the long descriptions only play the first time.
-        self.room_described = False
-        self.chest_described = False
+        self.room_described = "tr.described" in done
+        self.chest_described = "tr.chest_described" in done
 
         # Game state: which stones are already inside the chest.
-        self.stones_placed = []          # grows with "Green", "Purple", ...
-        self.chest_unlocked = False      # True the moment all five are in
-        self.reward_taken = False        # so you can't take the necklace twice
+        self.stones_placed = [s for s in REQUIRED_STONES if "tr.placed." + s in done]   # grows with "White", "Red", ...
+        self.chest_unlocked = "tr.unlocked" in done      # True the moment all five are in
+        self.reward_taken = "tr.necklace" in done        # so you can't take the necklace twice
+        if self.chest_unlocked:
+            self.current_image = self.room_opened
 
         # Set to True while one click is being handled by a stone hole,
         # so the lid mask behind it does not react to the same click.
@@ -189,6 +194,7 @@ class TeacherRoom:
         if self.room_described:
             return
         self.room_described = True
+        self.add("tr.described")
         self.fui.sendMessage("You", "TeacherRoom", 1)   # dark lounge, candles, old paper
         self.fui.sendMessage("You", "TeacherRoom", 2)   # table / couches / chalkboard layout
         self.fui.sendMessage("You", "TeacherRoom", 3)   # the glowing chest on the red rug
@@ -224,6 +230,7 @@ class TeacherRoom:
             # The long close up description only plays the first time.
             if not self.chest_described:
                 self.chest_described = True
+                self.add("tr.chest_described")
                 self.fui.sendMessage("You", "TeacherRoom", 6)   # gold, carvings, scorched floor
                 self.fui.sendMessage("You", "TeacherRoom", 7)   # five diamond shaped holes
                 self.fui.sendMessage("You", "TeacherRoom", 8)   # five holes... five stones
@@ -258,26 +265,27 @@ class TeacherRoom:
             self.fui.sendMessage("You", "TeacherRoom", 21)      # the chest is already open
             return
 
-        if colour in self.stones_placed:
-            self.describe_slots()                               # that hole is already filled
-            return
+        for i in range(len(REQUIRED_STONES)):
+            stone = REQUIRED_STONES[i]
+            if stone in self.stones_placed:
+                continue  # that hole is already filled
+            if self.player.has_item("Stones", stone):
+                self.player.remove_item("Stones", stone)
+                self.stones_placed.append(stone)
+                self.add("tr.placed." + stone)
+                # White = 15, Red = 16, Green = 17, Purple = 18, Yellow = 19
+                self.fui.sendMessage("You", "TeacherRoom", STONE_LINE_FIRST + i)
+                # The fifth stone opens the chest by itself.
+                if len(self.stones_placed) == len(REQUIRED_STONES):
+                    self.unlock()
+                return  # one stone per click
 
-        if not self.player.has_item("Stones", colour):
-            self.fui.sendMessage("You", "TeacherRoom", 20)      # you don't have that stone
-            return
-
-        self.player.remove_item("Stones", colour)
-        self.stones_placed.append(colour)
-        # White = 15, Red = 16, Green = 17, Purple = 18, Yellow = 19
-        self.fui.sendMessage("You", "TeacherRoom", STONE_LINE_FIRST + REQUIRED_STONES.index(colour))
-
-        # The fifth stone opens the chest by itself.
-        if len(self.stones_placed) == len(REQUIRED_STONES):
-            self.unlock()
+        self.fui.sendMessage("You", "TeacherRoom", 20)          # no stone that fits
 
     # Everything that happens the moment the last stone goes in.
     def unlock(self):
         self.chest_unlocked = True
+        self.add("tr.unlocked")
         self.current_image = self.chest_open_image
         self.current_masks = self.no_masks
         self.current_buttons = self.reward_buttons
@@ -291,8 +299,10 @@ class TeacherRoom:
             self.fui.sendMessage("You", "TeacherRoom", 26)      # the chest is empty now
             return
         self.reward_taken = True
+        self.add("tr.necklace")
         # change the picture of the item ## placeholder path
         self.player.add_item("Items", "Necklace", "assets/teacherRoom/tr.necklace.png")
+        lb.finishRun(self.player)   # the game is done, marks a saved run as finished on the leaderboard
         self.fui.sendMessage("You", "TeacherRoom", 25)          # still warm, the way out
         self.current_image = self.chest_open_image
         self.current_buttons = self.returnr_buttons
@@ -319,6 +329,10 @@ class TeacherRoom:
     # ------------------------------------------------------------------
     # events and drawing
     # ------------------------------------------------------------------
+
+    # Saves a step of this room in player.completion["TeacherRoom"]["all"].
+    def add(self, event):
+        self.player.addCompletion("TeacherRoom", event, "")
 
     # Sends mouse events to the active masks and buttons.
     def handle_event(self, event):

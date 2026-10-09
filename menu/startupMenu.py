@@ -1,5 +1,6 @@
 import roomFunc.startupFunc as sF
 import UI.pauseMenu as pause
+import UI.leaderboard as leaderboard
 
 
 class StartupMenu:
@@ -10,10 +11,11 @@ class StartupMenu:
         self.image = []
         self.buttons = []
         self.pause = pause.PauseMenu(screen, player, False)
+        self.leaderboard = leaderboard.Leaderboard(screen)
         self.getElements()
 
     def getElements(self):
-        tmp = sF.getElements(self.player,self.screen,self.goTo,self.pause.toggle)
+        tmp = sF.getElements(self.player,self.screen,self.goTo,self.pause.toggle,self.leaderboard.toggle)
         self.image = tmp[0]
         self.buttons = tmp[1]
 
@@ -23,6 +25,8 @@ class StartupMenu:
     def handle_event(self, event):
         if self.pause.paused:
             self.pause.handle_event(event)
+        elif self.leaderboard.handle_event(event):
+            return
         else:
             for b in self.buttons:
                 b.handle_event(event)
@@ -36,3 +40,4 @@ class StartupMenu:
 
         if self.pause.paused:
             self.pause.draw()
+        self.leaderboard.draw()

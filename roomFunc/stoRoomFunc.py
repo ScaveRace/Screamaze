@@ -125,9 +125,12 @@ def start(p, f, screen):
     }
 
     loadTexts()
+    # what the player already did here is saved in player.completion, so it is still done after leaving or loading
+    done = player.getCompletion("StorrageRoom")["all"]
     quiz = Quiz(buildQuestions())
-    stone_collected = False
-    fuse_collected = False
+    quiz.completed = "sto.quiz" in done
+    stone_collected = "sto.stone" in done
+    fuse_collected = "sto.fuse" in done
     view = View.ROOM
     next_room = None
     # the room pictures are drawn at x=300, so the picture's centre is here
@@ -219,6 +222,7 @@ def takeFuse():
     if fuse_collected:
         return
     fuse_collected = True
+    player.addCompletion("StorrageRoom", "sto.fuse", "")
     # add_item(category, name, icon path)
     player.add_item("Items", "Fuse", FUSE_ICON)
     say("You > " + T(MSG_FUSE_TAKEN))
@@ -250,6 +254,7 @@ def checkAnswer(choice):
         return
 
     if justCompleted:
+        player.addCompletion("StorrageRoom", "sto.quiz", "")
         # quiz done: back to the desk, the drawer is unlocked but you still have to open it
         say("You > " + T(MSG_QUIZ_DONE))
         setView(View.DESK)
@@ -263,6 +268,7 @@ def collectStone():
     if stone_collected:
         return
     stone_collected = True
+    player.addCompletion("StorrageRoom", "sto.stone", "")
     player.add_item("Stones", "Green", STONE_IMAGE)
     say("You > " + T(MSG_STONE_TAKEN))
     setView(View.DRAWER)

@@ -4,16 +4,17 @@ import functions.savingFunc as load
 from functions.settingsFunc import settings as sett
 
 
-def getElements(player,screen,goTo,openSettings):
+def getElements(player,screen,goTo,openSettings,openLeaderboard):
     images = start(screen)
-    buttons = current(player,goTo,openSettings)
+    buttons = current(player,goTo,openSettings,openLeaderboard)
     return images,buttons
 
-def current(player,goTo,openSettings):
+def current(player,goTo,openSettings,openLeaderboard):
     return [
         u.Button(120, 420, 150, 50, "New Game", lambda: new_game(goTo)),
         u.Button(120, 470, 150, 50, "Load Game", lambda: load_game(player,goTo)),
         u.Button(120, 520, 150, 50, "Settings", openSettings),
+        u.Button(120, 570, 150, 50, "Leaderboard", openLeaderboard),
     ]
 
 
