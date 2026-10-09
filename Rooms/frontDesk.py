@@ -9,8 +9,6 @@ clock = pygame.time.Clock()
 font = pygame.font.Font(None, 28)
 smallFont = pygame.font.Font(None, 20)
 
-from functions.settingsFunc import settings as sett
-import functions.sound as s
 import functions.language as lang
 from functions import uiFunc as uF
 running = True
@@ -48,9 +46,6 @@ class FrontDesk:
         self.screen = screen
         self.background = u.load_image("assets/frontDesk_1.png", (self.screen.get_size()[0]+300,self.screen.get_size()[1]))
         self.secondIm = u.load_image("assets/frontDesk_2.png", (self.screen.get_size()[0]+300,self.screen.get_size()[1]))
-        self.bgMusic = "assets/music/The_Unmarked_Door.mp3"
-
-        s.play_music(self.bgMusic,sett, .4)
         self.p = p
         self.buttons = [
             u.Button(1200, 290, 140, 30, "Male", self.gender),

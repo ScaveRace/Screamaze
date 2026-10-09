@@ -19,7 +19,7 @@ def current(player,goTo,openSettings,openLeaderboard):
 
 
 def start(screen):
-    s.play_music("assets/music/niceThomas.mp3",sett)
+    s.play_music("assets/music/The_Unmarked_Door.mp3",sett, .4)
     return [u.load_image("assets/startup.png", (screen.get_size()[0]+300,screen.get_size()[1]))]
 
 
