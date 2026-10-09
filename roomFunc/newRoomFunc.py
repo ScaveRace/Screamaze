@@ -1,3 +1,4 @@
+import pygame
 import UI.uiElements as u
 
 # every secondary room has a file in Rooms/secondaryRooms with its folder and its elements
@@ -32,11 +33,27 @@ def getElements(room):
         images[name + ".changed"] = u.load_image(folder + name + "/pov_changed.png", size)
         masks[name] = [u.Mask(folder + name + "/mask.png", size, (0, 0), inspect(room, name))]
         masks[name + ".changed"] = []
+        # an item that falls out of the element lies in its changed view until the player takes it, see FOUND in the room's file
+        found = getattr(room.data, "FOUND", {}).get(name)
+        if found and not isFound(room, name):
+            masks[name + ".changed"] = [spriteMask(found[1], found[3], found[2], pickUp(room, name))]
     buttons = [u.Button(1320, 650, 140, 50, "Back", lambda: back(room))]
     # the buttons a room has besides its elements, they are in the room view only
     extra = [u.Button(x, y, w, h, label, lambda action=ACTIONS[action]: action(room))
              for label, (x, y, w, h), action in getattr(room.data, "BUTTONS", [])]
     return images, masks, buttons, extra
+
+
+# a small picture, not as big as the room: the centre is relative to the room picture
+def spriteMask(path, width, centre, action):
+    w, h = pygame.image.load(path).get_size()
+    h = round(width * h / w)
+    return u.Mask(path, (width + u.startX, h), (centre[0] - width // 2, centre[1] - h // 2), action)
+
+
+# the item of an element was taken, saved as "room key.element id.found"
+def isFound(room, name):
+    return room.key + "." + name + ".found" in room.player.getCompletion("SecondaryRooms")["all"]
 
 
 # the id of a text in the language files is "room key.view", for example "lab2001R.window.changed"
@@ -55,12 +72,20 @@ def look(room, name):
 # makes the action for a close-up: pressing it changes the picture and tells what you found
 def inspect(room, name):
     def action():
-        found = getattr(room.data, "FOUND", {}).get(name)       # an item hidden in this element, see FOUND in the room's file
-        if found:
-            room.player.add_item("Items", found[0], found[1])
-        room.player.addCompletion("SecondaryRooms", room.key + "." + name, "")   # after add_item, so a failed pickup doesn't count as done
+        room.player.addCompletion("SecondaryRooms", room.key + "." + name, "")
         room.view = name + ".changed"
         say(room)
+    return action
+
+
+# makes the action for the item that fell out of an element: pressing it puts the item in the inventory
+def pickUp(room, name):
+    def action():
+        item, path = room.data.FOUND[name][:2]
+        room.player.add_item("Items", item, path)
+        room.player.addCompletion("SecondaryRooms", room.key + "." + name + ".found", "")   # after add_item, so a failed pickup doesn't count as taken
+        room.elements[name + ".changed"].clear()                # it is not on the floor anymore
+        room.fui.sendMessage("You", DB_TABLE, room.key + "." + name + ".found")
     return action
 
 

@@ -6,7 +6,10 @@ OWNERS = {"Circle": "Mina", "Triangle": "Sam", "Square": "Jorn"}            # wh
 STONE_PATH = "assets/stones/purple.png"
 STONE_WIDTH = 50
 STONE_POS = (630, 240)                                                      # centre of the stone in the open box, relative to the room picture
-HOLDING_COLOUR = (110, 95, 60)
+HOLDING_COLOUR = (255, 235, 170)                                            # the frame around the badge in your hand
+SHAPE_PATHS = {s: "assets/shapes/" + s.lower() + ".png" for s in SHAPES}    # the pictures of the badges, also their icons in the inventory
+BADGE_WIDTH = 80                                                            # the badges you carry, below the box
+SLOT_SHAPE_WIDTH = 88                                                       # a badge in its slot
 
 MASK_DIR = "assets/project_room/masks/"                                    # the things in the room you can press: cut out of the room picture
 
@@ -19,23 +22,34 @@ BOARD = [(None, "board"), ("Whiteboard", "board_mina"), ("Whiteboard", "board_jo
 OPEN = [(None, "open"), (None, "stone")]
 
 
+def fitWidth(path, width): # the size of a picture at a given width
+    w, h = pygame.image.load(path).get_size()
+    return (width, round(width * h / w))
+
+
+def spriteMask(path, width, centre, action): # a small picture, not as big as the room: the centre is relative to the room picture
+    w, h = fitWidth(path, width)
+    return u.Mask(path, (w + u.startX, h), (centre[0] - w // 2, centre[1] - h // 2), action)
+
+
 def loadImages(screen):
     image = u.load_image("assets/project_room.png", screen.get_size(), (22, 20, 26))
     boxImage = u.load_alpha_image("assets/", (420, 300), (40, 32, 26))
-    return image, boxImage
+    shapes = {s: u.load_alpha_image(SHAPE_PATHS[s], fitWidth(SHAPE_PATHS[s], SLOT_SHAPE_WIDTH)) for s in SHAPES}
+    return image, boxImage, shapes
 
 
-def buildMasks(room): # the things in the room are masks, so is the stone: it lies in the box once it is open
+def buildMasks(room): # the things in the room are masks, so are the badges you carry and the stone: it lies in the box once it is open
     size = room.screen.get_size()
-    w, h = pygame.image.load(STONE_PATH).get_size()
-    stone = (STONE_WIDTH, round(STONE_WIDTH * h / w))
     return {
         "bookshelf": u.Mask(MASK_DIR + "bookshelf.png", size, (0, 0), lambda: say(room, None, "binder"), "Bookshelf"),
         "board": u.Mask(MASK_DIR + "whiteboard.png", size, (0, 0), lambda: sayAll(room, BOARD), "Whiteboard"),
         "phone": u.Mask(MASK_DIR + "beanbags.png", size, (0, 0), lambda: sayAll(room, PHONE), "Beanbags"),
         "box": u.Mask(MASK_DIR + "locked_box.png", size, (0, 0), lambda: openBox(room)),   # no label, it is too narrow for text
-        "stone": u.Mask(STONE_PATH, (stone[0] + u.startX, stone[1]), (STONE_POS[0] - stone[0] // 2, STONE_POS[1] - stone[1] // 2),
-                        lambda: takeStone(room)),
+        "stone": spriteMask(STONE_PATH, STONE_WIDTH, STONE_POS, lambda: takeStone(room)),
+        # a badge only shows up while the player carries it, in a row below the box
+        "badge": {s: spriteMask(SHAPE_PATHS[s], BADGE_WIDTH, (470 + 110 * i, 525), lambda s=s: pickUp(room, s))
+                  for i, s in enumerate(SHAPES)},
     }
 
 
@@ -44,11 +58,9 @@ def buildButtons(room):
     return {
         "leave": u.Button(x + 540, 650, 200, 45, "Leave the room", lambda: leave(room)),
         "back": u.Button(x + 60, 650, 160, 45, "Back", lambda: toRoom(room)),
-        # one slot and one badge button per shape, the badge only shows up while the player carries it
+        # one slot per shape, it shows the name of its owner until the badge is in
         "slot": {s: u.Button(x + 450 + 130 * i, 300, 100, 100, OWNERS[s], lambda s=s: tryPlace(room, s))
                  for i, s in enumerate(SHAPES)},
-        "badge": {s: u.Button(x + 420 + 110 * i, 500, 100, 50, s, lambda s=s: pickUp(room, s))
-                  for i, s in enumerate(SHAPES)},
     }
 
 
@@ -97,14 +109,10 @@ def getElements(room): # basically the logic
     buttons = [room.btn["back"]]
     masks = [room.allMasks["stone"]] if has(room, "proj.open") and not has(room, "proj.stone") else []
     for shape in SHAPES:
-        slot = room.btn["slot"][shape]
-        slot.label = shape if placed(room, shape) else OWNERS[shape]    # the name turns into the badge
-        buttons.append(slot)
-
+        if not placed(room, shape):
+            buttons.append(room.btn["slot"][shape])                 # a filled slot is only a picture, see drawScene
         if carried(room, shape):
-            badge = room.btn["badge"][shape]
-            badge.bgCol = HOLDING_COLOUR if room.holding == shape else (0, 0, 0)
-            buttons.append(badge)
+            masks.append(room.allMasks["badge"][shape])
     return buttons, masks
 
 
@@ -171,3 +179,13 @@ def drawScene(room):
     else:
         room.screen.blit(room.boxImage, (u.startX + 420, 180))
         pygame.draw.rect(room.screen, (170, 150, 120), pygame.Rect(u.startX + 420, 180, 420, 300), 1)
+        for shape in SHAPES:
+            if placed(room, shape): # the badge sits in its slot, the name of its owner below
+                slot = room.btn["slot"][shape].rect
+                picture = room.shapes[shape]
+                room.screen.blit(picture, picture.get_rect(center=slot.center))
+                name = room.smallFont.render(OWNERS[shape], True, (210, 200, 160))
+                room.screen.blit(name, name.get_rect(midtop=(slot.centerx, slot.bottom + 8)))
+        if room.holding:
+            badge = room.allMasks["badge"][room.holding]
+            pygame.draw.rect(room.screen, HOLDING_COLOUR, pygame.Rect(badge.imageX, badge.imageY, badge.rect.w, badge.rect.h).inflate(12, 12), 2)

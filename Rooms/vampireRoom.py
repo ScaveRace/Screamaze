@@ -35,10 +35,6 @@ class VampireRoom:
         vF.next_room = None
 
     def dispatch(self, event):
-        # the circle in the drawer is not a mask, so it is checked first
-        if vF.handleCircleClick(event):
-            return
-
         # snapshot both lists first, so a click that changes the view
         # can't also click something in the new view
         masks = vF.activeMasks()
@@ -65,8 +61,6 @@ class VampireRoom:
 
         for m in vF.activeMasks():
             m.draw(self.screen)
-
-        vF.drawCircle(self.screen)      # circle placeholder in the drawer
 
         for b in vF.currentButtons():
             b.draw2(self.screen)

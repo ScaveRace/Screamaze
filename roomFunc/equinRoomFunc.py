@@ -34,6 +34,10 @@ DEMON_TIME = 2500 # how long the demon stands there before the blink
 BLINK_FRAMES = 40 # frames the screen takes to go black, and to come back
 
 STONE_PATH = "assets/stones/yellow.png"
+SHAPE_NAME = "Triangle" # one of the three project room badges, exactly this spelling
+SHAPE_PATH = "assets/shapes/triangle.png" # lies next to the stone, also its icon in the inventory
+SHAPE_WIDTH = 44
+SHAPE_POS = (684, 186) # centre of the badge in the room, next to the stone, change to move it
 LAYER_STEP = 14
 PLATE_CENTRE = (600, 493)
 MAX_MISTAKES = 2
@@ -81,6 +85,8 @@ def buildMasks(room):
     stone = {"view": "stone", "name": "stone", "file": STONE_PATH}
     stone["mask"] = makeMask(STONE_PATH, 40, (640, 175), lambda: takeStone(room))
     masks.append(stone)
+    masks.append({"view": "shape", "name": "shape", "file": SHAPE_PATH,
+                  "mask": makeMask(SHAPE_PATH, SHAPE_WIDTH, SHAPE_POS, lambda: takeShape(room))})
     for state in ("regular", "angry1", "angry2"): # only the one that fits the mistakes made is shown
         path, width = STUDENT[state]
         masks.append({"view": "student", "name": state, "file": path,
@@ -160,10 +166,9 @@ def getElements(room): # basically the logic
     if room.failing:
         return pictures, [], []
 
-    if has(room, "equin.stone"):
-        pass
-    elif has(room, "equin.lookaway"):
-        masks += [m["mask"] for m in room.allMasks if m["view"] == "stone"]
+    if has(room, "equin.stone") or has(room, "equin.lookaway"): # the stone and the badge lie on the table until you take them
+        masks += [m["mask"] for m in room.allMasks if (m["view"] == "stone" and not has(room, "equin.stone"))
+                  or (m["view"] == "shape" and not has(room, "equin.shape"))]
     elif has(room, "equin.sandwich"):
         pass # nothing to click, the demon blinks away by itself (see blink)
     elif has(room, "equin.talked") and room.view == "table":
@@ -225,6 +230,12 @@ def takeStone(room):
     room.player.add_item("Stones", "Yellow", STONE_PATH)
     add(room, "equin.stone")
     say(room, None, "stone")
+
+
+def takeShape(room): # the project room needs this badge
+    room.player.add_item("Items", SHAPE_NAME, SHAPE_PATH)
+    add(room, "equin.shape") # after add_item, so a failed pickup doesn't count as taken. It is only given once, even after the project room used it
+    say(room, None, "shape")
 
 
 def collect(room, item):

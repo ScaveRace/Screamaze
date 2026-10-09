@@ -110,7 +110,7 @@
   },
   "EquinoxRoom": {
     "intro_empty": "* Kruimels op een lege tafel. Niemand hier.",
-    "intro_gone": "* De student is weg. Op de lange tafel ligt een gele steen.",
+    "intro_gone": "* De student is weg. Op de lange tafel liggen een gele steen en een kleine badge.",
     "intro_waiting": "* De student wacht aan de lange tafel. Hongerig.",
     "intro_1": "* Het ruikt hier naar geroosterd brood.",
     "intro_2": "* Aan de lange tafel zit een student te kauwen.",
@@ -135,7 +135,8 @@
     "complete_6": "Hou de steen maar. We zien elkaar weer...",
     "complete_7": "...ergens met betere catering.",
     "lookaway_1": "* Je knippert. Hij is weg. Alleen kruimels zijn over.",
-    "lookaway_2": "* Op de lange tafel ligt een gele steen.",
+    "lookaway_2": "* Op de lange tafel liggen een gele steen en, ernaast, een kleine driehoekige badge.",
+    "shape": "* Een kleine driehoekige badge, koud en zwaar. Diagonaal doorgesneden, net als een sandwich.",
     "stone": "* Je pakt de steen op. Warm als verse toast."
   },
   "TeacherRoom": {
@@ -289,7 +290,8 @@
     "projRoom1R.table_right": "Uitdraaien en plakbriefjes. Iemand was iets aan het tellen.",
     "projRoom1R.table_right.changed": "De laptop laat dit lokaal zien. Van bovenaf.",
     "projRoom1R.beanbag": "Een zitzak. Hij heeft nog de vorm van wie erin zat.",
-    "projRoom1R.beanbag.changed": "Er zat iets verstopt in de zitzak. Een vierkante badge, een van de drie waar Mina het over had.",
+    "projRoom1R.beanbag.changed": "Er zat iets verstopt in de zitzak. Een vierkante badge rolt op het kleed.",
+    "projRoom1R.beanbag.found": "Een vierkante badge, een van de drie waar Mina het over had.",
     "projRoom2R.window": "Gesloten lamellen. Er komt koude lucht door het kozijn.",
     "projRoom2R.window.changed": "Een handafdruk aan de buitenkant van het glas.",
     "projRoom2R.vending_machine": "De automaat zoemt. Elk vak is leeg, op één na.",

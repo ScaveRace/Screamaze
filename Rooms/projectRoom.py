@@ -15,7 +15,8 @@ class ProjectRoom:
         self.holding = None             # the badge in your hand
 
         self.font = pygame.font.Font(None, 40)
-        self.image, self.boxImage = pF.loadImages(screen)
+        self.smallFont = pygame.font.Font(None, 28)
+        self.image, self.boxImage, self.shapes = pF.loadImages(screen)
         self.btn = pF.buildButtons(self)
         self.allMasks = pF.buildMasks(self)
         self.buttons, self.masks = [], []

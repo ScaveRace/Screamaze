@@ -15,8 +15,9 @@ ELEMENTS = [
     ("door", "Leave room"),
 ]
 
-# an item hidden in an element, you get it the first time you press its close-up: id -> (item name, icon)
-# the name must be spelled exactly like the Project Room badge it belongs to, there is no picture for it yet
+# an item that falls out of an element when you press its close-up, you pick it up by pressing it:
+# id -> (item name, picture and inventory icon, centre in the room picture, width on screen)
+# the name must be spelled exactly like the Project Room badge it belongs to
 FOUND = {
-    "beanbag": ("Square", FOLDER + "beanbag/square.png"),
+    "beanbag": ("Square", "assets/shapes/square.png", (740, 590), 100),
 }

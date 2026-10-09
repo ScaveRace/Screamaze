@@ -1,4 +1,3 @@
-import os
 import pygame
 import UI.uiElements as u
 import functions.language as lang
@@ -21,11 +20,10 @@ def T(textId):
 ASSET_DIR = "assets/vampire/"
 MASK_DIR = ASSET_DIR + "masks/"
 
-# circle placeholder (drawn in code, no image needed for the drawer)
-CIRCLE_ICON = ASSET_DIR + "circle_placeholder.png"   # created automatically if missing
-CIRCLE_RADIUS = 40
-CIRCLE_COLOUR = (200, 170, 60)
-CIRCLE_OFFSET = (0, -60)    # moves the circle relative to the screen centre, adjust to fit the drawer
+# the circle in the drawer: a mask, the picture is also its icon in the inventory
+CIRCLE_ICON = "assets/shapes/circle.png"
+CIRCLE_WIDTH = 90
+CIRCLE_OFFSET = (0, 20)     # moves the circle relative to the centre of the room picture, adjust to fit the drawer
 
 STONE_IMAGE = "assets/stones/red.png"    # adjust to your red stone icon
 
@@ -51,8 +49,6 @@ next_room = None
 player = None
 fui = None
 view = View.ROOM
-circle_rect = pygame.Rect(0, 0, 0, 0)
-circle_center = (0, 0)
 
 # progress: created once and kept when you leave and come back
 initialised = False
@@ -74,16 +70,6 @@ def resetProgress():
     initialised = True
 
 
-def makeCircleIcon():
-    # creates a simple circle png for the inventory, only if it doesn't exist yet
-    if os.path.exists(CIRCLE_ICON):
-        return
-    surf = pygame.Surface((64, 64), pygame.SRCALPHA)
-    pygame.draw.circle(surf, CIRCLE_COLOUR, (32, 32), 28)
-    pygame.draw.circle(surf, (255, 255, 255), (32, 32), 28, 3)
-    pygame.image.save(surf, CIRCLE_ICON)
-
-
 def getElements(p, f, screen):
     start(p, f, screen)
     current(screen)
@@ -91,7 +77,7 @@ def getElements(p, f, screen):
 
 
 def start(p, f, screen):
-    global images, masks, player, fui, view, next_room, circle_rect, circle_center
+    global images, masks, player, fui, view, next_room
     player = p
     fui = f
     size = screen.get_size()
@@ -123,8 +109,14 @@ def start(p, f, screen):
         for name, f in files.items()
     }
 
-    # no mask for the circle: it is drawn and clicked through circle_rect
+    # the circle is a small picture, not as big as the room: its position is relative to the room picture (the chat takes the left 300px)
+    w, h = pygame.image.load(CIRCLE_ICON).get_size()
+    circle = (CIRCLE_WIDTH, round(CIRCLE_WIDTH * h / w))
+    cx = (size[0] - u.startX) // 2 + CIRCLE_OFFSET[0]
+    cy = size[1] // 2 + CIRCLE_OFFSET[1]
+
     masks = {
+        "circle": u.Mask(CIRCLE_ICON, (circle[0] + u.startX, circle[1]), (cx - circle[0] // 2, cy - circle[1] // 2), collectCircle),
         "vampire": u.Mask(MASK_DIR + "vampire.png", size, (0, 0), talk),
         "cabinet": u.Mask(MASK_DIR + "cabinet.png", size, (0, 0), openCabinet),
         "fusebox": u.Mask(MASK_DIR + "fusebox.png", size, (0, 0), openFuseboxCloseup),
@@ -134,14 +126,6 @@ def start(p, f, screen):
         "drawer": u.Mask(MASK_DIR + "cabinet_drawer.png", size, (0, 0), openDrawer),
     }
 
-    # the circle sits near the centre of the room picture (the chat takes the left 300px)
-    cx = 300 + (size[0] - 300) // 2 + CIRCLE_OFFSET[0]
-    cy = size[1] // 2 + CIRCLE_OFFSET[1]
-    circle_center = (cx, cy)
-    circle_rect = pygame.Rect(0, 0, CIRCLE_RADIUS * 2, CIRCLE_RADIUS * 2)
-    circle_rect.center = circle_center
-
-    makeCircleIcon()
     loadTexts()
     view = View.ROOM
     next_room = None
@@ -209,30 +193,9 @@ def activeMasks():
         return [masks["fusebox_closed"]]
     if view == View.FUSEBOX_OPEN:
         return [masks["reset"]]
-    return []      # the drawer view has no masks, the circle is handled below
-
-
-########## circle placeholder in the drawer ##########
-def circleVisible():
-    return view == View.DRAWER and not circle_found
-
-
-def drawCircle(screen):
-    if not circleVisible():
-        return
-    pygame.draw.circle(screen, CIRCLE_COLOUR, circle_center, CIRCLE_RADIUS)
-    pygame.draw.circle(screen, (255, 255, 255), circle_center, CIRCLE_RADIUS, 3)
-
-
-def handleCircleClick(event):
-    # returns True when the click was used by the circle
-    if not circleVisible():
-        return False
-    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-        if circle_rect.collidepoint(event.pos):
-            collectCircle()
-            return True
-    return False
+    if view == View.DRAWER:
+        return [] if circle_found else [masks["circle"]]       # the circle lies in the drawer until you take it
+    return []
 
 
 ########## view transitions ##########

@@ -4,9 +4,6 @@ import roomFunc.equinRoomFunc as eF
 pygame.init()
 pygame.mixer.init()
 
-SHAPE_NAME = "Triangle" # one of the three project room badges, exactly this spelling
-SHAPE_PATH = "assets/equinoxRoom/triangle.png" # not drawn yet
-
 
 class EquinoxRoom:
     def __init__(self, screen, player, fui):
@@ -40,13 +37,7 @@ class EquinoxRoom:
                 m.handle_event(event)
             for b in self.buttons:
                 b.handle_event(event)
-        self.giveShape()
         self.getElements()
-
-    def giveShape(self): # the project room needs this badge, you get it together with the stone
-        if eF.has(self, "equin.stone") and not eF.has(self, "equin.shape"):
-            self.player.add_item("Items", SHAPE_NAME, SHAPE_PATH) # no image for it yet, the inventory shows a placeholder
-            eF.add(self, "equin.shape") # so it is only given once, even after the project room used it
 
     def draw(self):
         for image, pos in self.images:

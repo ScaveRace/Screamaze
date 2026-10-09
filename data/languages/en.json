@@ -110,7 +110,7 @@
   },
   "EquinoxRoom": {
     "intro_empty": "* Crumbs on an empty table. Nobody here.",
-    "intro_gone": "* The student is gone. A yellow stone lies on the long table.",
+    "intro_gone": "* The student is gone. A yellow stone and a small badge lie on the long table.",
     "intro_waiting": "* The student waits at the long table. Hungry.",
     "intro_1": "* The room smells of toasted bread.",
     "intro_2": "* A student sits at the long table, chewing.",
@@ -135,7 +135,8 @@
     "complete_6": "Keep the stone. We will meet again...",
     "complete_7": "...somewhere with better catering.",
     "lookaway_1": "* You blink. He's gone. Only crumbs are left.",
-    "lookaway_2": "* On the long table lies a yellow stone.",
+    "lookaway_2": "* On the long table lies a yellow stone and, next to it, a small triangular badge.",
+    "shape": "* A small triangular badge, cold and heavy. Cut diagonally, like a sandwich.",
     "stone": "* You pick up the stone. Warm as fresh toast."
   },
   "TeacherRoom": {
@@ -289,7 +290,8 @@
     "projRoom1R.table_right": "Printouts and sticky notes. Someone was counting something.",
     "projRoom1R.table_right.changed": "The laptop shows this room. From above.",
     "projRoom1R.beanbag": "A beanbag. It still has the shape of whoever sat in it.",
-    "projRoom1R.beanbag.changed": "Something was hidden in the beanbag. A square badge, one of the three Mina talked about.",
+    "projRoom1R.beanbag.changed": "Something was hidden in the beanbag. A square badge tumbles out onto the rug.",
+    "projRoom1R.beanbag.found": "A square badge, one of the three Mina talked about.",
     "projRoom2R.window": "Closed blinds. Cold air comes through the frame.",
     "projRoom2R.window.changed": "A handprint on the outside of the glass.",
     "projRoom2R.vending_machine": "The vending machine hums. Every slot is empty except one.",
