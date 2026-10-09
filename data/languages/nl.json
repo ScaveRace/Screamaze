@@ -189,6 +189,7 @@
     "frontDeskR.wall_clock.changed": "Middernacht. Net was het nog tien over tien.",
     "frontDeskR.printer": "De printer is warm. De laatste pagina is helemaal zwart.",
     "frontDeskR.printer.changed": "Hij heeft een foto van de gang geprint. Jij staat erop.",
+    "frontDeskR.necklace_missing": "Ik heb haar nog niets te geven.",
     "class2021R.window": "Je duwt twee lamellen uit elkaar en kijkt naar buiten. Alleen duisternis, en je eigen spiegelbeeld dat terugstaart.",
     "class2021R.window.changed": "Een handafdruk. Aan de buitenkant. Dit is de tweede verdieping.",
     "class2021R.teacher_desk": "Een oude computer op het bureau van de docent. De cursor knippert, afwachtend.",
@@ -303,5 +304,11 @@
     "projRoom2R.robot.changed": "Hij draaide zich om en keek naar je.",
     "projRoom2R.cardboard_boxes": "Dozen met reserveonderdelen. Eén ervan is vele malen dichtgetapet.",
     "projRoom2R.cardboard_boxes.changed": "Iets in de doos kijkt terug."
+  },
+  "Ending": {
+    "wake": "Je wordt wakker in je bed..... was dit echt?",
+    "skip": "Misschien moet ik morgen maar school overslaan.",
+    "thanks": "Bedankt voor het spelen",
+    "menu": "hoofdmenu"
   }
 }
