@@ -22,14 +22,6 @@ MASKS = {
     "stone": "assets/vampire/masks/red.png",
 }
 
-STONE_PATH = "assets/stones/red.png"
-
-
-# saves a step of this room in player.completion["VampRoom"]["all"]
-def add(room, event):
-    room.player.addCompletion("VampRoom", event, "")
-
-
 def loadImages(screen):
     fallbacks = {
         "bg_closed": (35, 8, 18),
@@ -149,7 +141,6 @@ def talk(room):
     if line < 3:
         room.fui.sendMessage("Vampire", "VampireRoom", 1)
         room.states["line"] += 1
-        add(room, "vamp.talk_" + str(room.states["line"]))
         if room.states["line"] == 3:
             room.states["task_started"] = True
     elif not room.states["task_done"]:
@@ -180,10 +171,10 @@ def close_fusebox(room):
 
 def collect_fuse(room):
     if room.states["fuse_found"]:
+        inventory.append("fuse")
         return
 
     room.states["fuse_found"] = True
-    add(room, "vamp.fuse_found")
     room.states["inventory"].append("fuse")
     room.fui.sendMessage("You", "VampireRoom", 6)
 
@@ -197,7 +188,6 @@ def insert_fuse(room):
 
     room.states["inventory"].remove("fuse")
     room.states["fuse_inserted"] = True
-    add(room, "vamp.fuse_inserted")
     room.fui.sendMessage("You", "VampireRoom", 8)
 
 def press_reset(room):
@@ -209,7 +199,6 @@ def press_reset(room):
         return
 
     room.states["task_done"] = True
-    add(room, "vamp.task_done")
     room.fui.sendMessage("You", "VampireRoom", 10)
     room.fui.sendMessage("You", "VampireRoom", 11)
 
@@ -219,8 +208,6 @@ def collect_stone(room):
 
     room.states["stone_collected"] = True
     room.states["inventory"].append("red_stone")
-    room.player.add_item("Stones", "Red", STONE_PATH)   # the teacher room looks for this stone in the inventory
-    add(room, "vamp.stone")
     room.fui.sendMessage("You", "VampireRoom", 12)
 
 def leave(room):
