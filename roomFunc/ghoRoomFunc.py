@@ -1,4 +1,5 @@
 # roomFunc/ghoRoomFunc.py
+import os
 import pygame
 import UI.uiElements as u
 
@@ -9,9 +10,12 @@ A = "assets/ghostRoom/"
 CABINET_CODE = "4537"                 # string to avoid strange behaviour
 CODE_POS = (615, 205)                 # where typed digits are drawn
 KEYPAD_ORIGIN, KEY, STEP = (500, 300), 70, 80
-HOMEWORK_SPOT = pygame.Rect(600, 400, 56, 56)
-ICON = "assets/stones/white.png"   # inventory icon for stone and homework
+ICON = "assets/stones/white.png"      # inventory icon for the stone
+HOMEWORK_CUTOUT = A + "gr_homework_cutout.png"    # the cutout is cropped to make the icon
+HOMEWORK_ICON = "assets/homework_icon.png"        # auto-made inventory icon
 CODE_FONT = pygame.font.Font(None, 56)
+DESCRIBE_DELAY_MS = 400               # wait after entering so the chatbox clear is over
+DEBUG = True                          # set to False when everything works
 
 # saved events (player.completion["GhostRoom"]["all"])
 DESCRIBED, UNLOCKED = "gr.described", "gr.cabinet_unlocked"
@@ -21,6 +25,8 @@ TALK = ("gr.talk_1", "gr.talk_2", "gr.talk_3")
 next_room = None
 _player = _fui = None
 _ui = {"view": "room", "code": ""}    # screen-only state: room/teacher/cabinet/keypad/whiteboard
+_pending = True                       # True = the room still has to be described
+_enter_at = None                      # time of the first frame after entering
 
 
 # ---------------------------------------------------------------- helpers
@@ -50,13 +56,43 @@ def stone_visible():
     return _ui["view"] == "teacher" and done(HW_DONE) and not done(STONE)
 
 
+def homework_visible():
+    """The homework lies in the open cabinet until it is picked up."""
+    return _ui["view"] == "cabinet" and done(UNLOCKED) and not done(HW_TAKEN)
+
+
 def reset():
     _ui.update(view="room", code="")
 
 
 def state():
     """Changes whenever the view or the saved progress changes -> room rebuilds."""
-    return _ui["view"], len(_player.getCompletion(ROOM)["all"])
+    return (_ui["view"], done(UNLOCKED), done(HW_TAKEN), done(HW_DONE), done(STONE),
+            len(_player.getCompletion(ROOM)["all"]))
+
+
+def homework_icon():
+    """Makes (once) a square inventory icon of the homework and returns its path."""
+    if os.path.exists(HOMEWORK_ICON):
+        return HOMEWORK_ICON
+    size = 64
+    icon = pygame.Surface((size, size), pygame.SRCALPHA)
+    try:
+        cutout = pygame.image.load(HOMEWORK_CUTOUT)
+        box = cutout.get_bounding_rect()                  # only the visible homework shape
+        crop = cutout.subsurface(box).copy()
+        scale = min(size / crop.get_width(), size / crop.get_height())
+        new = (max(1, int(crop.get_width() * scale)), max(1, int(crop.get_height() * scale)))
+        crop = pygame.transform.smoothscale(crop, new)
+        icon.blit(crop, crop.get_rect(center=(size // 2, size // 2)))
+    except Exception:                                     # missing or unreadable cutout
+        icon.fill((225, 215, 185))                        # plain paper icon
+        pygame.draw.rect(icon, (120, 100, 70), icon.get_rect(), 3)
+        label = pygame.font.Font(None, 30).render("HW", True, (60, 50, 30))
+        icon.blit(label, label.get_rect(center=(size // 2, size // 2)))
+    os.makedirs(os.path.dirname(HOMEWORK_ICON), exist_ok=True)
+    pygame.image.save(icon, HOMEWORK_ICON)
+    return HOMEWORK_ICON
 
 
 # ---------------------------------------------------------------- building
@@ -74,6 +110,9 @@ def background():
 def masks():
     """(mask file, callback, label)"""
     view = _ui["view"]
+    if DEBUG and view == "cabinet":
+        print("[cabinet] unlocked:", done(UNLOCKED), "| homework taken:", done(HW_TAKEN),
+              "| cutout exists:", os.path.exists(A + "gr_homework_cutout.png"))
     if view == "room":
         found = [("gr_room_whiteboard.png", show_whiteboard, "Whiteboard"),
                  ("gr_room_cabinet.png", show_cabinet, "Cabinet")]
@@ -85,6 +124,9 @@ def masks():
     if stone_visible():
         # empty label: the stone is too small for text
         return [("gr_white_stone_2.png", take_stone, "")]
+    if homework_visible():
+        # disappears by itself once the homework is taken
+        return [("gr_homework_cutout.png", take_homework, "Homework")]
     if view == "cabinet" and not done(UNLOCKED):
         return [("gr_cabinet_homework_keypad.png", open_keypad, "Keypad")]
     return []
@@ -98,8 +140,6 @@ def buttons():
         return [(560, 650, 140, 50, "Return", leave)]
     if view == "teacher" and not done(HW_DONE):
         return [(830, 660, 140, 50, "Give", give_homework), back]
-    if view == "cabinet" and done(UNLOCKED) and not done(HW_TAKEN):
-        return [(550, 600, 180, 50, "Take Homework", take_homework), back]
     if view == "keypad":
         keys = []
         for i, label in enumerate("123456789C0E"):
@@ -121,10 +161,22 @@ def getElements(player, fui, screen):
 
 
 # ---------------------------------------------------------------- actions
-def on_enter():
-    if not done(DESCRIBED):
-        show(21, 22)                     # cold classroom
-        save(DESCRIBED, 22)
+def describe():
+    """Describes the whole room."""
+    if done(HW_DONE):
+        show(21, 34)                     # teacher is gone: empty desk
+    else:
+        show(21, 22)                     # full description with the ghost teacher
+    save(DESCRIBED, 22)                  # kept so older saves still work
+
+
+def on_enter(player=None, fui=None):
+    """Called when the player walks into the room: reset the view, describe soon."""
+    global _player, _fui, _pending, _enter_at
+    if player is not None:
+        _player, _fui = player, fui
+    reset()
+    _pending, _enter_at = True, None
 
 
 def talk():
@@ -167,7 +219,6 @@ def take_stone():
     say(10)
 
 
-
 def open_keypad():
     _ui.update(view="keypad", code="")
     show(33, 12)
@@ -200,11 +251,12 @@ def check_code():
 
 
 def take_homework():
+    """Clicking the homework cutout in the open cabinet."""
     if done(HW_TAKEN):
         say(32)
         return
-    _player.add_item("Items", "Homework", ICON)
-    save(HW_TAKEN, 16)
+    _player.add_item("Items", "Homework", homework_icon())
+    save(HW_TAKEN, 16)                   # saving rebuilds the room, so the mask disappears
     say(16)
 
 
@@ -228,8 +280,10 @@ def back_to_room():
 
 
 def leave():
-    global next_room
+    global next_room, _pending, _enter_at
     next_room = "corridor"
+    reset()
+    _pending, _enter_at = True, None     # describe again next time the room is entered
 
 
 def keyboard(event):
@@ -244,9 +298,15 @@ def keyboard(event):
 
 # ---------------------------------------------------------------- drawing
 def drawExtras(screen):
-    view = _ui["view"]
-    if view == "cabinet" and done(UNLOCKED) and not done(HW_TAKEN):
-        pygame.draw.rect(screen, (235, 235, 235), HOMEWORK_SPOT)
-    if view == "keypad":
+    global _pending, _enter_at
+    if _pending:                         # runs every frame while the room is on screen
+        now = pygame.time.get_ticks()
+        if _enter_at is None:
+            _enter_at = now              # first frame after entering
+        elif now - _enter_at >= DESCRIBE_DELAY_MS:
+            _pending, _enter_at = False, None
+            describe()
+
+    if _ui["view"] == "keypad":
         shown = _ui["code"].ljust(4, "-")             # "45" -> "45--"
         screen.blit(CODE_FONT.render(shown, True, (0, 255, 120)), CODE_POS)
