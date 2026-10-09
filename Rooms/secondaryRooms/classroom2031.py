@@ -1,0 +1,15 @@
+# Classroom 2.031
+
+# all the pictures of this room are in this folder
+FOLDER = "assets/classroom_2031/"
+
+# (id, label) of everything you can press in this room
+ELEMENTS = [
+    ("window", "Window"),
+    ("teacher_desk", "Teacher Desk"),
+    ("globe", "Globe"),
+    ("projector", "Projector"),
+    ("chalkboard", "Chalkboard"),
+    ("lockers", "Lockers"),
+    ("door", "Leave room"),
+]

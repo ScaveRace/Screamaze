@@ -37,8 +37,8 @@ def current(screen,goTo):
         makeMask(screen, "assets/corridor/room_13.png", (1141, 383), projRoom, "Project Room 3"),
         makeMask(screen, "assets/corridor/room_14.png", (1224, 383), storr, "Storage"),
         makeMask(screen, "assets/corridor/room_15.png", (1397, 340), door(goTo,"class2035R"), "Classroom 2.035"),
-        makeMask(screen, "assets/corridor/room_16.png", (455, 438), projRoom, "Project Room 1"),
-        makeMask(screen, "assets/corridor/room_17.png", (551, 438), projRoom, "Project Room 2"),
+        makeMask(screen, "assets/corridor/room_16.png", (455, 438), door(goTo,"projRoom1R"), "Project Room 1"),
+        makeMask(screen, "assets/corridor/room_17.png", (551, 438), door(goTo,"projRoom2R"), "Project Room 2"),
     ]
 
 
