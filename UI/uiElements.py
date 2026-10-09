@@ -1,5 +1,6 @@
 import pygame
 from functions import uiFunc as uF
+import sqlite3
 
 pygame.font.init()  #### fonts need to be initialized before using them
 
@@ -313,3 +314,22 @@ class Slider:
         text = self.font.render(f"{self.label}   {int(self.value * 100)}%",
                                 True, self.fgCol)
         screen.blit(text, (self.rect.x, self.rect.y - 26))
+
+
+
+class LeaderboardDB:
+    def __init__(self, path="data//database//storyDB.db"):
+        self.conn = sqlite3.connect(path)
+
+    def save_completion(self, name, finish_time):
+        self.conn.execute(
+            "INSERT INTO leaderboard (player_name, finish_time) VALUES (?, ?)",
+            (name, finish_time))
+        self.conn.commit()
+
+    def get_top_five(self):
+        return self.conn.execute(
+            "SELECT player_name, finish_time FROM leaderboard "
+            "ORDER BY finish_time ASC LIMIT 5").fetchall()
+
+# the leader board can be completed after the story is finished and we know where the end of the game is going to be.

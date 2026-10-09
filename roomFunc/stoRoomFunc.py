@@ -1,18 +1,18 @@
+import sqlite3
+import pygame
 import UI.uiElements as u
-import functions.language as lang
 
 ########## constants ##########
-TABLE = "SorrageRoom"   # (sic) the name of this room in the language files
+DB_PATH = "data/database/storyDB.db"
+TABLE = "SorrageRoom"   # (sic) the table name in storyDB.db
 
-# ids of the quiz texts in the language files: (question id, [answer ids], index of the correct answer)
+# ids of the quiz texts in the database table: (question id, [answer ids], index of the correct answer)
 QUESTION_IDS = [
     (11, [12, 13, 14], 1),
     (15, [16, 17, 18], 2),
     (19, [20, 21, 22], 0),
 ]
 
-# ids of the chat messages in the language files
-MSG_FUSE_BOX = 1
 # ids of the chat messages in the database table
 MSG_FUSE_TAKEN = 2
 MSG_DRAWER_LOCKED_HINT = 5
@@ -35,9 +35,14 @@ texts = {}      # id -> text, filled by loadTexts()
 
 
 def loadTexts():
-    # read every line of this room from the language files once, when the room starts
+    # read every line of this room from the database once, when the room starts
     global texts
-    texts = {int(i): lang.chatMessage(TABLE, i) for i in lang.texts["en"][TABLE]}
+    con = sqlite3.connect(DB_PATH)
+    try:
+        rows = con.execute(f'SELECT id, text_en FROM "{TABLE}"').fetchall()
+    finally:
+        con.close()
+    texts = {int(i): t for i, t in rows}
 
 
 def T(textId):

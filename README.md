@@ -12,7 +12,7 @@ This file is what a new person on the team reads first.
 
 - **Python 3.13.** Not 3.14 — pygame 2.6.1 has no ready-made install for it and `pip install`
   fails with a long red error.
-- **pygame 2.6.1.** It is the only dependency (`json` comes with Python).
+- **pygame 2.6.1.** It is the only dependency (`sqlite3` and `json` come with Python).
 - Git.
 
 ```
@@ -90,15 +90,14 @@ Rooms/
 functions/
   uiFunc.py                text wrapping and text-input helpers
   sound.py                 play_music, play_sound
-  settingsFunc.py          the shared `settings` object (volumes, language)
+  settingsFunc.py          the shared `settings` object (volumes)
   savingFunc.py            save / load any object to JSON
-  language.py              chatMessage: reads dialogue from the language files
+  loreFunctions.py         StoryDB: reads dialogue from the database
 data/
   playerLogistics.py       DOOR_SPAWNS: where the player stands in front of each corridor door
-  languages/en.json        dialogue in english, room -> id -> text
-  languages/nl.json        the same dialogue in dutch
+  database/storyDB.db      SQLite dialogue, one table per room (id, text_en)
   savePlayer.json          the save file
-  gameSettings.json        volume and language settings
+  gameSettings.json        volume settings
 assets/                    images, masks and music
 ```
 
@@ -213,10 +212,10 @@ The chatbox splits on that: the name is drawn once and wrapped lines line up und
 A message without `" > "` (narration such as `"* The room smells of toasted bread."`) uses the
 full width. The mouse wheel scrolls the chat, and a new message jumps back to the bottom.
 
-To write into the side chat from a room, with text taken from the language files:
+To write into the side chat from a room, with text taken from the database:
 
 ```python
-self.fui.sendMessage("Vampire", "VampireRoom", "msg_1")   # speaker, room, id of the text
+self.fui.sendMessage("Vampire", "VampireRoom", "msg_1")   # speaker, table, row id
 ```
 
 ### Inventory and sound
