@@ -4,6 +4,8 @@ import UI.uiElements as u
 SHAPES = ("Circle", "Triangle", "Square")                                   # item names, found in other rooms
 OWNERS = {"Circle": "Mina", "Triangle": "Sam", "Square": "Jorn"}            # whose badge it is, see the whiteboard
 STONE_PATH = "assets/stones/purple.png"
+STONE_WIDTH = 50
+STONE_POS = (630, 240)                                                      # centre of the stone in the open box, relative to the room picture
 HOLDING_COLOUR = (110, 95, 60)
 
 # the chat takes the left 300px, so the right-hand buttons sit 60px from the screen edge instead of a plain +300
@@ -22,6 +24,13 @@ def loadImages(screen):
     image = u.load_image("assets/project_room.png", screen.get_size(), (22, 20, 26))
     boxImage = u.load_alpha_image("assets/", (420, 300), (40, 32, 26))
     return image, boxImage
+
+
+def buildMasks(room): # the stone is a mask, it lies in the box once it is open
+    w, h = pygame.image.load(STONE_PATH).get_size()
+    size = (STONE_WIDTH, round(STONE_WIDTH * h / w))
+    return u.Mask(STONE_PATH, (size[0] + u.startX, size[1]), (STONE_POS[0] - size[0] // 2, STONE_POS[1] - size[1] // 2),
+                  lambda: takeStone(room))
 
 
 def buildButtons(room):
@@ -81,9 +90,10 @@ def intro(room):
 
 def getElements(room): # basically the logic
     if room.view == "room":
-        return [room.btn[name] for name in ("bookshelf", "board", "phone", "box", "leave")]
+        return [room.btn[name] for name in ("bookshelf", "board", "phone", "box", "leave")], []
 
     buttons = [room.btn["back"]]
+    masks = [room.stoneMask] if has(room, "proj.open") and not has(room, "proj.stone") else []
     for shape in SHAPES:
         slot = room.btn["slot"][shape]
         slot.label = shape if placed(room, shape) else OWNERS[shape]    # the name turns into the badge
@@ -93,7 +103,7 @@ def getElements(room): # basically the logic
             badge = room.btn["badge"][shape]
             badge.bgCol = HOLDING_COLOUR if room.holding == shape else (0, 0, 0)
             buttons.append(badge)
-    return buttons
+    return buttons, masks
 
 
 def toRoom(room):
@@ -109,6 +119,9 @@ def openBox(room):
     room.view = "box"
     if has(room, "proj.stone"):
         say(room, None, "box_empty")
+        return
+    if has(room, "proj.open"): # open, the stone is still waiting in it
+        say(room, None, "stone")
         return
     say(room, None, "box")
     if not any(carried(room, s) for s in SHAPES):
@@ -136,12 +149,17 @@ def tryPlace(room, shape):
         say(room, None, "wrong")
 
 
-def complete(room): # all badges are in: they are used up and the stone is the reward
+def complete(room): # all badges are in: they are used up and the box opens, the stone is in it
     for shape in SHAPES:
         room.player.remove_item("Items", shape)
+    add(room, "proj.open")
+    sayAll(room, OPEN)
+
+
+def takeStone(room): # pressing the stone in the open box
     room.player.add_item("Stones", "Purple", STONE_PATH)
     add(room, "proj.stone")                                 # after add_item, so a failed pickup doesn't count as taken
-    sayAll(room, OPEN)
+    say(room, None, "stone_taken")
 
 
 def drawScene(room):

@@ -103,7 +103,8 @@
     "wrong": "It doesn't fit. That badge belongs to someone else.",
     "place": "The badge clicks into place.",
     "open": "All three badges are in. The box hums and the lid lifts.",
-    "stone": "Inside lies a purple stone, warm like the end of a long day. Group 7 can finally present.",
+    "stone": "Inside lies a purple stone, warm like the end of a long day.",
+    "stone_taken": "You pick up the purple stone. Group 7 can finally present.",
     "box_empty": "The box is empty now. Only a faint hum is left.",
     "intro_done": "The project room is quiet. Group 7 finally got to present."
   },
@@ -287,7 +288,7 @@
     "projRoom1R.table_right": "Printouts and sticky notes. Someone was counting something.",
     "projRoom1R.table_right.changed": "The laptop shows this room. From above.",
     "projRoom1R.beanbag": "A beanbag. It still has the shape of whoever sat in it.",
-    "projRoom1R.beanbag.changed": "Something was hidden in the beanbag.",
+    "projRoom1R.beanbag.changed": "Something was hidden in the beanbag. A square badge, one of the three Mina talked about.",
     "projRoom2R.window": "Closed blinds. Cold air comes through the frame.",
     "projRoom2R.window.changed": "A handprint on the outside of the glass.",
     "projRoom2R.vending_machine": "The vending machine hums. Every slot is empty except one.",

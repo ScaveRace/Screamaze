@@ -14,3 +14,9 @@ ELEMENTS = [
     ("beanbag", "Beanbag"),
     ("door", "Leave room"),
 ]
+
+# an item hidden in an element, you get it the first time you press its close-up: id -> (item name, icon)
+# the name must be spelled exactly like the Project Room badge it belongs to, there is no picture for it yet
+FOUND = {
+    "beanbag": ("Square", FOLDER + "beanbag/square.png"),
+}

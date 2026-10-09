@@ -52,7 +52,10 @@ def look(room, name):
 # makes the action for a close-up: pressing it changes the picture and tells what you found
 def inspect(room, name):
     def action():
-        room.player.addCompletion("SecondaryRooms", room.key + "." + name, "")
+        found = getattr(room.data, "FOUND", {}).get(name)       # an item hidden in this element, see FOUND in the room's file
+        if found:
+            room.player.add_item("Items", found[0], found[1])
+        room.player.addCompletion("SecondaryRooms", room.key + "." + name, "")   # after add_item, so a failed pickup doesn't count as done
         room.view = name + ".changed"
         say(room)
     return action
