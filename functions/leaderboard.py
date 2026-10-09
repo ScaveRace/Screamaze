@@ -1,0 +1,67 @@
+import sqlite3
+
+# the leaderboard is its own small database, one row per player name
+# a run only gets on it when the player saves the game, saving again updates the row
+DB_PATH = "data/leaderboard.db"
+
+# the steps that count for the completion percentage: room -> events in player.completion[room]["all"]
+# the secondary rooms are only extra story, so they are saved but don't count
+STEPS = {
+    "Corridor": ["corr.going"],
+    "VampRoom": ["vamp.talk_1", "vamp.talk_2", "vamp.talk_3", "vamp.fuse_found", "vamp.fuse_inserted",
+                 "vamp.task_done", "vamp.stone"],
+    "StorrageRoom": ["sto.fuse", "sto.quiz", "sto.stone"],
+    "TeacherRoom": ["tr.described", "tr.chest_described", "tr.placed.White", "tr.placed.Red", "tr.placed.Green",
+                    "tr.placed.Purple", "tr.placed.Yellow", "tr.unlocked", "tr.necklace"],
+    "GhostRoom": ["gr.described", "gr.talk_1", "gr.talk_2", "gr.talk_3", "gr.cabinet_unlocked",
+                  "gr.homework_taken", "gr.homework_done", "gr.stone_taken"],
+    "EquinoxRoom": ["equin.talked", "equin.sandwich", "equin.lookaway", "equin.stone"],
+    "ProjectRoom": ["proj.visited", "proj.placed.Circle", "proj.placed.Triangle", "proj.placed.Square", "proj.stone"],
+}
+
+
+# how much of the game the player did, from 0 to 100
+def completion(player):
+    done = 0
+    total = 0
+    for room, steps in STEPS.items():
+        for step in steps:
+            total += 1
+            if step in player.getCompletion(room)["all"]:
+                done += 1
+    return round(done / total * 100)
+
+
+def connect():
+    con = sqlite3.connect(DB_PATH)
+    con.execute("CREATE TABLE IF NOT EXISTS leaderboard ("
+                "name TEXT PRIMARY KEY, time INTEGER, completion INTEGER, finished INTEGER DEFAULT 0)")
+    return con
+
+
+# called when the player saves: puts the run on the leaderboard or updates it
+def saveRun(player):
+    con = connect()
+    con.execute("INSERT INTO leaderboard (name, time, completion) VALUES (?, ?, ?) "
+                "ON CONFLICT(name) DO UPDATE SET time = excluded.time, completion = excluded.completion",
+                (player.name, player.time, completion(player)))
+    con.commit()
+    con.close()
+
+
+# called when the game is finished: only updates a run that was saved before
+def finishRun(player):
+    con = connect()
+    con.execute("UPDATE leaderboard SET time = ?, completion = ?, finished = 1 WHERE name = ?",
+                (player.time, completion(player), player.name))
+    con.commit()
+    con.close()
+
+
+# the best five runs: the highest completion first, the fastest time wins when it is the same
+def topFive():
+    con = connect()
+    rows = con.execute("SELECT name, time, completion, finished FROM leaderboard "
+                       "ORDER BY completion DESC, time ASC LIMIT 5").fetchall()
+    con.close()
+    return rows

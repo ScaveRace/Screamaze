@@ -3,6 +3,7 @@ import UI.uiElements as u
 import functions.sound as s
 from functions.settingsFunc import settings as sett
 import functions.savingFunc as save
+import functions.leaderboard as lb
 
 
 font = pygame.font.Font(None, 36)
@@ -52,6 +53,7 @@ class PauseMenu:
 
     def saveGame(self):
         save.save(self.player,"data/savePlayer.json")
+        lb.saveRun(self.player)   # a saved run also goes on the leaderboard
         self.saveButton.label = "saved!"
 
 

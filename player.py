@@ -24,7 +24,8 @@ class Player:
                            "StorrageRoom":{"all":[],"current": "", "msg":""},
                            "ProjectRoom":{"all":[],"current": "", "msg":""},
                            "Corridor":{"all":[],"current": "corr.start", "msg":""},
-                           "FrontDesk":{"all":[],"current": "", "msg":""}
+                           "FrontDesk":{"all":[],"current": "", "msg":""},
+                           "SecondaryRooms":{"all":[],"current": "", "msg":""}
         }
 
 
@@ -48,11 +49,14 @@ class Player:
 
 
     def addCompletion(self,room,current,msg):
-        self.completion[room]["all"].append(current)
+        self.getCompletion(room)["all"].append(current)
         self.completion[room]["current"] = current
         self.completion[room]["msg"] = msg
 
     def getCompletion(self,room):
+        # a save file from before a room was added doesn't have that room yet
+        if room not in self.completion:
+            self.completion[room] = {"all":[],"current": "", "msg":""}
         return self.completion[room]
 
 
@@ -85,5 +89,4 @@ class Player:
         if self.location == "corridor":
             self.position = pL.DOOR_SPAWNS[self.lastLocation]
         screen.blit(self.pImage,self.position)
-
 

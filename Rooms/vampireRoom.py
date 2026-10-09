@@ -12,14 +12,17 @@ class VampireRoom:
         self.fui = fui
         self.next_room = None
 
+        # what the player already did here is saved in player.completion, so it is still done after leaving or loading
+        done = player.getCompletion("VampRoom")["all"]
+        line = sum(1 for event in done if event.startswith("vamp.talk_"))
         self.states = {
-            "line": 0,
-            "task_started": False,
-            "task_done": False,
-            "inventory": [],
-            "fuse_found": False,
-            "fuse_inserted": False,
-            "stone_collected": False,
+            "line": line,
+            "task_started": line == 3,
+            "task_done": "vamp.task_done" in done,
+            "inventory": ["fuse"] if "vamp.fuse_found" in done and "vamp.fuse_inserted" not in done else [],
+            "fuse_found": "vamp.fuse_found" in done,
+            "fuse_inserted": "vamp.fuse_inserted" in done,
+            "stone_collected": "vamp.stone" in done,
             "state": "room"
         }
 
