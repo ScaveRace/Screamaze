@@ -50,7 +50,9 @@ ROOMS = {
     "teach1R" : nr.TeachersRoom1,
     "teach2R" : nr.TeachersRoom2,
     "teach3R" : nr.TeachersRoom3,
-    "teach4R" : nr.TeachersRoom4
+    "teach4R" : nr.TeachersRoom4,
+    "projRoom1R" : nr.ProjectRoom1,
+    "projRoom2R" : nr.ProjectRoom2
 }
 
 if not load.is_json_empty("data/gameSettings.json"):

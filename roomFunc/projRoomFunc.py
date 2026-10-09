@@ -147,7 +147,7 @@ def complete(room): # all badges are in: they are used up and the stone is the r
 def drawScene(room):
     room.screen.blit(room.image, (u.startX, 0))
     if room.view == "room":
-        room.screen.blit(room.font.render("PROJECT ROOM 1", True, (230, 225, 235)), (u.startX + 60, 50))
+        room.screen.blit(room.font.render("PROJECT ROOM 3", True, (230, 225, 235)), (u.startX + 60, 50))
     else:
         room.screen.blit(room.boxImage, (u.startX + 420, 180))
         pygame.draw.rect(room.screen, (170, 150, 120), pygame.Rect(u.startX + 420, 180, 420, 300), 1)
