@@ -1,6 +1,5 @@
 import pygame
 import UI.uiElements as u
-from player import Player
 import UI.frontUI as Fui
 import functions.leaderboard as lb
 
@@ -11,9 +10,11 @@ pygame.mixer.init()
 # THE FIVE STONES
 # ----------------------------------------------------------------------
 
-# The five stones that have to go into the chest, in the order of the holes.
+# The five stones that have to go into the chest.
 # These names must match exactly what the other rooms put in the inventory,
 # for example GhostRoom does: player.add_item("Stones", "White", ...)
+# The ORDER here is only used to pick the dialogue line of each stone
+# (White = 15, Red = 16, Green = 17, Purple = 18, Yellow = 19).
 REQUIRED_STONES = ["White", "Red", "Green", "Purple", "Yellow"]
 
 # The picture that belongs to every stone. ## placeholder folder
@@ -34,10 +35,13 @@ STONE_COLOURS = {
     "Yellow": (225, 180, 45),
 }
 
-# TESTING ONLY: set to True and the player gets all five stones the moment
-# the teacher room is entered, so every hole can be checked without playing
-# the other rooms. Set it back to False before the real game!
-DEBUG_GIVE_ALL_STONES = False
+# ----------------------------------------------------------------------
+# TESTING ONLY
+# ----------------------------------------------------------------------
+# True = the player gets all five stones as soon as the room is created, so the
+# whole chest can be tested at once: place the stones, open the chest, click the
+# necklace. Set it to False before the real game!
+TEST_GIVE_ALL_STONES = False
 
 # Dialogue ids, so the numbers below stay readable.
 # One "stone placed" line per stone, in the order of REQUIRED_STONES.
@@ -64,6 +68,17 @@ STONE_HOLES = [
 
 # Height of a stone when it sits in its hole, on the ORIGINAL 572 high picture.
 STONE_HEIGHT = 50
+
+# The necklace lying in the open chest. This picture is the necklace on a
+# transparent background, same size as the chest picture (1024 x 572),
+# so it lines up with the open chest by itself.
+NECKLACE_MASK = "assets/teacherRoom/tr_necklace_in_chest.png"
+# The necklace is a thin chain, so clicking exactly on it is hard.
+# This invisible box around it (x, y, width, height on the 1024 x 572 picture)
+# also counts as a click on the necklace.
+NECKLACE_AREA = (404, 224, 221, 117)
+# The small picture of the necklace that shows up in the inventory.
+NECKLACE_ICON = "assets/teacherRoom/tr_necklace_icon.png"
 
 # Where the "3 / 5" counter is drawn on the chest close up.
 COUNTER_POS = (615, 205)
@@ -127,7 +142,7 @@ class TeacherRoom:
         self.chest_described = "tr.chest_described" in done
 
         # Game state: which stones are already inside the chest.
-        self.stones_placed = [s for s in REQUIRED_STONES if "tr.placed." + s in done]   # grows with "White", "Red", ...
+        self.stones_placed = [s for s in REQUIRED_STONES if "tr.placed." + s in done]   # grows with "Green", "Purple", ...
         self.chest_unlocked = "tr.unlocked" in done      # True the moment all five are in
         self.reward_taken = "tr.necklace" in done        # so you can't take the necklace twice
         if self.chest_unlocked:
@@ -137,7 +152,11 @@ class TeacherRoom:
         # so the lid mask behind it does not react to the same click.
         self.hole_clicked = False
 
-        self.reward_spot = pygame.Rect(600, 330, 56, 56)  # placeholder for the necklace
+        # TESTING: hand out every stone the player does not have yet.
+        if TEST_GIVE_ALL_STONES:
+            for name in REQUIRED_STONES:
+                if not self.player.has_item("Stones", name):
+                    self.player.add_item("Stones", name, STONE_IMAGES[name])
 
         # MASKS - the chest only, clicking it walks up to it
         self.masks = [
@@ -162,6 +181,17 @@ class TeacherRoom:
             u.Mask("assets/teacherRoom/tr_cutout_1_whole_chest.png", self.screensize, (0, 0), self.try_open, "Chest lid")
         )
 
+        # MASK in the open chest: the necklace itself, clicking it collects it.
+        self.necklace_masks = [
+            u.Mask(NECKLACE_MASK, self.screensize, (0, 0), self.take_reward, "Necklace"),
+        ]
+
+        # The invisible click box around the necklace, scaled to this screen.
+        nx, ny, nw, nh = NECKLACE_AREA
+        self.necklace_rect = pygame.Rect(
+            IMAGE_OFFSET_X + round(nx * self.scale_x), round(ny * self.scale_y),
+            round(nw * self.scale_x), round(nh * self.scale_y))
+
         self.no_masks = []
         self.current_masks = self.masks
 
@@ -177,9 +207,7 @@ class TeacherRoom:
         # No "Place stone" button any more, the holes are the buttons.
         self.chest_buttons = self.returnr_buttons
 
-        self.reward_buttons = [
-                                  u.Button(830, 600, 180, 50, "Take necklace", self.take_reward),
-                              ] + self.returnr_buttons
+        # No "Take necklace" button any more, the necklace itself is the button.
 
     # ------------------------------------------------------------------
     # entering the room
@@ -188,9 +216,6 @@ class TeacherRoom:
     # Called once, the first time the player sets foot in the lounge.
     # Describes the whole room so the player knows what can be clicked.
     def on_enter(self):
-        if DEBUG_GIVE_ALL_STONES:
-            self.give_debug_stones()
-
         if self.room_described:
             return
         self.room_described = True
@@ -198,14 +223,6 @@ class TeacherRoom:
         self.fui.sendMessage("You", "TeacherRoom", 1)   # dark lounge, candles, old paper
         self.fui.sendMessage("You", "TeacherRoom", 2)   # table / couches / chalkboard layout
         self.fui.sendMessage("You", "TeacherRoom", 3)   # the glowing chest on the red rug
-
-    # Testing helper: puts every stone that is not yet owned or placed in the inventory.
-    def give_debug_stones(self):
-        for name in REQUIRED_STONES:
-            if name in self.stones_placed:
-                continue  # already inside the chest
-            if not self.player.has_item("Stones", name):
-                self.player.add_item("Stones", name, STONE_IMAGES[name])
 
     # ------------------------------------------------------------------
     # chest
@@ -215,12 +232,12 @@ class TeacherRoom:
     def chest(self):
         if self.chest_unlocked:
             self.current_image = self.chest_open_image
-            self.current_masks = self.no_masks
+            self.current_buttons = self.returnr_buttons
             if self.reward_taken:
-                self.current_buttons = self.returnr_buttons
+                self.current_masks = self.no_masks
                 self.fui.sendMessage("You", "TeacherRoom", 26)  # empty velvet and dust
             else:
-                self.current_buttons = self.reward_buttons
+                self.current_masks = self.necklace_masks
                 self.fui.sendMessage("You", "TeacherRoom", 24)  # the necklace on the velvet
         else:
             self.current_image = self.chest_closed_image
@@ -265,30 +282,31 @@ class TeacherRoom:
             self.fui.sendMessage("You", "TeacherRoom", 21)      # the chest is already open
             return
 
-        for i in range(len(REQUIRED_STONES)):
-            stone = REQUIRED_STONES[i]
-            if stone in self.stones_placed:
-                continue  # that hole is already filled
-            if self.player.has_item("Stones", stone):
-                self.player.remove_item("Stones", stone)
-                self.stones_placed.append(stone)
-                self.add("tr.placed." + stone)
-                # White = 15, Red = 16, Green = 17, Purple = 18, Yellow = 19
-                self.fui.sendMessage("You", "TeacherRoom", STONE_LINE_FIRST + i)
-                # The fifth stone opens the chest by itself.
-                if len(self.stones_placed) == len(REQUIRED_STONES):
-                    self.unlock()
-                return  # one stone per click
+        if colour in self.stones_placed:
+            self.describe_slots()                               # that hole is already filled
+            return
 
-        self.fui.sendMessage("You", "TeacherRoom", 20)          # no stone that fits
+        if not self.player.has_item("Stones", colour):
+            self.fui.sendMessage("You", "TeacherRoom", 20)      # you don't have that stone
+            return
+
+        self.player.remove_item("Stones", colour)
+        self.stones_placed.append(colour)
+        self.add("tr.placed." + colour)
+        # White = 15, Red = 16, Green = 17, Purple = 18, Yellow = 19
+        self.fui.sendMessage("You", "TeacherRoom", STONE_LINE_FIRST + REQUIRED_STONES.index(colour))
+
+        # The fifth stone opens the chest by itself.
+        if len(self.stones_placed) == len(REQUIRED_STONES):
+            self.unlock()
 
     # Everything that happens the moment the last stone goes in.
     def unlock(self):
         self.chest_unlocked = True
         self.add("tr.unlocked")
         self.current_image = self.chest_open_image
-        self.current_masks = self.no_masks
-        self.current_buttons = self.reward_buttons
+        self.current_masks = self.necklace_masks    # the necklace can be clicked now
+        self.current_buttons = self.returnr_buttons
         self.fui.sendMessage("You", "TeacherRoom", 22)          # clunk, the lid swings open
         self.fui.sendMessage("You", "TeacherRoom", 23)          # golden light spills out
         self.fui.sendMessage("You", "TeacherRoom", 24)          # the necklace on the velvet
@@ -296,15 +314,15 @@ class TeacherRoom:
     # Takes the necklace out of the chest and adds it to the inventory.
     def take_reward(self):
         if self.reward_taken:
-            self.fui.sendMessage("You", "TeacherRoom", 26)      # the chest is empty now
             return
         self.reward_taken = True
         self.add("tr.necklace")
-        # change the picture of the item ## placeholder path
-        self.player.add_item("Items", "Necklace", "assets/teacherRoom/tr.necklace.png")
+        self.player.add_item("Items", "Necklace", NECKLACE_ICON)
         lb.finishRun(self.player)   # the game is done, marks a saved run as finished on the leaderboard
         self.fui.sendMessage("You", "TeacherRoom", 25)          # still warm, the way out
+        # the necklace is in the inventory now, so its mask disappears
         self.current_image = self.chest_open_image
+        self.current_masks = self.no_masks
         self.current_buttons = self.returnr_buttons
 
     # ------------------------------------------------------------------
@@ -344,6 +362,14 @@ class TeacherRoom:
         for b in self.current_buttons:
             b.handle_event(event)
 
+        # Also accept a click anywhere in the box around the necklace.
+        # (reward_taken is checked, so a click the mask already took does not count twice)
+        if (self.current_image is self.chest_open_image
+                and self.chest_unlocked and not self.reward_taken
+                and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1
+                and self.necklace_rect.collidepoint(event.pos)):
+            self.take_reward()
+
     # Gives back the screen position of the middle of hole number i, left to right.
     def hole_center(self, i):
         cx, cy = STONE_HOLES[i]["centre"]
@@ -376,10 +402,6 @@ class TeacherRoom:
             self.on_enter()
 
         self.screen.blit(self.current_image, (IMAGE_OFFSET_X, 0))
-
-        # Draw the necklace inside the open chest until the player takes it.
-        if self.current_image is self.chest_open_image and not self.reward_taken:
-            pygame.draw.rect(self.screen, (220, 220, 230), self.reward_spot)
 
         # masks get drawn first. The tr_cutout pictures are real pictures of the
         # chest, so anything drawn BEFORE them is hidden underneath.

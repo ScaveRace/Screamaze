@@ -10,7 +10,7 @@ CABINET_CODE = "4537"                 # string to avoid strange behaviour
 CODE_POS = (615, 205)                 # where typed digits are drawn
 KEYPAD_ORIGIN, KEY, STEP = (500, 300), 70, 80
 HOMEWORK_SPOT = pygame.Rect(600, 400, 56, 56)
-ICON = "assets/gr.room.teacher.jpg"   # inventory icon for stone and homework
+ICON = "assets/stones/white.png"   # inventory icon for stone and homework
 CODE_FONT = pygame.font.Font(None, 56)
 
 # saved events (player.completion["GhostRoom"]["all"])
@@ -165,6 +165,7 @@ def take_stone():
     _player.add_item("Stones", "White", ICON)
     save(STONE, 10)
     say(10)
+
 
 
 def open_keypad():
