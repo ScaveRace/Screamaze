@@ -1,5 +1,6 @@
 import pygame
 from functions import uiFunc as uF
+import data.maskPositions as mP
 
 pygame.font.init()  #### fonts need to be initialized before using them
 
@@ -211,8 +212,18 @@ class Mask:
         self.action = action
 
         self.image = pygame.image.load(image).convert_alpha()
-        self.image = pygame.transform.scale(self.image, (size[0]-startX,size[1]))
+        w, h = size[0]-startX, size[1]
         self.imageX, self.imageY = pos
+        if image in mP.CUT:
+            # this picture was cut down to its shape: put it back where it sat in the full picture
+            x, y, fullW, fullH = mP.CUT[image]
+            cutW, cutH = self.image.get_size()
+            left, top = round(x * w / fullW), round(y * h / fullH)
+            right, bottom = round((x + cutW) * w / fullW), round((y + cutH) * h / fullH)
+            w, h = max(1, right - left), max(1, bottom - top)
+            self.imageX += left
+            self.imageY += top
+        self.image = pygame.transform.scale(self.image, (w, h))
         self.imageX+=startX
         self.imageMask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(topleft=pos)
