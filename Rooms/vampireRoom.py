@@ -4,8 +4,6 @@ import roomFunc.VampFunc as vF
 pygame.init()
 pygame.mixer.init()
 
-TITLE_COLOUR = (200, 30, 40)
-
 
 class VampireRoom:
 
@@ -54,10 +52,6 @@ class VampireRoom:
     ########## drawing ##########
     def draw(self):
         self.screen.blit(vF.currentImage(), (300, 0))
-
-        if vF.view == vF.View.ROOM:
-            title = self.titleFont.render("The Vampire's Crypt", True, TITLE_COLOUR)
-            self.screen.blit(title, (60, 40))
 
         for m in vF.activeMasks():
             m.draw(self.screen)
