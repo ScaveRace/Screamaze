@@ -1,12 +1,18 @@
 # Rooms/ghostRoom.py
+
 import roomFunc.ghoRoomFunc as gF
+from Rooms.baseRoom import BaseRoom, register
 
 
-class GhostRoom:
+@register
+class GhostRoom(BaseRoom):
+    key = "ghostR"
+
+
     def __init__(self, screen, player, fui):
-        self.screen, self.player, self.fui = screen, player, fui
-        self.next_room = None
-        self.build()
+        super().__init__(screen, player, fui)
+        self.images, self.masks,  self.buttons = [], [], []
+        self.state = None
 
     def build(self):
         self.images, self.masks, self.buttons = gF.getElements(self.player, self.fui, self.screen)

@@ -1,16 +1,15 @@
 import pygame
 import roomFunc.equinRoomFunc as eF
+from Rooms.baseRoom import BaseRoom, register
 
 pygame.init()
 pygame.mixer.init()
 
-
-class EquinoxRoom:
+@register
+class EquinoxRoom(BaseRoom):
+    key = "equinR"
     def __init__(self, screen, player, fui):
-        self.fui = fui
-        self.screen = screen
-        self.player = player
-        self.next_room = None
+        super().__init__(screen, player, fui)
 
         self.view = "room"
         self.failing = False

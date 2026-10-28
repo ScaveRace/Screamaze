@@ -1,13 +1,15 @@
 import roomFunc.startupFunc as sF
 import UI.pauseMenu as pause
 import UI.leaderboard as leaderboard
+from Rooms.baseRoom import BaseRoom, register
 
+@register
+class StartupMenu(BaseRoom):
+    key = "startup"
+    show_ui = False
 
-class StartupMenu:
-    def __init__(self, screen,player):
-        self.screen = screen
-        self.player = player
-        self.next_room = None
+    def __init__(self, screen, player, fui=None):
+        super().__init__(screen, player, fui)
         self.image = []
         self.buttons = []
         self.pause = pause.PauseMenu(screen, player, False)
@@ -18,9 +20,6 @@ class StartupMenu:
         tmp = sF.getElements(self.player,self.screen,self.goTo,self.pause.toggle,self.leaderboard.toggle)
         self.image = tmp[0]
         self.buttons = tmp[1]
-
-    def goTo(self, room):
-        self.next_room = room
 
     def handle_event(self, event):
         if self.pause.paused:

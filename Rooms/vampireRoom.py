@@ -1,18 +1,16 @@
 import pygame
 import roomFunc.VampFunc as vF
+from Rooms.baseRoom import BaseRoom, register
 
 pygame.init()
 pygame.mixer.init()
 
-
-class VampireRoom:
+@register
+class VampireRoom(BaseRoom):
+    key = "vampR"
 
     def __init__(self, screen, player, fui):
-        self.screen = screen
-        self.player = player
-        self.fui = fui
-        self.next_room = None
-
+        super().__init__(screen, player, fui)
         self.titleFont = pygame.font.Font(None, 40)
 
         self.images = {}

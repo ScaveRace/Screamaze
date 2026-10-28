@@ -1,15 +1,15 @@
 import pygame
 import roomFunc.projRoomFunc as pF
+from Rooms.baseRoom import BaseRoom, register
 
 pygame.init()
 
+@register
+class ProjectRoom(BaseRoom):
+    key ="projRoom"
 
-class ProjectRoom:
     def __init__(self, screen, player, fui):
-        self.fui = fui
-        self.screen = screen
-        self.player = player
-        self.next_room = None
+        super().__init__(screen, player, fui)
 
         self.view = "room"
         self.holding = None             # the badge in your hand
