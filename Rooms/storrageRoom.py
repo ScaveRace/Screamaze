@@ -35,6 +35,7 @@ class StorrageRoom:
     ########## handle user input depending on current view ##########
     def handle_event(self, event):
         self.dispatch(event)
+
         self.next_room = sF.next_room
         sF.next_room = None
 

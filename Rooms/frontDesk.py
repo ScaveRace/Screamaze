@@ -105,7 +105,9 @@ class FrontDesk:
             return
         for b in self.buttons:
             b.handle_event(event)
-        self.textField.handle_event(event)
+        full = len(self.textField.text) > 6
+        if not (full and event.type == pygame.TEXTINPUT):
+            self.textField.handle_event(event)
 
         # in draw:
 
