@@ -116,7 +116,7 @@ def start(p, f, screen):
     cy = size[1] // 2 + CIRCLE_OFFSET[1]
 
     masks = {
-        "circle": u.Mask(CIRCLE_ICON, (circle[0] + u.startX, circle[1]), (cx - circle[0] // 2, cy - circle[1] // 2), collectCircle),
+        "circle": u.Mask(MASK_DIR + "circle_in_drawer.png", size, (0,0), collectCircle),
         "vampire": u.Mask(MASK_DIR + "vampire.png", size, (0, 0), talk),
         "cabinet": u.Mask(MASK_DIR + "cabinet.png", size, (0, 0), openCabinet),
         "fusebox": u.Mask(MASK_DIR + "fusebox.png", size, (0, 0), openFuseboxCloseup),
@@ -236,15 +236,15 @@ def openFuseboxDoor():
 
 
 ########## vampire ##########
+intro_line = 0  # module level, starts at 0
+
 def talk():
     global intro_line
-    if intro_line < 3:
-        say("Vampire > " + T(1))
+    if intro_line < 4:
         intro_line += 1
-    elif not task_done:
-        say("Vampire > " + T(4))
+        say("Vampire > " + T(intro_line))   # shows 1, 2, 3, 4 in order
     else:
-        say("Vampire > " + T(5))
+        say("Vampire > " + T(5))            # the "stop annoying me" line
 
 
 ########## circle (found in the drawer, stays in the inventory) ##########
