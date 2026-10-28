@@ -5,7 +5,7 @@ DOOR_SPAWNS = {
     "projectRoom2": (681, 259),
     "frontDesk": (808, 215),
     "classroom2015": (909, 215),
-    "classroom2021": (1076, 215),
+    "classroom2021": (1076, 215), 
     "stairExit": (1143, 215),
     "teachersRoom2": (910, 215),
     "teachersRoom3": (977, 215),
