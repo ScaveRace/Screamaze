@@ -37,19 +37,18 @@
   },
   "Corridor": {},
   "VampireRoom": {
-    "1": "Ah... a warm little visitor, wandering into my crypt.",
+    "1": "Ah... a warm little visitor, wandering into my biology class.",
     "2": "Those shutters have kept the sun out for centuries.",
     "3": "You'll never get them open without power to that old panel.",
     "4": "That panel is your only way to open those shutters.",
-    "5": "...",
-    "6": "Found a spare fuse inside the cabinet.",
+    "5": "if you don't stop annoying me, I will kill you",
+    "6": "Found a circle figure in the cabinet.",
     "7": "I need to find a fuse first.",
     "8": "Slotted the last fuse into place. All three are lit now.",
     "9": "All three fuses need to be in before I hit this.",
     "10": "*click* — the panel hums back to life.",
     "11": "Something outside screamed. I should go look.",
-    "12": "A red stone... still cold.",
-    "13": "blabla"
+    "12": "A red stone... still cold."
   },
   "GhostRoom": {
     "1": "Ohh a student has finally come to class.",

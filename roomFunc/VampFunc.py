@@ -23,11 +23,11 @@ MASK_DIR = ASSET_DIR + "masks/"
 # the circle in the drawer: a mask, the picture is also its icon in the inventory
 CIRCLE_ICON = "assets/shapes/circle.png"
 CIRCLE_WIDTH = 90
-CIRCLE_OFFSET = (0, 20)     # moves the circle relative to the centre of the room picture, adjust to fit the drawer
+CIRCLE_OFFSET = (0, 20)
 
-STONE_IMAGE = "assets/stones/red.png"    # adjust to your red stone icon
+STONE_IMAGE = "assets/stones/red.png"
 
-# item names in the inventory (must match what the other rooms use)
+# item names in the inventory
 FUSE_ITEM = "Fuse"
 CIRCLE_ITEM = "Circle"
 
@@ -50,7 +50,6 @@ player = None
 fui = None
 view = View.ROOM
 
-# progress: created once and kept when you leave and come back
 initialised = False
 intro_line = 0
 task_done = False
@@ -95,6 +94,7 @@ def start(p, f, screen):
         "fusebox_open": (20, 20, 20),
         "fusebox_three": (20, 20, 20),
     }
+
     files = {
         "bg_closed": "Room2015_1_win_clo.png",
         "bg_open": "Room2015_1_win_op.png",
@@ -104,19 +104,20 @@ def start(p, f, screen):
         "fusebox_open": "fuse_box2.png",
         "fusebox_three": "fuse_box2_three_fuses.png",
     }
+
     images = {
         name: u.load_image(ASSET_DIR + f, size, fallback=fallbacks[name])
         for name, f in files.items()
     }
 
-    # the circle is a small picture, not as big as the room: its position is relative to the room picture (the chat takes the left 300px)
+    # the circle is a small picture, not as big as the room
     w, h = pygame.image.load(CIRCLE_ICON).get_size()
     circle = (CIRCLE_WIDTH, round(CIRCLE_WIDTH * h / w))
     cx = (size[0] - u.startX) // 2 + CIRCLE_OFFSET[0]
     cy = size[1] // 2 + CIRCLE_OFFSET[1]
 
     masks = {
-        "circle": u.Mask(MASK_DIR + "circle_in_drawer.png", size, (0,0), collectCircle),
+        "circle": u.Mask(MASK_DIR + "circle_in_drawer.png", size, (0, 0), collectCircle),
         "vampire": u.Mask(MASK_DIR + "vampire.png", size, (0, 0), talk),
         "cabinet": u.Mask(MASK_DIR + "cabinet.png", size, (0, 0), openCabinet),
         "fusebox": u.Mask(MASK_DIR + "fusebox.png", size, (0, 0), openFuseboxCloseup),
@@ -130,6 +131,22 @@ def start(p, f, screen):
     view = View.ROOM
     next_room = None
 
+
+########## completion tracking ##########
+
+def progress():
+    return player.getCompletion("VampRoom")
+
+
+def has(event):
+    return event in progress()["all"]
+
+
+def add(event):
+    player.addCompletion("VampRoom", event, "")
+
+
+########## buttons ##########
 
 def current(screen=None):
     global buttons
@@ -145,16 +162,18 @@ def current(screen=None):
     }
 
 
-########## inventory helpers (the only place that touches the player's inventory) ##########
+########## inventory helpers ##########
+
 def hasItem(name):
-    return player.has_item("Items", name)      # adjust to your player class
+    return player.has_item("Items", name)
 
 
 def removeItem(name):
-    player.remove_item("Items", name)          # adjust to your player class
+    player.remove_item("Items", name)
 
 
 ########## helpers ##########
+
 def say(text):
     fui.chat.say(text)
 
@@ -187,18 +206,24 @@ def activeMasks():
         if task_done and not stone_collected:
             active.append(masks["stone"])
         return active
+
     if view == View.CABINET:
         return [masks["drawer"]]
+
     if view == View.FUSEBOX_CLOSED:
         return [masks["fusebox_closed"]]
+
     if view == View.FUSEBOX_OPEN:
         return [masks["reset"]]
+
     if view == View.DRAWER:
-        return [] if circle_found else [masks["circle"]]       # the circle lies in the drawer until you take it
+        return [] if circle_found else [masks["circle"]]
+
     return []
 
 
 ########## view transitions ##########
+
 def setView(newView, message=None):
     global view
     view = newView
@@ -236,59 +261,95 @@ def openFuseboxDoor():
 
 
 ########## vampire ##########
-intro_line = 0  # module level, starts at 0
 
 def talk():
     global intro_line
+
     if intro_line < 4:
         intro_line += 1
-        say("Vampire > " + T(intro_line))   # shows 1, 2, 3, 4 in order
+        say("Vampire > " + T(intro_line))
+
+        # Save the first three dialogue milestones
+        if intro_line <= 3:
+            event = f"vamp.talk_{intro_line}"
+            if not has(event):
+                add(event)
+
     else:
-        say("Vampire > " + T(5))            # the "stop annoying me" line
+        say("Vampire > " + T(5))
 
 
-########## circle (found in the drawer, stays in the inventory) ##########
+########## circle ##########
+
 def collectCircle():
     global circle_found
-    if circle_found or hasItem(CIRCLE_ITEM):   # never add a second circle
+
+    if circle_found or hasItem(CIRCLE_ITEM):
         circle_found = True
         return
-    circle_found = True
+
     player.add_item("Items", CIRCLE_ITEM, CIRCLE_ICON)
+    circle_found = True
+
+    if not has("vamp.circle_found"):
+        add("vamp.circle_found")
+
     say("You > " + T(6))
 
 
 ########## fuse box ##########
+
 def insertFuse():
     global fuse_inserted
+
     if fuse_inserted:
         return
-    # the fuse is collected in another room, it must be in the inventory first
+
+    # the fuse is collected in another room
     if not hasItem(FUSE_ITEM):
         say("You > " + T(7))
         return
+
     removeItem(FUSE_ITEM)
     fuse_inserted = True
+
+    if not has("vamp.fuse_inserted"):
+        add("vamp.fuse_inserted")
+
     say("You > " + T(8))
 
 
 def pressReset():
     global task_done
+
     if task_done:
         return
+
     if not fuse_inserted:
         say("You > " + T(9))
         return
+
     task_done = True
+
+    if not has("vamp.task_done"):
+        add("vamp.task_done")
+
     say("You > " + T(10))
     say("You > " + T(11))
 
 
 ########## stone ##########
+
 def collectStone():
     global stone_collected
+
     if not task_done or stone_collected:
         return
-    stone_collected = True
+
     player.add_item("Stones", "Red", STONE_IMAGE)
+    stone_collected = True
+
+    if not has("vamp.stone"):
+        add("vamp.stone")
+
     say("You > " + T(12))
