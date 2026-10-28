@@ -8,7 +8,7 @@ DB_PATH = "data/leaderboard.db"
 # the secondary rooms are only extra story, so they are saved but don't count
 STEPS = {
     "Corridor": ["corr.going"],
-    "VampRoom": ["vamp.talk_1", "vamp.talk_2", "vamp.talk_3", "vamp.fuse_found", "vamp.fuse_inserted",
+    "VampRoom": ["vamp.talk_1", "vamp.talk_2", "vamp.talk_3", "vamp.circle_found", "vamp.fuse_inserted",
                  "vamp.task_done", "vamp.stone"],
     "StorrageRoom": ["sto.fuse", "sto.quiz", "sto.stone"],
     "TeacherRoom": ["tr.described", "tr.chest_described", "tr.placed.White", "tr.placed.Red", "tr.placed.Green",

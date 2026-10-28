@@ -116,7 +116,7 @@ def start(p, f, screen):
     cy = size[1] // 2 + CIRCLE_OFFSET[1]
 
     masks = {
-        "circle": u.Mask(MASK_DIR + "circle_in_drawer", size, (0,0), collectCircle),
+        "circle": u.Mask(MASK_DIR + "circle_in_drawer.png", size, (0,0), collectCircle),
         "vampire": u.Mask(MASK_DIR + "vampire.png", size, (0, 0), talk),
         "cabinet": u.Mask(MASK_DIR + "cabinet.png", size, (0, 0), openCabinet),
         "fusebox": u.Mask(MASK_DIR + "fusebox.png", size, (0, 0), openFuseboxCloseup),
