@@ -69,16 +69,21 @@ the window, keeping the aspect ratio.
 ## Project structure
 
 ```
-main.py                    the window, the game loop, the timer and the ROOMS dictionary
+main.py                    the window, the game loop and the timer; finds rooms in the registry
 player.py                  Player: name, gender, time, location, inventory
 UI/
   uiElements.py            Button, Chatbox, TextField, Mask, Slider, load_image — shared by everyone
   frontUI.py               the overlay drawn on top of every room: side chat, timer, pause, inventory
   pauseMenu.py             pause panel with volume sliders and save
 menu/
-  startupMenu.py           new game / load game / settings
+  startupMenu.py           new game / load game / settings (a room: key "startup")
+  endingScreen.py          the end of the game and the leaderboard (a room: key "ending")
   inventory.py             inventory panel
 Rooms/
+  baseRoom.py              BaseRoom, the @register decorator and the REGISTRY of all rooms
+  __init__.py              load_all(): imports every room file so each one registers itself
+  newRooms.py              NewRoom: the base of the secondary rooms, which only hold data
+  secondaryRooms/          the 12 small rooms (lab, classrooms, teacher rooms ...), data only
   frontDesk.py             character creation (name and gender)
   corridor.py              the hub: every door is a clickable mask
   ghostRoom.py             teacher's homework and a keypad cabinet      -> white stone
@@ -86,7 +91,6 @@ Rooms/
   storrageRoom.py          quiz at the desk                             -> green stone
   equinoxRoom.py           three riddles from a hungry student          -> yellow stone
   projectRoom.py           hidden shapes and a puzzle box
-  endingRoom.py            placeholder, not written yet
 functions/
   uiFunc.py                text wrapping and text-input helpers
   sound.py                 play_music, play_sound
@@ -102,7 +106,7 @@ data/
 assets/                    images, masks and music
 ```
 
-Room keys used in `main.py` and in `self.next_room`:
+Room keys used in `goTo("...")`, in saves and in the language files (never rename one):
 
 | Key | Room |
 |---|---|
@@ -114,6 +118,9 @@ Room keys used in `main.py` and in `self.next_room`:
 | `storrR` | `StorrageRoom` |
 | `equinR` | `EquinoxRoom` |
 | `projRoom` | `ProjectRoom` |
+| `teacherR` | `TeacherRoom` |
+| `ending` | `EndingScreen` |
+| `lab2001R`, `frontDeskR`, `class2021R`, `class2031R`, `class2035R`, `stairR`, `teach1R` - `teach4R`, `projRoom1R`, `projRoom2R` | the secondary rooms in `Rooms/secondaryRooms/` |
 
 **You own your own room file and your own assets.** Nobody else edits them, and you don't edit
 anyone else's. That is what keeps merge conflicts away.
@@ -122,43 +129,45 @@ anyone else's. That is what keeps merge conflicts away.
 
 ## Adding a room
 
-1. Create `Rooms/<yourRoom>.py` with one class in it (skeleton below).
+No change to `main.py` is needed: a room registers itself and `main.py` finds it by its key.
+
+1. Create `Rooms/<yourRoom>.py` with one class that extends `BaseRoom`, has `@register` above it
+   and a `key` (skeleton below).
 2. Put your images in `assets/` (a subfolder per room, like `assets/vampire/`) and load them in
    `__init__`.
-3. Register the room in the `ROOMS` dictionary in `main.py` — this is the one shared line you
-   have to add.
-4. Point a corridor door at it: in `Rooms/corridor.py`, give the door's `Mask` an action that sets
-   `self.next_room` to your key.
+3. Point a door at it: a button or mask action that calls `self.goTo("yourKey")`, for example in
+   `Rooms/corridor.py`.
 
 ```python
-import pygame
 import UI.uiElements as u
+from Rooms.baseRoom import BaseRoom, register
 
 
-class YourRoom:
+@register
+class YourRoom(BaseRoom):
+    key = "yourRoom"              # the name used in goTo("yourRoom"), saves and language files
+    show_ui = True                # False = no side chat, pause button or inventory
+
     def __init__(self, screen, player, fui):
-        self.screen = screen          # keep the screen for draw()
-        self.player = player
-        self.fui = fui                # the overlay: side chat, pause, inventory
-        self.next_room = None         # must exist, must start as None
+        super().__init__(screen, player, fui)   # sets self.screen, self.player, self.fui, self.next_room
         self.image = u.load_image("assets/yourRoom.png", screen.get_size())
         self.buttons = [
-            u.Button(930, 350, 140, 50, "Leave", self.leave),
+            u.Button(930, 350, 140, 50, "Leave", lambda: self.goTo("corridor")),
         ]
         self.masks = [
-            u.Mask("assets/yourRoom/door.png", screen.get_size(), (0, 0), self.leave, "Door"),
+            u.Mask("assets/yourRoom/door.png", screen.get_size(), (0, 0), lambda: self.goTo("corridor"), "Door"),
         ]
 
-    def leave(self):
-        self.next_room = "corridor"
+    def on_enter(self):               # optional: runs every time the player walks in
+        pass
 
-    def handle_event(self, event):    # called by main.py for every event
+    def handle_event(self, event):    # optional: called by main.py for every event
         for b in self.buttons:
             b.handle_event(event)
         for m in self.masks:
             m.handle_event(event)
 
-    def draw(self):                   # called by main.py every frame
+    def draw(self):                   # optional: called by main.py every frame
         self.screen.blit(self.image, (300, 0))   # to the right of the side chat
         for m in self.masks:
             m.draw(self.screen)
@@ -166,23 +175,39 @@ class YourRoom:
             b.draw2(self.screen)
 ```
 
+A small room that is only pictures and clickable elements extends `NewRoom` instead and holds
+only data, like the files in `Rooms/secondaryRooms/`:
+
+```python
+from Rooms.baseRoom import register
+from Rooms.newRooms import NewRoom
+
+
+@register
+class Lab2001(NewRoom):
+    key = "lab2001R"
+    FOLDER = "assets/lab_2001/"
+    ELEMENTS = [("window", "Window"), ("door", "Leave room")]
+```
+
 ### The room contract
 
 Every room **must**:
 
-- be a class in its own file in `Rooms/`
-- take `def __init__(self, screen, player, fui)` — `main.py` creates every room except the start
-  menu and the front desk with these three arguments
-- set `self.next_room = None` in `__init__`
-- have `handle_event(self, event)` and `draw(self)` — `main.py` calls both
+- be a class that extends `BaseRoom` (or `NewRoom`), with `@register` and a unique `key`, in its
+  own file in `Rooms/` or `Rooms/secondaryRooms/`
+- take `def __init__(self, screen, player, fui)` and call `super().__init__(screen, player, fui)`;
+  `main.py` creates every room with these three arguments
+- override `handle_event(self, event)` and `draw(self)` if it reacts to the player or draws
+  anything (`BaseRoom` has empty versions of both, and of `on_enter`)
 - load images, fonts and sounds in `__init__`, never inside `draw()`
-- leave the room by setting `self.next_room = "<the other room's key>"`
+- leave the room with `self.goTo("<the other room's key>")`
 
 Every room **must not**:
 
 - contain a `while` loop, or call `pygame.display.set_mode`, `clock.tick`, `pygame.display.flip`
   or `pygame.quit` — `main.py` owns the loop and the window
-- import another room. Use `self.next_room` instead.
+- import another room. Use `self.goTo` instead.
 - draw the timer, pause button or inventory itself — `frontUI` draws those on top of every room
 - edit files outside its own room in the same pull request
 
@@ -242,12 +267,10 @@ does not, so `assets/FrontDesk_1.png` works on one laptop and crashes on another
 
 ## Known issues
 
-- `GhostRoom`, `StorrageRoom` and `ProjectRoom` still take `(screen, player)` without `fui`, while
-  `main.py` passes three arguments. They need the third parameter added.
 - Most corridor doors without a room of their own currently lead to the vampire room.
 - The **Settings** button on the start screen does nothing yet; the volume sliders are in the
   pause menu.
-- There is no `.gitignore` or `requirements.txt` yet, and `__pycache__` files are tracked in Git.
+- There is no `requirements.txt` yet.
 
 ---
 

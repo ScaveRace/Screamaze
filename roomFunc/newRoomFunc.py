@@ -19,11 +19,11 @@ def isChanged(room, name):
 
 # a view is "room", the id of the element you are looking at, or that id with ".changed" behind it
 def getElements(room):
-    folder = room.data.FOLDER
+    folder = room.FOLDER
     size = room.screen.get_size()
     images = {"room": u.load_image(folder + "room.png", size)}
     masks = {"room": []}
-    for name, label in room.data.ELEMENTS:
+    for name, label in room.ELEMENTS:
         # mask images: full picture size, transparent except for the clickable area
         if name == "door":
             masks["room"].append(u.Mask(folder + "masks/door.png", size, (0, 0), door(room, "corridor"), label))
@@ -34,13 +34,13 @@ def getElements(room):
         masks[name] = [u.Mask(folder + name + "/mask.png", size, (0, 0), inspect(room, name))]
         masks[name + ".changed"] = []
         # an item that falls out of the element lies in its changed view until the player takes it, see FOUND in the room's file
-        found = getattr(room.data, "FOUND", {}).get(name)
+        found = room.FOUND.get(name)
         if found and not isFound(room, name):
             masks[name + ".changed"] = [spriteMask(found[1], found[3], found[2], pickUp(room, name))]
     buttons = [u.Button(1320, 650, 140, 50, "Back", lambda: back(room))]
     # the buttons a room has besides its elements, they are in the room view only
     extra = [u.Button(x, y, w, h, label, lambda action=ACTIONS[action]: action(room))
-             for label, (x, y, w, h), action in getattr(room.data, "BUTTONS", [])]
+             for label, (x, y, w, h), action in room.BUTTONS]
     return images, masks, buttons, extra
 
 
@@ -81,7 +81,7 @@ def inspect(room, name):
 # makes the action for the item that fell out of an element: pressing it puts the item in the inventory
 def pickUp(room, name):
     def action():
-        item, path = room.data.FOUND[name][:2]
+        item, path = room.FOUND[name][:2]
         room.player.add_item("Items", item, path)
         room.player.addCompletion("SecondaryRooms", room.key + "." + name + ".found", "")   # after add_item, so a failed pickup doesn't count as taken
         room.elements[name + ".changed"].clear()                # it is not on the floor anymore
