@@ -84,6 +84,9 @@ class Player:
     def add_time(self, seconds):
         self.time += int(seconds)
 
+    #resets the whole game after every completion
+    def reset(self):
+        self.__init__()
 
     def draw(self,screen):
         if self.location == "corridor":
