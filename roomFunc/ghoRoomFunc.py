@@ -1,5 +1,5 @@
 # roomFunc/ghoRoomFunc.py
-import os
+
 import pygame
 import UI.uiElements as u
 
@@ -7,15 +7,15 @@ pygame.font.init()
 
 ROOM = "GhostRoom"
 A = "assets/ghostRoom/"
-CABINET_CODE = "4537"                 # string to avoid strange behaviour
-CODE_POS = (615, 205)                 # where typed digits are drawn
+CABINET_CODE = "4537"                               # string to avoid strange behaviour
+CODE_POS = (615, 205)                               # where typed digits are drawn
 KEYPAD_ORIGIN, KEY, STEP = (500, 300), 70, 80
-ICON = "assets/stones/white.png"      # inventory icon for the stone
-HOMEWORK_CUTOUT = A + "gr_homework_cutout.png"    # the cutout is cropped to make the icon
-HOMEWORK_ICON = "assets/homework_icon.png"        # auto-made inventory icon
+STONE_ICON = "assets/stones/white.png"              # inventory icon for the stone
+HOMEWORK_CUTOUT = A + "gr_homework_cutout.png"      # the cutout is cropped to make the icon
+HOMEWORK_ICON = A + "gr.homework_icon.png"           # homework inventory icon
 CODE_FONT = pygame.font.Font(None, 56)
-DESCRIBE_DELAY_MS = 400               # wait after entering so the chatbox clear is over
-DEBUG = True                          # set to False when everything works
+DESCRIBE_DELAY_MS = 400                             # wait after entering so the chatbox clear is over
+                   # set to False when everything works
 
 # saved events (player.completion["GhostRoom"]["all"])
 DESCRIBED, UNLOCKED = "gr.described", "gr.cabinet_unlocked"
@@ -29,7 +29,12 @@ _pending = True                       # True = the room still has to be describe
 _enter_at = None                      # time of the first frame after entering
 
 
-# ---------------------------------------------------------------- helpers
+images = {}                           # all pictures, made once in start()
+masks = {}                            # all masks, made once in start()
+buttons = {}                          # all buttons, made once in start()
+
+
+
 def done(event):
     return event in _player.getCompletion(ROOM)["all"]
 
@@ -71,93 +76,103 @@ def state():
             len(_player.getCompletion(ROOM)["all"]))
 
 
-def homework_icon():
-    """Makes (once) a square inventory icon of the homework and returns its path."""
-    if os.path.exists(HOMEWORK_ICON):
-        return HOMEWORK_ICON
-    size = 64
-    icon = pygame.Surface((size, size), pygame.SRCALPHA)
-    try:
-        cutout = pygame.image.load(HOMEWORK_CUTOUT)
-        box = cutout.get_bounding_rect()                  # only the visible homework shape
-        crop = cutout.subsurface(box).copy()
-        scale = min(size / crop.get_width(), size / crop.get_height())
-        new = (max(1, int(crop.get_width() * scale)), max(1, int(crop.get_height() * scale)))
-        crop = pygame.transform.smoothscale(crop, new)
-        icon.blit(crop, crop.get_rect(center=(size // 2, size // 2)))
-    except Exception:                                     # missing or unreadable cutout
-        icon.fill((225, 215, 185))                        # plain paper icon
-        pygame.draw.rect(icon, (120, 100, 70), icon.get_rect(), 3)
-        label = pygame.font.Font(None, 30).render("HW", True, (60, 50, 30))
-        icon.blit(label, label.get_rect(center=(size // 2, size // 2)))
-    os.makedirs(os.path.dirname(HOMEWORK_ICON), exist_ok=True)
-    pygame.image.save(icon, HOMEWORK_ICON)
-    return HOMEWORK_ICON
 
 
 # ---------------------------------------------------------------- building
-def background():
+def start(player, fui, screen):
+    """Makes every image, mask and button once. Nothing is rebuilt after this."""
+    size = screen.get_size()
+
+    images["room"] = u.load_image(A + "gr.room.teacher.jpg", size)
+    images["room_stone"] = u.load_image(A + "gr.ghostroom_with_stone.png", size)  # teacher became a stone, stone not taken yet
+    images["room_empty"] = u.load_image(A + "gr.ghostRoom.no.teacher.png", size)
+    images["teacher"] = u.load_image(A + "gr.teacher.png", size)
+    images["teacher_empty"] = u.load_image(A + "gr.bureau.no.teacher.png", size)
+    images["cabinet_locked"] = u.load_image(A + "gr.cabinet.homework.png", size)
+    images["cabinet_open"] = u.load_image(A + "gr.cabinet.open.keypad.png", size)
+    images["whiteboard"] = u.load_image(A + "gr.whiteboard.code.png", size)
+
+    # u.Mask(file, size, position, callback, label)
+    masks["teacher"] = u.Mask(A + "gr_room_teacher_ghost.png", size, (0, 0), show_teacher, "Teacher")
+    masks["whiteboard"] = u.Mask(A + "gr_room_whiteboard.png", size, (0, 0), show_whiteboard, "Whiteboard")
+    masks["cabinet"] = u.Mask(A + "gr_room_cabinet.png", size, (0, 0), show_cabinet, "Cabinet")
+    # the stone lying in the room after the teacher turned into it (no label, too small)
+    masks["room_stone"] = u.Mask(A + "gr.wh_stone_cutout.png", size, (0, 0), take_stone, "")
+    masks["ghost"] = u.Mask(A + "gr_teacher_ghost.png", size, (0, 0), talk, "Talk to the ghost")
+    # empty label: the stone is too small for text
+    masks["stone"] = u.Mask(A + "gr_white_stone_2.png", size, (0, 0), take_stone, "")
+    masks["homework"] = u.Mask(A + "gr_homework_cutout.png", size, (0, 0), take_homework, "Homework")
+    masks["keypad"] = u.Mask(A + "gr_cabinet_homework_keypad.png", size, (0, 0), open_keypad, "Keypad")
+
+    keys = []
+    for i, label in enumerate("123456789C0E"):
+        action = clear_code if label == "C" else check_code if label =="E"\
+            else (lambda d=label: press_digit(d))
+        keys.append(u.Button(KEYPAD_ORIGIN[0]  +  i % 3 * STEP, KEYPAD_ORIGIN[1]  + i // 3 * STEP, KEY , KEY, label, action))
+    keys.append(u.Button(1000, 520, 140, 50, "Back", close_keypad))
+
+    buttons["room"] = [u.Button(560, 650, 140, 50, "Corridor", leave)]
+    buttons["teacher"] = [u.Button(830, 660, 140, 50, "Give", give_homework),
+                          u.Button(1000, 520, 140, 50, "Return", back_to_room)]
+    buttons["back"] = [u.Button(1000, 520, 140, 50, "Return", back_to_room)]
+    buttons["keypad"] = keys
+
+
+def currentImage():
+    """The picture for the current view."""
     view, hw = _ui["view"], done(HW_DONE)
     if view == "room":
-        return A + ("gr.ghostRoom.no.teacher.png" if hw else "gr.room.teacher.jpg")
+        if not hw:
+            return images["room"]
+        # teacher became aa stone: the stone lies there until it is taken
+        return images["room_empty"] if done(STONE) else images["room_stone"]
     if view == "teacher":
-        return A + ("gr.bureau.no.teacher.png" if hw else "gr.teacher.png")
+        return images["teacher_empty"] if hw else images["teacher"]
     if view in ("cabinet", "keypad"):
-        return A + ("gr.cabinet.open.keypad.png" if done(UNLOCKED) else "gr.cabinet.homework.png")
-    return A + "gr.whiteboard.4537.png"
+        return images["cabinet_open"] if done(UNLOCKED) else images["cabinet_locked"]
+    return images["whiteboard"]
 
 
-def masks():
-    """(mask file, callback, label)"""
+def activeMasks():
+    """The masks that can be clicked in the current view."""
     view = _ui["view"]
-    if DEBUG and view == "cabinet":
-        print("[cabinet] unlocked:", done(UNLOCKED), "| homework taken:", done(HW_TAKEN),
-              "| cutout exists:", os.path.exists(A + "gr_homework_cutout.png"))
     if view == "room":
-        found = [("gr_room_whiteboard.png", show_whiteboard, "Whiteboard"),
-                 ("gr_room_cabinet.png", show_cabinet, "Cabinet")]
+        found = [masks["whiteboard"], masks["cabinet"]]
         if not done(HW_DONE):            # the teacher is gone after the homework
-            found.insert(0, ("gr_room_teacher_ghost.png", show_teacher, "Teacher"))
+            found.insert(0, masks["teacher"])
+        if done(HW_DONE) and not done(STONE):
+            found.append(masks["room_stone"])
         return found
     if view == "teacher" and not done(HW_DONE):
-        return [("gr_teacher_ghost.png", talk, "Talk to the ghost")]
+        return [masks["ghost"]]
     if stone_visible():
-        # empty label: the stone is too small for text
-        return [("gr_white_stone_2.png", take_stone, "")]
+        return [masks["stone"]]
     if homework_visible():
         # disappears by itself once the homework is taken
-        return [("gr_homework_cutout.png", take_homework, "Homework")]
+        return [masks["homework"]]
     if view == "cabinet" and not done(UNLOCKED):
-        return [("gr_cabinet_homework_keypad.png", open_keypad, "Keypad")]
+        return [masks["keypad"]]
     return []
 
 
-def buttons():
-    """(x, y, w, h, label, callback)"""
+def currentButtons():
+    """The buttons shown in the current view."""
     view = _ui["view"]
-    back = (1000, 520, 140, 50, "Return", back_to_room)
     if view == "room":
-        return [(560, 650, 140, 50, "Return", leave)]
+        return buttons["room"]
     if view == "teacher" and not done(HW_DONE):
-        return [(830, 660, 140, 50, "Give", give_homework), back]
+        return buttons["teacher"]
     if view == "keypad":
-        keys = []
-        for i, label in enumerate("123456789C0E"):
-            action = clear_code if label == "C" else check_code if label == "E" \
-                else (lambda d=label: press_digit(d))
-            keys.append((KEYPAD_ORIGIN[0] + i % 3 * STEP, KEYPAD_ORIGIN[1] + i // 3 * STEP,
-                         KEY, KEY, label, action))
-        return keys + [(1000, 520, 140, 50, "Back", close_keypad)]
-    return [back]
+        return buttons["keypad"]
+    return buttons["back"]
 
 
 def getElements(player, fui, screen):
     global _player, _fui
     _player, _fui = player, fui
-    size = screen.get_size()
-    return ([u.load_image(background(), size)],
-            [u.Mask(A + f, size, (0, 0), cb, label) for f, cb, label in masks()],
-            [u.Button(*b) for b in buttons()])
+    if not images:  # only the very first time
+        start(player, fui, screen)
+    return [currentImage()], activeMasks(), currentButtons()
 
 
 # ---------------------------------------------------------------- actions
@@ -214,7 +229,7 @@ def take_stone():
     if done(STONE):
         say(9)
         return
-    _player.add_item("Stones", "White", ICON)
+    _player.add_item("Stones", "White", STONE_ICON)
     save(STONE, 10)
     say(10)
 
@@ -255,7 +270,7 @@ def take_homework():
     if done(HW_TAKEN):
         say(32)
         return
-    _player.add_item("Items", "Homework", homework_icon())
+    _player.add_item("Items", "Homework", HOMEWORK_ICON)
     save(HW_TAKEN, 16)                   # saving rebuilds the room, so the mask disappears
     say(16)
 
