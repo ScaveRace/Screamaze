@@ -1,7 +1,6 @@
 # every mask picture that was cut down to its own shape, the empty see-through part around it is gone
 # path -> (x, y, width, height): where the shape sat in the full picture, and how big that full picture was
 # u.Mask reads this and puts the cut picture back on the same spot, so the rooms did not have to change
-
 CUT = {
     "assets/classroom_2021/masks/chalkboard.png": (309, 258, 1672, 941),
     "assets/classroom_2021/masks/door.png": (923, 869, 1672, 941),
