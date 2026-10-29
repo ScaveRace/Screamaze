@@ -1,3 +1,4 @@
+
 class BasePage:
     # every page of the phone extends this, like the rooms extend BaseRoom
     # the Phone makes it with (screen, player, phone) and shows it when somebody calls phone.goTo("<its name>")

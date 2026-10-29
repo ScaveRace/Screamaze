@@ -46,7 +46,6 @@ class PauseMenu:
         self.langButton.label = lang.ui("language") + ": " + LANGUAGES[sett.getLanguage()]
 
     def switchLanguage(self):
-        # only new messages use the new language, the chat keeps what was already said
         sett.setLanguage("nl" if sett.getLanguage() == "en" else "en")
         self.showLanguage()
         self.saveAction()

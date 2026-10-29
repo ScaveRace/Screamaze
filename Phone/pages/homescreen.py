@@ -1,3 +1,4 @@
+import pygame
 import UI.uiElements as u
 from Phone.pages.basePage import BasePage
 
@@ -18,9 +19,10 @@ class HomeScreen(BasePage):
     def getElements(self):
         size = GAME_SIZE
         # u.Mask(file, size, position, callback, label)   no label, the apps are too small for text
+        self.chatMask = u.Mask(A + "apps/chat.png", size, (0, 0), self.open_chat, "")
         self.masks = [
             u.Mask(A + "apps/globe.png", size, (0, 0), self.open_globe, ""),
-            u.Mask(A + "apps/chat.png", size, (0, 0), self.open_chat, ""),
+            self.chatMask,
             u.Mask(A + "apps/gear.png", size, (0, 0), self.open_gear, ""),
             u.Mask(A + "apps/briefcase.png", size, (0, 0), self.open_briefcase, ""),
             u.Mask(A + "apps/handset.png", size, (0, 0), self.open_handset, ""),
@@ -32,7 +34,7 @@ class HomeScreen(BasePage):
         self.goTo("browser")
 
     def open_chat(self):
-        pass
+        self.goTo("chat")
 
     def open_gear(self):
         pass
@@ -54,3 +56,11 @@ class HomeScreen(BasePage):
         self.screen.blit(self.image, (0, 0))
         for m in self.masks:
             m.draw(self.screen)
+        if self.phone.log.unread:
+            self.drawDot()
+
+    # the red dot on the top right of the chat app, when there are messages that were not read
+    def drawDot(self):
+        corner = self.chatMask.image.get_bounding_rect().move(self.chatMask.imageX, self.chatMask.imageY).topright
+        pygame.draw.circle(self.screen, (20, 20, 20), corner, 8)
+        pygame.draw.circle(self.screen, (230, 40, 40), corner, 6)
