@@ -50,23 +50,12 @@ player = None
 fui = None
 view = View.ROOM
 
-initialised = False
 intro_line = 0
 task_done = False
 circle_found = False
 fuse_inserted = False
 stone_collected = False
 
-
-def resetProgress():
-    # call this only for a brand new game
-    global initialised, intro_line, task_done, circle_found, fuse_inserted, stone_collected
-    intro_line = 0
-    task_done = False
-    circle_found = False
-    fuse_inserted = False
-    stone_collected = False
-    initialised = True
 
 
 def getElements(p, f, screen):
@@ -80,10 +69,6 @@ def start(p, f, screen):
     player = p
     fui = f
     size = screen.get_size()
-
-    # progress is only reset the very first time, not on every entry
-    if not initialised:
-        resetProgress()
 
     fallbacks = {
         "bg_closed": (35, 8, 18),
