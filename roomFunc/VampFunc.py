@@ -50,23 +50,12 @@ player = None
 fui = None
 view = View.ROOM
 
-initialised = False
 intro_line = 0
 task_done = False
 circle_found = False
 fuse_inserted = False
 stone_collected = False
 
-
-def resetProgress():
-    # call this only for a brand new game
-    global initialised, intro_line, task_done, circle_found, fuse_inserted, stone_collected
-    intro_line = 0
-    task_done = False
-    circle_found = False
-    fuse_inserted = False
-    stone_collected = False
-    initialised = True
 
 
 def getElements(p, f, screen):
@@ -77,13 +66,27 @@ def getElements(p, f, screen):
 
 def start(p, f, screen):
     global images, masks, player, fui, view, next_room
+    global intro_line, task_done, circle_found, fuse_inserted, stone_collected
     player = p
     fui = f
     size = screen.get_size()
 
-    # progress is only reset the very first time, not on every entry
-    if not initialised:
-        resetProgress()
+    # Rebuild the room state from the player's save data whenever the room opens.
+    completed = set(player.getCompletion("VampRoom")["all"])
+    intro_line = max(
+        (line for line in range(1, 4) if f"vamp.talk_{line}" in completed),
+        default=0,
+    )
+    task_done = "vamp.task_done" in completed
+    circle_found = (
+        "vamp.circle_found" in completed
+        or player.has_item("Items", CIRCLE_ITEM)
+    )
+    fuse_inserted = "vamp.fuse_inserted" in completed
+    stone_collected = (
+        "vamp.stone" in completed
+        or player.has_item("Stones", "Red")
+    )
 
     fallbacks = {
         "bg_closed": (35, 8, 18),

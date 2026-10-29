@@ -4,6 +4,7 @@ import functions.sound as s
 from functions.settingsFunc import settings as sett
 import functions.savingFunc as save
 import functions.leaderboard as lb
+import functions.language as lang
 
 
 font = pygame.font.Font(None, 36)
@@ -42,7 +43,7 @@ class PauseMenu:
         self.showLanguage()
 
     def showLanguage(self):
-        self.langButton.label = "language: " + LANGUAGES[sett.getLanguage()]
+        self.langButton.label = lang.ui("language") + ": " + LANGUAGES[sett.getLanguage()]
 
     def switchLanguage(self):
         # only new messages use the new language, the chat keeps what was already said
