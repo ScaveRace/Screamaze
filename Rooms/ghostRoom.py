@@ -20,8 +20,9 @@ class GhostRoom(BaseRoom):
 
     def on_enter(self):
         gF.reset()
-        gF.on_enter()
         self.build()
+        gF.describe()
+
 
     def handle_event(self, event):
         for e in self.masks + self.buttons:
