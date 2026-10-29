@@ -25,3 +25,12 @@ def chatMessage(room, messageID, lang=None):
     if not text:
         text = texts["en"][room].get(messageID)     # english when there is no translation
     return text
+
+
+
+# the text on a button or label, in the language chosen in the pause menu
+# the text in the code is also the id in the "Buttons" table; without a translation it is shown as it is
+def ui(text, lang=None):
+    if lang is None:
+        lang = sett.getLanguage()
+    return texts.get(lang, {}).get("Buttons", {}).get(text, text)

@@ -178,11 +178,14 @@ def getElements(player, fui, screen):
 # ---------------------------------------------------------------- actions
 def describe():
     """Describes the whole room."""
-    if done(HW_DONE):
-        show(21, 34)                     # teacher is gone: empty desk
+    show(21)
+    if not done(HW_DONE):
+        say(22)  # the ghost teacher is there
+    elif not done(STONE):
+        say(34)  # the teacher is a stone, not picked up yet
     else:
-        show(21, 22)                     # full description with the ghost teacher
-    save(DESCRIBED, 22)                  # kept so older saves still work
+        say(35)  # nothing left in the room
+    save(DESCRIBED, 22)  # kept so older saves still work
 
 
 def on_enter(player=None, fui=None):
@@ -295,10 +298,9 @@ def back_to_room():
 
 
 def leave():
-    global next_room, _pending, _enter_at
+    global next_room
     next_room = "corridor"
-    reset()
-    _pending, _enter_at = True, None     # describe again next time the room is entered
+       # describe again next time the room is entered
 
 
 def keyboard(event):
@@ -313,15 +315,6 @@ def keyboard(event):
 
 # ---------------------------------------------------------------- drawing
 def drawExtras(screen):
-    global _pending, _enter_at
-    if _pending:                         # runs every frame while the room is on screen
-        now = pygame.time.get_ticks()
-        if _enter_at is None:
-            _enter_at = now              # first frame after entering
-        elif now - _enter_at >= DESCRIBE_DELAY_MS:
-            _pending, _enter_at = False, None
-            describe()
-
     if _ui["view"] == "keypad":
         shown = _ui["code"].ljust(4, "-")             # "45" -> "45--"
         screen.blit(CODE_FONT.render(shown, True, (0, 255, 120)), CODE_POS)

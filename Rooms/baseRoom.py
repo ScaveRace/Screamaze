@@ -14,7 +14,7 @@ class BaseRoom:
 
     key = ""
     show_ui = True #define if chat and other elements are shown
-
+    paranormal = True   #paranormal sounds turned on
 
     def __init__(self,screen,player,fui = None):
         self.screen = screen
