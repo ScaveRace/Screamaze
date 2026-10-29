@@ -11,7 +11,7 @@ def getElements(player,screen,goTo,openSettings,openLeaderboard):
 
 def current(player,goTo,openSettings,openLeaderboard):
     return [
-        u.Button(120, 420, 150, 50, "New Game", lambda: new_game(goTo)),
+        u.Button(120, 420, 150, 50, "New Game", lambda: new_game(player,goTo)),
         u.Button(120, 470, 150, 50, "Load Game", lambda: load_game(player,goTo)),
         u.Button(120, 520, 150, 50, "Settings", openSettings),
         u.Button(120, 570, 150, 50, "Leaderboard", openLeaderboard),
@@ -24,11 +24,14 @@ def start(screen):
 
 
 def load_game(player,goTo):
+    if not load.is_json_empty("data/savePlayer.json"):
+        player.reset()
     load.load(player,"data/savePlayer.json")
     player.setImage()
     goTo(player.location)
 
 
-def new_game(goTo):
+def new_game(player,goTo):
     print("starting new game")
+    player.reset()
     goTo("frontD")

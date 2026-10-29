@@ -60,6 +60,8 @@ while running:
     paranormal.setActive(room.paranormal)
     paranormal.update()
 
+    if current == "startup":
+        frontui.reset()
     room.draw()
     if room.show_ui:
         if not frontui.pause.paused:
