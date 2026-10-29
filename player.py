@@ -68,7 +68,7 @@ class Player:
                 return True
 
     def setCurrent(self,current):
-        self.lastLocation = self.location
+        self.lastLocation = current
 
     def has_item(self, category, item):
         for element in self.inventory[category]:
@@ -90,6 +90,6 @@ class Player:
 
     def draw(self,screen):
         if self.location == "corridor":
-            self.position = pL.DOOR_SPAWNS[self.lastLocation]
+            self.position = pL.DOOR_SPAWNS.get(self.lastLocation, pL.DOOR_SPAWNS["frontDesk"])
         screen.blit(self.pImage,self.position)
 

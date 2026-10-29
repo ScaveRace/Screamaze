@@ -24,6 +24,7 @@ class Corridor(BaseRoom):
         self.elements = tmp[1]
 
     def goTo(self, room):
+        self.player.setCurrent(room)
         self.next_room = room
 
 

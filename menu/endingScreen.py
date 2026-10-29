@@ -21,6 +21,7 @@ class EndingScreen(BaseRoom):
 
     def __init__(self, screen, player, fui=None):
         super().__init__(screen, player, fui)
+        self.paranormal = False
 
         self.font = pygame.font.Font(None, 90)
         self.page = 0

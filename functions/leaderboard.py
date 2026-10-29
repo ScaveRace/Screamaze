@@ -1,4 +1,6 @@
 import sqlite3
+from datetime import datetime
+
 
 # the leaderboard is its own small database, one row per player name
 # a run only gets on it when the player saves the game, saving again updates the row
@@ -44,20 +46,40 @@ def completion(player):
                 done += 1
     return round(done / total * 100)
 
+def today():
+    return datetime.now().strftime("%d-%m-%Y") # "29-10-2026"
+
+def fmtDate(d):
+    return datetime.strptime(d, "%d-%m-%Y").strftime("%d %b") if d else "-" # "29 Oct", "-" if no date
+
+def dateKey(d):
+    return datetime.strptime(d, "%d-%m-%Y") if d else datetime.min   # for sorting on date
+
+def fmtTime(seconds):
+    return f"{seconds // 60:02d}:{seconds % 60:02d}"
+
 
 def connect():
     con = sqlite3.connect(DB_PATH)
     con.execute("CREATE TABLE IF NOT EXISTS leaderboard ("
-                "name TEXT PRIMARY KEY, time INTEGER, completion INTEGER, finished INTEGER DEFAULT 0)")
+                "name TEXT PRIMARY KEY, time INTEGER, completion INTEGER, finished INTEGER DEFAULT 0, "
+                "updated_at TEXT)")
+    try:
+        con.execute("ALTER TABLE leaderboard ADD COLUMN updated_at TEXT")
+    except sqlite3.OperationalError:
+        pass  # column already exists
     return con
 
 
 # called when the player saves: puts the run on the leaderboard or updates it
 def saveRun(player):
+    if not player.name.strip():
+        return
     con = connect()
-    con.execute("INSERT INTO leaderboard (name, time, completion) VALUES (?, ?, ?) "
-                "ON CONFLICT(name) DO UPDATE SET time = excluded.time, completion = excluded.completion",
-                (player.name, player.time, completion(player)))
+    con.execute("INSERT INTO leaderboard (name, time, completion, updated_at) VALUES (?, ?, ?, ?) "
+                "ON CONFLICT(name) DO UPDATE SET time = excluded.time, completion = excluded.completion, "
+                "updated_at = excluded.updated_at",
+                (player.name, player.time, completion(player), today()))
     con.commit()
     con.close()
 
@@ -65,11 +87,16 @@ def saveRun(player):
 # called when the game is finished: only updates a run that was saved before
 def finishRun(player):
     con = connect()
-    con.execute("UPDATE leaderboard SET time = ?, completion = ?, finished = 1 WHERE name = ?",
-                (player.time, completion(player), player.name))
+    con.execute("UPDATE leaderboard SET time = ?, completion = ?, finished = 1, updated_at = ? WHERE name = ?",
+                (player.time, completion(player), today(), player.name))
     con.commit()
     con.close()
 
+def allRuns():
+    con = connect()
+    rows = con.execute("SELECT name, time, completion, finished, updated_at FROM leaderboard").fetchall()
+    con.close()
+    return rows
 
 # the best five runs: the highest completion first, the fastest time wins when it is the same
 def topFive():
@@ -78,3 +105,5 @@ def topFive():
                        "ORDER BY completion DESC, time ASC LIMIT 5").fetchall()
     con.close()
     return rows
+
+connect().execute("DELETE FROM leaderboard WHERE name = '';")
