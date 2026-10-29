@@ -56,7 +56,7 @@ class HomeScreen(BasePage):
         self.screen.blit(self.image, (0, 0))
         for m in self.masks:
             m.draw(self.screen)
-        if self.phone.log.unread:
+        if self.phone.chat.unread:
             self.drawDot()
 
     # the red dot on the top right of the chat app, when there are messages that were not read

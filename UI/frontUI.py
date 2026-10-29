@@ -16,8 +16,8 @@ class FrontUI:
         self.inventory = i.InventoryMenu(screen,p)
         self.pause = pause.PauseMenu(screen,p)
         self.pauseButton = u.Button(1370, 20, 90, 36, "pause", self.pause.toggle)
-        self.phone = Phone(screen,p)     # the phone is where the chat was, the messages are kept in its log
-        self.chat = self.phone.log
+        self.phone = Phone(screen,p)     # the phone is where the chat was, the chat of the phone is the Chatbox
+        self.chat = self.phone.chat
         self.db = lang   # the rooms get their texts with fui.db.chatMessage(room, id)
 
     def reset(self):
