@@ -1,16 +1,7 @@
 ##### import alllllll the rooms ######
 import pygame
-import menu.startupMenu as s
-import menu.endingScreen as ending
-import Rooms.frontDesk as fd
-import Rooms.ghostRoom as gr
-import Rooms.storrageRoom as st
-import Rooms.vampireRoom as vp
-import Rooms.corridor as corri
-import Rooms.projectRoom as pR
-import Rooms.equinoxRoom as eq
-import Rooms.teacherRoom as tr
-import Rooms.newRooms as nr
+import Rooms.baseRoom as bR
+from Rooms import load_all
 
 import player as p
 import functions.savingFunc as load
@@ -30,34 +21,7 @@ font = pygame.font.Font(None, 32)
 
 ######## game loop boolean  ##########
 running = True
-
-######## dictionary of rooms  ########
-ROOMS = {
-    "startup": s.StartupMenu,
-    "ending": ending.EndingScreen,
-    "frontD": fd.FrontDesk,
-    "corridor": corri.Corridor,
-    "ghostR" : gr.GhostRoom,
-    "storrR" : st.StorrageRoom,
-    "vampR" : vp.VampireRoom,
-    "equinR" : eq.EquinoxRoom,
-    "projRoom" : pR.ProjectRoom,
-    "teacherR" : tr.TeacherRoom,
-    "lab2001R" : nr.Lab2001,
-    "frontDeskR" : nr.FrontDeskOffice,
-    "class2021R" : nr.Classroom2021,
-    "class2031R" : nr.Classroom2031,
-    "class2035R" : nr.Classroom2035,
-    "stairR" : nr.StairExit,
-    "teach1R" : nr.TeachersRoom1,
-    "teach2R" : nr.TeachersRoom2,
-    "teach3R" : nr.TeachersRoom3,
-    "teach4R" : nr.TeachersRoom4,
-    "projRoom1R" : nr.ProjectRoom1,
-    "projRoom2R" : nr.ProjectRoom2
-}
-
-NO_UI = ("startup", "frontD", "ending")      # rooms that do not show the front UI (chat, pause, inventory)
+load_all()
 
 if not load.is_json_empty("data/gameSettings.json"):
     load.load(sett,"data/gameSettings.json")
@@ -66,7 +30,8 @@ if not load.is_json_empty("data/gameSettings.json"):
 
 player = p.Player()
 frontui = fui.FrontUI(player,screen)
-room = s.StartupMenu(screen,player)
+room = bR.REGISTRY["startup"](screen,player,frontui)
+room.on_enter()
 current = "startup"
 
 ms_buffer = 0          # leftover milliseconds not yet worth a whole second
@@ -80,26 +45,21 @@ while running:
     for event in pygame.event.get():   ### handle user events
         if event.type == pygame.QUIT:
             running = False
-
-        else:
-            inGame = current not in NO_UI                            # only these rooms show the front UI
-            if not (inGame and frontui.handleEvenet(event)):
-                room.handle_event(event)
+        elif not (room.show_ui and frontui.handleEvenet(event)):
+            room.handle_event(event)
 
     if room.next_room is not None:
         name = room.next_room
-        if name not in ROOMS:
-            raise KeyError(f"No room named {name!r}. Known: {sorted(ROOMS)}")
-        if name not in NO_UI:
-            room = ROOMS[name](screen, player,frontui)
-        else:
-            room = ROOMS[name](screen, player)
+        if name not in bR.REGISTRY:
+            raise KeyError(f"No room named {name!r}. Known: {sorted(bR.REGISTRY)}")
+        room = bR.REGISTRY[name](screen,player,frontui)
+        room.on_enter()
         current = name
         player.location = name
 
 
     room.draw()
-    if current not in NO_UI:
+    if room.show_ui:
         if not frontui.pause.paused:
             # clock only advances while unpaused
             ms_buffer += dt

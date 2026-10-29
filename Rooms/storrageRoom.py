@@ -2,6 +2,7 @@ import pygame
 import UI.uiElements as u
 from functions import uiFunc as uF
 import roomFunc.stoRoomFunc as sF
+from Rooms.baseRoom import BaseRoom, register
 
 pygame.init()
 pygame.mixer.init()
@@ -10,13 +11,12 @@ QUESTION_COLOUR = (30, 25, 20)  # text colour of the question on the quiz paper
 
 
 ########## storage room class ##########
-class StorrageRoom:
+@register
+class StorrageRoom(BaseRoom):
+    key = "storrR"
 
     def __init__(self, screen, player, fui):
-        self.screen = screen
-        self.player = player
-        self.fui = fui
-        self.next_room = None
+        super().__init__(screen, player, fui)
 
         self.questionFont = pygame.font.Font(None, 34)
         self.fieldoftext = u.TextField(1100, 600, 100, 60)

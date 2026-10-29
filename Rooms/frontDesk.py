@@ -1,6 +1,6 @@
 import UI.uiElements as u
 import pygame
-
+from Rooms.baseRoom import BaseRoom, register
 
 pygame.init()
 pygame.mixer.init()
@@ -12,6 +12,7 @@ smallFont = pygame.font.Font(None, 20)
 import functions.language as lang
 from functions import uiFunc as uF
 running = True
+
 
 # the story before the game starts: (who says it, id of the text under FrontDesk in the language files)
 STORY = [
@@ -31,22 +32,22 @@ FADE_TIME = 100    # how many frames the fade to the second picture takes
 
 
 
-class FrontDesk:
+@register
+class FrontDesk(BaseRoom):
+    key = "frontD"
+    show_ui = False
     text = ""
 
-    def __init__(self, screen,p):
-        self.player = None
+    def __init__(self, screen, player, fui=None):
+        super().__init__(screen, player, fui)
         self.animation = False ### button animation switch
         self.alpha = 0
         self.startAnim = 0 ### animation start time, set when the story reaches LOOK_UP
         self.story = [(who, lang.chatMessage("FrontDesk", msg_id) or "") for who, msg_id in STORY]
         self.part = 0 ### which part of the story is on screen
         self.partStart = pygame.time.get_ticks()
-        self.next_room = None
-        self.screen = screen
         self.background = u.load_image("assets/frontDesk_1.png", (self.screen.get_size()[0]+300,self.screen.get_size()[1]))
         self.secondIm = u.load_image("assets/frontDesk_2.png", (self.screen.get_size()[0]+300,self.screen.get_size()[1]))
-        self.p = p
         self.buttons = [
             u.Button(1200, 290, 140, 30, "Male", self.gender),
             u.Button(1130, 350, 140, 50, "Start Run", self.startRun),
@@ -66,7 +67,7 @@ class FrontDesk:
         # startAnim =
     def startRun(self):
         if self.textField.text.replace(" ","") != "":
-            self.p.createPlayer(self.textField.text,self.buttons[0].label)
+            self.player.createPlayer(self.textField.text,self.buttons[0].label)
             self.next_room = "corridor"
 
     ########## story ##########

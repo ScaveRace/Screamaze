@@ -1,18 +1,18 @@
 import pygame
 import roomFunc.teachRoomFunc as tF
+from Rooms.baseRoom import BaseRoom, register
 
 pygame.init()
 pygame.mixer.init()
 
 
-# what the room does is in roomFunc/teachRoomFunc.py
-class TeacherRoom:
+@register
+class TeacherRoom(BaseRoom):
+    key = "teacherR"
+
     def __init__(self, screen, player, fui):
+        super().__init__(screen, player, fui)
         self.screensize = screen.get_size()
-        self.screen = screen
-        self.next_room = None
-        self.player = player
-        self.fui = fui
         tF.start(self)
 
     def on_enter(self):

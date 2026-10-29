@@ -1,25 +1,25 @@
 import pygame
 import UI.uiElements as u
 import roomFunc.corrFunc as cF
+from Rooms.baseRoom import BaseRoom, register
 pygame.init()
 
 pygame.mixer.init()
 
+@register
+class Corridor(BaseRoom):
+    key = "corridor"
 
-class Corridor:
-    def __init__(self, screen,p, fui):
-        self.fui = fui
-        self.p = p
-        self.screen = screen
+    def __init__(self, screen, player, fui):
+        super().__init__(screen, player, fui)
         self.conversation = 0
-        self.next_room = None
         self.image = []
         self.elements = []
         self.getElements()
 
 
     def getElements(self):
-        tmp = cF.getElements(self.p,self.fui,self.screen,self.goTo)
+        tmp = cF.getElements(self.player,self.fui,self.screen,self.goTo)
         self.image = tmp[0]
         self.elements = tmp[1]
 
@@ -39,4 +39,4 @@ class Corridor:
             e.draw(self.screen)
 
 
-        self.p.draw(self.screen)
+        self.player.draw(self.screen)

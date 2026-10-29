@@ -4,6 +4,7 @@ import UI.leaderboard as leaderboard
 import functions.leaderboard as lb
 import functions.language as lang
 import functions.uiFunc as uF
+from Rooms.baseRoom import BaseRoom, register
 
 TABLE = "Ending"                # the texts are in the language files under this name
 PAGES = ["wake", "skip"]        # the big letters, one after the other. After them comes the thank you page
@@ -13,11 +14,13 @@ FADE_OUT = 1000
 TEXT_COLOUR = (230, 225, 235)
 
 
-class EndingScreen:
-    def __init__(self, screen, player):
-        self.screen = screen
-        self.player = player
-        self.next_room = None
+@register
+class EndingScreen(BaseRoom):
+    key = "ending"
+    show_ui = False
+
+    def __init__(self, screen, player, fui=None):
+        super().__init__(screen, player, fui)
 
         self.font = pygame.font.Font(None, 90)
         self.page = 0
