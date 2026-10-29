@@ -6,6 +6,7 @@ from Rooms import load_all
 import player as p
 import functions.savingFunc as load
 from functions.settingsFunc import settings as sett
+from functions.paranormal import paranormal
 import UI.frontUI as fui
 pygame.init()
 pygame.mixer.init()
@@ -56,7 +57,8 @@ while running:
         room.on_enter()
         current = name
         player.location = name
-
+    paranormal.setActive(room.paranormal)
+    paranormal.update()
 
     room.draw()
     if room.show_ui:

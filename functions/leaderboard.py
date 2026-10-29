@@ -19,7 +19,20 @@ STEPS = {
                   "gr.homework_taken", "gr.homework_done", "gr.stone_taken"],
     "EquinoxRoom": ["equin.talked", "equin.sandwich", "equin.lookaway", "equin.stone"],
     "ProjectRoom": ["proj.visited", "proj.placed.Circle", "proj.placed.Triangle", "proj.placed.Square", "proj.stone"],
-}
+    "SecondaryRooms": [
+        "class2021R.window", "class2021R.teacher_desk", "class2021R.chalkboard", "class2021R.fridge", "class2021R.notice_board",
+        "class2031R.window", "class2031R.teacher_desk", "class2031R.globe", "class2031R.projector", "class2031R.chalkboard", "class2031R.lockers",
+        "class2035R.chalkboard", "class2035R.teacher_desk", "class2035R.bookshelf", "class2035R.metal_cabinet", "class2035R.notice_board", "class2035R.globe",
+        "frontDeskR.window", "frontDeskR.filing_cabinets", "frontDeskR.reception_desk", "frontDeskR.key_cabinet", "frontDeskR.wall_clock", "frontDeskR.printer",
+        "lab2001R.window", "lab2001R.whiteboard", "lab2001R.server_rack", "lab2001R.metal_cabinet", "lab2001R.computers",
+        "projRoom1R.window", "projRoom1R.bookshelf", "projRoom1R.printer_3d", "projRoom1R.whiteboard", "projRoom1R.table_left", "projRoom1R.table_right", "projRoom1R.beanbag",
+        "projRoom2R.window", "projRoom2R.vending_machine", "projRoom2R.sticky_board", "projRoom2R.workshop_table", "projRoom2R.tool_cabinet", "projRoom2R.robot", "projRoom2R.cardboard_boxes",
+        "stairR.staircase", "stairR.fire_door", "stairR.fire_extinguisher", "stairR.emergency_light",
+        "teach1R.bookshelf", "teach1R.safe", "teach1R.notice_board", "teach1R.plant",
+        "teach2R.filing_cabinets", "teach2R.desk", "teach2R.notice_board", "teach2R.plant",
+        "teach3R.sofa", "teach3R.bookshelf", "teach3R.armchair", "teach3R.radio",
+        "teach4R.window", "teach4R.sofa", "teach4R.coffee_table", "teach4R.meeting_table", "teach4R.coffee_machine", "teach4R.bookshelf",
+    ]}
 
 
 # how much of the game the player did, from 0 to 100
