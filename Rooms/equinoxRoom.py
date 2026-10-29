@@ -1,6 +1,7 @@
 import pygame
 import roomFunc.equinRoomFunc as eF
 from Rooms.baseRoom import BaseRoom, register
+from player import Player
 
 pygame.init()
 pygame.mixer.init()
