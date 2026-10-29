@@ -56,13 +56,10 @@ circle_found = False
 fuse_inserted = False
 stone_collected = False
 
-
-
 def getElements(p, f, screen):
     start(p, f, screen)
     current(screen)
     return images, buttons, masks
-
 
 def start(p, f, screen):
     global images, masks, player, fui, view, next_room
@@ -85,8 +82,7 @@ def start(p, f, screen):
     fuse_inserted = "vamp.fuse_inserted" in completed
     stone_collected = (
         "vamp.stone" in completed
-        or player.has_item("Stones", "Red")
-    )
+        or player.has_item("Stones", "Red"))
 
     fallbacks = {
         "bg_closed": (35, 8, 18),
@@ -95,8 +91,7 @@ def start(p, f, screen):
         "drawer": (120, 100, 60),
         "fusebox_closed": (20, 20, 20),
         "fusebox_open": (20, 20, 20),
-        "fusebox_three": (20, 20, 20),
-    }
+        "fusebox_three": (20, 20, 20),}
 
     files = {
         "bg_closed": "Room2015_1_win_clo.png",
@@ -105,8 +100,7 @@ def start(p, f, screen):
         "drawer": "cabinet_drawer_open.png",
         "fusebox_closed": "fuse_box.png",
         "fusebox_open": "fuse_box2.png",
-        "fusebox_three": "fuse_box2_three_fuses.png",
-    }
+        "fusebox_three": "fuse_box2_three_fuses.png",}
 
     images = {
         name: u.load_image(ASSET_DIR + f, size, fallback=fallbacks[name])
@@ -124,7 +118,7 @@ def start(p, f, screen):
         "vampire": u.Mask(MASK_DIR + "vampire.png", size, (0, 0), talk),
         "cabinet": u.Mask(MASK_DIR + "cabinet.png", size, (0, 0), openCabinet),
         "fusebox": u.Mask(MASK_DIR + "fusebox.png", size, (0, 0), openFuseboxCloseup),
-        "stone": u.Mask(MASK_DIR + "red.png", size, (0, 0), collectStone),
+        "stone": u.Mask(MASK_DIR + "red.png", size, (-120, -30), collectStone),
         "fusebox_closed": u.Mask(MASK_DIR + "fusebox_closed.png", size, (0, 0), openFuseboxDoor),
         "reset": u.Mask(MASK_DIR + "red_button.png", size, (0, 0), pressReset),
         "drawer": u.Mask(MASK_DIR + "cabinet_drawer.png", size, (0, 0), openDrawer),
@@ -221,10 +215,7 @@ def activeMasks():
 
     if view == View.DRAWER:
         return [] if circle_found else [masks["circle"]]
-
     return []
-
-
 ########## view transitions ##########
 
 def setView(newView, message=None):
@@ -233,36 +224,27 @@ def setView(newView, message=None):
     if message:
         say(message)
 
-
 def leave():
     global next_room
     next_room = "corridor"
 
-
 def gotoRoom():
     setView(View.ROOM)
-
 
 def gotoCabinet():
     setView(View.CABINET)
 
-
 def openCabinet():
     setView(View.CABINET)
-
 
 def openDrawer():
     setView(View.DRAWER)
 
-
 def openFuseboxCloseup():
     setView(View.FUSEBOX_CLOSED)
 
-
 def openFuseboxDoor():
     setView(View.FUSEBOX_OPEN)
-
-
 ########## vampire ##########
 
 def talk():
@@ -271,7 +253,6 @@ def talk():
     if intro_line < 4:
         intro_line += 1
         say("Vampire > " + T(intro_line))
-
         # Save the first three dialogue milestones
         if intro_line <= 3:
             event = f"vamp.talk_{intro_line}"
@@ -281,9 +262,7 @@ def talk():
     else:
         say("Vampire > " + T(5))
 
-
 ########## circle ##########
-
 def collectCircle():
     global circle_found
 
@@ -321,38 +300,26 @@ def insertFuse():
 
     say("You > " + T(8))
 
-
 def pressReset():
     global task_done
-
     if task_done:
         return
-
     if not fuse_inserted:
         say("You > " + T(9))
         return
-
     task_done = True
-
     if not has("vamp.task_done"):
         add("vamp.task_done")
-
     say("You > " + T(10))
     say("You > " + T(11))
 
-
 ########## stone ##########
-
 def collectStone():
     global stone_collected
-
     if not task_done or stone_collected:
         return
-
     player.add_item("Stones", "Red", STONE_IMAGE)
     stone_collected = True
-
     if not has("vamp.stone"):
         add("vamp.stone")
-
     say("You > " + T(12))
