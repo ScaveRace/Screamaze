@@ -7,7 +7,6 @@ from datetime import datetime
 DB_PATH = "data/leaderboard.db"
 
 # the steps that count for the completion percentage: room -> events in player.completion[room]["all"]
-# the secondary rooms are only extra story, so they are saved but don't count
 STEPS = {
     "Corridor": ["corr.going"],
     "VampRoom": ["vamp.talk_1", "vamp.talk_2", "vamp.talk_3", "vamp.circle_found", "vamp.fuse_inserted",
@@ -31,7 +30,6 @@ STEPS = {
         "teach1R.bookshelf", "teach1R.safe", "teach1R.notice_board", "teach1R.plant",
         "teach2R.filing_cabinets", "teach2R.desk", "teach2R.notice_board", "teach2R.plant",
         "teach3R.sofa", "teach3R.bookshelf", "teach3R.armchair", "teach3R.radio",
-        "teach4R.window", "teach4R.sofa", "teach4R.coffee_table", "teach4R.meeting_table", "teach4R.coffee_machine", "teach4R.bookshelf",
     ]}
 
 

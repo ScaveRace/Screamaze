@@ -129,8 +129,7 @@ def resetProgress(room):
 
 
 def say(room, who, messageID, **values):
-    text = room.fui.db.chatMessage(DB_TABLE, messageID).format(**values)
-    room.fui.chat.say(f"{who} > {text}" if who else text)
+    room.fui.chat.sayKey(who or "", DB_TABLE, messageID, **values)
 
 
 def sayAll(room, lines):

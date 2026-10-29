@@ -171,8 +171,8 @@ def removeItem(name):
 
 ########## helpers ##########
 
-def say(text):
-    fui.chat.say(text)
+def say(who, textId):
+    fui.chat.sayKey(who, TABLE, textId)
 
 
 def currentButtons():
@@ -222,7 +222,7 @@ def setView(newView, message=None):
     global view
     view = newView
     if message:
-        say(message)
+        say(*message)       # message is (who, text id)
 
 def leave():
     global next_room
@@ -252,7 +252,7 @@ def talk():
 
     if intro_line < 4:
         intro_line += 1
-        say("Vampire > " + T(intro_line))
+        say("Vampire", intro_line)
         # Save the first three dialogue milestones
         if intro_line <= 3:
             event = f"vamp.talk_{intro_line}"
@@ -260,7 +260,7 @@ def talk():
                 add(event)
 
     else:
-        say("Vampire > " + T(5))
+        say("Vampire", 5)
 
 ########## circle ##########
 def collectCircle():
@@ -276,7 +276,7 @@ def collectCircle():
     if not has("vamp.circle_found"):
         add("vamp.circle_found")
 
-    say("You > " + T(6))
+    say("You", 6)
 
 
 ########## fuse box ##########
@@ -289,7 +289,7 @@ def insertFuse():
 
     # the fuse is collected in another room
     if not hasItem(FUSE_ITEM):
-        say("You > " + T(7))
+        say("You", 7)
         return
 
     removeItem(FUSE_ITEM)
@@ -298,20 +298,20 @@ def insertFuse():
     if not has("vamp.fuse_inserted"):
         add("vamp.fuse_inserted")
 
-    say("You > " + T(8))
+    say("You", 8)
 
 def pressReset():
     global task_done
     if task_done:
         return
     if not fuse_inserted:
-        say("You > " + T(9))
+        say("You", 9)
         return
     task_done = True
     if not has("vamp.task_done"):
         add("vamp.task_done")
-    say("You > " + T(10))
-    say("You > " + T(11))
+    say("You", 10)
+    say("You", 11)
 
 ########## stone ##########
 def collectStone():
@@ -322,4 +322,4 @@ def collectStone():
     stone_collected = True
     if not has("vamp.stone"):
         add("vamp.stone")
-    say("You > " + T(12))
+    say("You", 12)

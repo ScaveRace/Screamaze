@@ -72,8 +72,8 @@ the window, keeping the aspect ratio.
 main.py                    the window, the game loop and the timer; finds rooms in the registry
 player.py                  Player: name, gender, time, location, inventory
 UI/
-  uiElements.py            Button, Chatbox, TextField, Mask, Slider, load_image — shared by everyone
-  frontUI.py               the overlay drawn on top of every room: side chat, timer, pause, inventory
+  uiElements.py            Button, TextField, Mask, Slider, load_image — shared by everyone
+  frontUI.py               the overlay drawn on top of every room: phone (with the chat), timer, pause, inventory
   pauseMenu.py             pause panel with volume sliders and save
 menu/
   startupMenu.py           new game / load game / settings (a room: key "startup")
@@ -225,7 +225,6 @@ PNG with position `(0, 0)` lines up with that background.
 |---|---|---|
 | `Button(x, y, w, h, label, action)` | Text button, runs `action` on click | `b.draw2(screen)` |
 | `Mask(image, size, pos, action, label)` | Clickable shape taken from a PNG: only the non-transparent pixels react, and the label shows on hover | `m.draw(screen)` |
-| `Chatbox(x, y, w, h, font)` | Message list with a text input | `c.draw(screen)` |
 | `TextField(x, y, w, h, ...)` | Single text input | `t.draw(screen)` |
 | `Slider(x, y, w, h, label, action, action2, value)` | Used for the volume sliders | `s.draw(screen)` |
 
