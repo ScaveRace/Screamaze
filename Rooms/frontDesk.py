@@ -40,6 +40,7 @@ class FrontDesk(BaseRoom):
 
     def __init__(self, screen, player, fui=None):
         super().__init__(screen, player, fui)
+        self.paranormal = False
         self.animation = False ### button animation switch
         self.alpha = 0
         self.startAnim = 0 ### animation start time, set when the story reaches LOOK_UP
