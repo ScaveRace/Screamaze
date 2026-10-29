@@ -1,8 +1,8 @@
 import pygame
 from Phone.pages.homescreen import HomeScreen, PHONE_SIZE
 from Phone.pages.bowser import Browser, PHONE_SIZE
-from Phone.pages.chatPage import ChatPage
-from Phone.chatLog import ChatLog
+from Phone.pages.chatPage import ChatPage, CHAT_AREA
+import UI.uiElements as u
 
 # every page of the phone: name -> class, a new page is one line here
 PAGES = {
@@ -17,7 +17,7 @@ class Phone:
     def __init__(self, screen, player):
         self.screen = screen
         self.player = player
-        self.log = ChatLog()        # every message of the game, the rooms add theirs through fui.chat
+        self.chat = u.Chatbox(*CHAT_AREA)       # every message of the game, the rooms add theirs through fui.chat, the chat page shows it
         self.pages = {name: page(screen, player, self) for name, page in PAGES.items()}
         self.page = "home"
 
