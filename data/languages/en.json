@@ -83,7 +83,10 @@
     "30": "A small keypad is mounted on the front, four empty slots waiting for a code.",
     "31": "The cabinet doors stand open. On the middle shelf lies a thick stack of papers.",
     "32": "The cabinet stands open and empty. Nothing but dust on the shelves.",
-    "33": "Close up on the keypad. Twelve worn keys: zero to nine, C to clear and E to enter."
+    "33": "Close up on the keypad. Twelve worn keys: zero to nine, C to clear and E to enter.",
+    "34": "The teacher has turned into a stone. It lies on the empty desk.",
+    "35": "There is nothing left in the room."
+
   },
   "ProjectRoom": {
     "intro_1": "A student project room. Beanbags, a bookshelf, a whiteboard and a locked box. It looks like somebody left in the middle of a sentence.",
