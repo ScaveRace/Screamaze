@@ -10,6 +10,7 @@ class StartupMenu(BaseRoom):
 
     def __init__(self, screen, player, fui=None):
         super().__init__(screen, player, fui)
+        self.paranormal = False
         self.image = []
         self.buttons = []
         self.pause = pause.PauseMenu(screen, player, False)
