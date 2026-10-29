@@ -1,5 +1,6 @@
 import random
 import pygame
+from functions.settingsFunc import settings as s
 
 SOUND_DIR = "assets/soundEffects/paranormal/"
 
@@ -33,10 +34,12 @@ class Paranormal:
         options = self.sounds.get(category)
         if not options:
             return
+        vol = (self.volume if volume is None else volume) * s.getSFXVolume()
+        if vol <= 0:                      # slider at 0: don't play at all
+            return
         channel = random.choice(options).play()
         if channel is None:               # no free channel
             return
-        vol = self.volume if volume is None else volume
         if pan is None:
             pan = random.uniform(-1, 1)
         channel.set_volume(vol * min(1, 1 - pan), vol * min(1, 1 + pan))
