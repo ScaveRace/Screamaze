@@ -1,6 +1,7 @@
 import pygame
 from functions import uiFunc as uF
 import data.maskPositions as mP
+import functions.language as lang
 
 pygame.font.init()  #### fonts need to be initialized before using them
 
@@ -60,16 +61,17 @@ class Button:
 
     def draw2(self,screen):   ##  will change, but every UI class has their own draw function
         hovered = self.rect.collidepoint(pygame.mouse.get_pos())  ## changes look upon mouse above the button  ##
+        text = lang.ui(self.label)    # self.label stays the id, the text follows the chosen language
         if hovered:
             pygame.draw.rect(screen, self.hoverCol, self.rect)
             if self.outline == 0 or self.outline == 1:
                 pygame.draw.rect(screen, self.fgCol, self.rect, 1)
-            label = self.font.render(self.label, True, self.fgCol)
+            label = self.font.render(text, True, self.fgCol)
         else:
             pygame.draw.rect(screen, self.bgCol, self.rect)
             if self.outline == 1:
                 pygame.draw.rect(screen, self.fgCol, self.rect, 1)
-            label = self.font.render(self.label, True, (222, 222, 214))
+            label = self.font.render(text, True, (222, 222, 214))
         if self.align == "left":        ## alignment of text
             screen.blit(label, label.get_rect(midleft=(self.rect.x + 14, self.rect.centery)))
         elif self.align == "right":     ## needs testing
@@ -233,11 +235,18 @@ class Mask:
 
         # Center of the non-transparent part
         shape = self.image.get_bounding_rect().move(self.imageX, self.imageY)
-        self.labelSurf = uF.render_wrapped(self.font, self.label, (255, 255, 255), shape.width - 20)
-        self.labelRect = self.labelSurf.get_rect(center=shape.center)
+        self.labelWidth = shape.width - 20
+        self.labelCentre = shape.center
+        self.showLabel()
 
         self.outlineColor = (128, 128, 128)
         self.hovering = False
+
+    # the label text follows the chosen language, it is drawn again when that changes
+    def showLabel(self):
+        self.labelText = lang.ui(self.label)
+        self.labelSurf = uF.render_wrapped(self.font, self.labelText, (255, 255, 255), self.labelWidth)
+        self.labelRect = self.labelSurf.get_rect(center=self.labelCentre)
 
     def handle_event(self, event):
         mouseX, mouseY = pygame.mouse.get_pos()
@@ -253,6 +262,8 @@ class Mask:
 
     def draw(self, screen):
         screen.blit(self.image, (self.imageX, self.imageY))
+        if lang.ui(self.label) != self.labelText:
+            self.showLabel()
         screen.blit(self.labelSurf, self.labelRect)
         outline = self.imageMask.outline()
         if self.hovering:
