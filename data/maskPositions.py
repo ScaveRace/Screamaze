@@ -181,12 +181,11 @@ CUT = {
 }
 
 # the apps of the phone (Phone/pages/homescreen.py), cut out of assets/phoneIm/phone_full.png which is 809 x 1944
+# the briefcase (inventory) and the corner app are not on the phone anymore, the handset took the place of the briefcase
 # the phone is 300 wide and replaces the chat, so it sits left of the room: every x is the place in phone_full.png - 810
 CUT.update({
     "assets/phoneIm/apps/globe.png": (-716, 808, 3186, 1944),
     "assets/phoneIm/apps/chat.png": (-492, 808, 3186, 1944),
     "assets/phoneIm/apps/gear.png": (-276, 808, 3186, 1944),
-    "assets/phoneIm/apps/briefcase.png": (-716, 1027, 3186, 1944),
-    "assets/phoneIm/apps/handset.png": (-492, 1027, 3186, 1944),
-    "assets/phoneIm/apps/corner.png": (-276, 1027, 3186, 1944),
+    "assets/phoneIm/apps/handset.png": (-716, 1027, 3186, 1944),
 })

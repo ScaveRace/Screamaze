@@ -9,7 +9,8 @@ from Phone.PhoneUI import Phone
 font = pygame.font.Font(None, 24)
 
 class FrontUI:
-    def __init__(self,p,screen):
+    def __init__(self,p,screen,aria):
+        self.aria = aria
         self.player = p
         self.screen = screen
         self.visible = False

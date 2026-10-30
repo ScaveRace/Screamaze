@@ -1,6 +1,11 @@
 import pygame
 import UI.uiElements as u
 
+# the briefcase of the phone is the button that opens the inventory, in the bottom right corner of the game
+ICON = "assets/phoneIm/apps/briefcase.png"
+ICON_SIZE = 64
+PADDING = 20
+
 class InventoryMenu:
     def __init__(self,screen,player):
         self.screen = screen
@@ -11,7 +16,8 @@ class InventoryMenu:
         self.font = pygame.font.Font(None,36)
         self.small_font = pygame.font.Font(None, 28)
 
-        self.openButton = u.Button(1270,20,90,36,"Inventory",self.toggle)
+        self.icon = u.load_alpha_image(ICON, (ICON_SIZE, ICON_SIZE))
+        self.openRect = self.icon.get_rect(bottomright=(screen.get_width() - PADDING, screen.get_height() - PADDING))
         self.closeButton = u.Button(870,520,140,44,"Close",self.toggle)
 
     def toggle(self):
@@ -24,7 +30,8 @@ class InventoryMenu:
                 return True
             self.closeButton.handle_event(event)
             return True
-        self.openButton.handle_event(event)
+        if event.type == pygame.MOUSEBUTTONUP and event.button == 1 and self.openRect.collidepoint(event.pos):
+            self.toggle()
         return self.open
 
     def get_image(self, path):
@@ -35,7 +42,9 @@ class InventoryMenu:
 
     def draw(self):
         if not self.open:
-            self.openButton.draw2(self.screen)
+            if self.openRect.collidepoint(pygame.mouse.get_pos()):    # grey behind the icon when you hover it, like the buttons
+                pygame.draw.rect(self.screen, (128, 128, 128), self.openRect.inflate(8, 8), border_radius=6)
+            self.screen.blit(self.icon, self.openRect)
             return
 
         pygame.draw.rect(self.screen, (0, 0, 0), self.panel)

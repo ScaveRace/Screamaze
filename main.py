@@ -6,7 +6,7 @@ from Rooms import load_all
 import sys
 from autoplayer import AutoPlayer
 from playthrough import STEPS
-
+import AI.aria as aria
 bot = AutoPlayer(STEPS) if "--autoplay" in sys.argv else None
 import player as p
 import functions.savingFunc as load
@@ -35,7 +35,7 @@ if not load.is_json_empty("data/gameSettings.json"):
 
 
 player = p.Player()
-frontui = fui.FrontUI(player,screen)
+frontui = fui.FrontUI(player,screen,aria)
 room = bR.REGISTRY["startup"](screen,player,frontui)
 room.on_enter()
 current = "startup"

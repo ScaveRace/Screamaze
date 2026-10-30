@@ -16,17 +16,21 @@ class PauseMenu:
     def __init__(self, screen,player,canSave=True):
         self.screen = screen
         self.paused = False
+        # in the game the settings are in the gear app of the phone, the startup menu has no phone so its settings stay here
+        self.hasSettings = not canSave
         self.saveButton = u.Button(870, 385, 140, 44, "save game", self.saveGame)
         self.langButton = u.Button(840, 385, 200, 44, "", self.switchLanguage)
         self.buttons = [
-            self.langButton,
             self.saveButton,
             u.Button(870, 440, 140, 44, "resume", self.toggle),
         ]
+        if self.hasSettings:
+            self.buttons.insert(0, self.langButton)
         if not canSave:   # the startup menu has no game to save yet
             self.buttons.remove(self.saveButton)
-        for i, b in enumerate(self.buttons):   # stack the buttons under the sliders
-            b.rect.y = 385 + i * 55
+        self.firstButtonY = 385 if self.hasSettings else 255
+        for i, b in enumerate(self.buttons):   # stack the buttons under the sliders, or at the top when there are none
+            b.rect.y = self.firstButtonY + i * 55
         self.showLanguage()
         self.player = player
         self.volumeSlider = u.Slider(790, 280, 300, 18, "volume",sett.setMusicVolume,self.saveAction,sett.getMusicVolume())
@@ -70,8 +74,9 @@ class PauseMenu:
             return True
 
         if self.paused:
-            self.volumeSlider.handle_event(event)
-            self.sfxSlider.handle_event(event)
+            if self.hasSettings:
+                self.volumeSlider.handle_event(event)
+                self.sfxSlider.handle_event(event)
             for b in self.buttons:
                 b.handle_event(event)
             return True
@@ -82,12 +87,13 @@ class PauseMenu:
         self.screen.blit(
             font.render(f"{self.player.name}", True, (210, 200, 160)), (10, 20))
         if self.paused:
-            panel = pygame.Rect(740, 180, 400, 210 + len(self.buttons) * 55)
+            panel = pygame.Rect(740, 180, 400, self.firstButtonY - 175 + len(self.buttons) * 55)
             pygame.draw.rect(self.screen, (0, 0, 0), panel)
             pygame.draw.rect(self.screen, (255, 255, 255), panel, 1)
             title = font.render("PAUSED", True, (255, 255, 255))
             self.screen.blit(title, title.get_rect(center=(940, 215)))
-            self.volumeSlider.draw(self.screen)
-            self.sfxSlider.draw(self.screen)
+            if self.hasSettings:
+                self.volumeSlider.draw(self.screen)
+                self.sfxSlider.draw(self.screen)
             for b in self.buttons:
                 b.draw2(self.screen)

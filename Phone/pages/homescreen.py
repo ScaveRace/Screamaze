@@ -24,9 +24,7 @@ class HomeScreen(BasePage):
             u.Mask(A + "apps/globe.png", size, (0, 0), self.open_globe, ""),
             self.chatMask,
             u.Mask(A + "apps/gear.png", size, (0, 0), self.open_gear, ""),
-            u.Mask(A + "apps/briefcase.png", size, (0, 0), self.open_briefcase, ""),
             u.Mask(A + "apps/handset.png", size, (0, 0), self.open_handset, ""),
-            u.Mask(A + "apps/corner.png", size, (0, 0), self.open_corner, ""),
         ]
 
     # what pressing an app does: none of the pages is made yet, later it is self.goTo("<name of the page>")
@@ -37,15 +35,9 @@ class HomeScreen(BasePage):
         self.goTo("chat")
 
     def open_gear(self):
-        pass
-
-    def open_briefcase(self):
-        pass
+        self.goTo("settings")
 
     def open_handset(self):
-        pass
-
-    def open_corner(self):
         pass
 
     def handle_event(self, event):

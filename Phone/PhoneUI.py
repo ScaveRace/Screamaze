@@ -2,6 +2,7 @@ import pygame
 from Phone.pages.homescreen import HomeScreen, PHONE_SIZE
 from Phone.pages.browser import Browser, PHONE_SIZE
 from Phone.pages.chatPage import ChatPage, CHAT_AREA
+from Phone.pages.settingsPage import SettingsPage
 import UI.uiElements as u
 
 # every page of the phone: name -> class, a new page is one line here
@@ -9,6 +10,7 @@ PAGES = {
     "home": HomeScreen,
     "browser" : Browser,
     "chat": ChatPage,
+    "settings": SettingsPage,
 }
 HOMEBUTTON = pygame.Rect(135, 660, 30, 30)
 
