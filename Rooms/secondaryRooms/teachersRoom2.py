@@ -12,6 +12,7 @@ class TeachersRoom2(NewRoom):
         ("filing_cabinets", "Filing Cabinets"),
         ("desk", "Desk"),
         ("notice_board", "Notice Board"),
+        ("book_pile", "Book Pile"),
         ("plant", "Plant"),
         ("door", "Leave room"),
     ]

@@ -12,6 +12,8 @@ class NewRoom(BaseRoom):
     ELEMENTS = []
     FOUND = {}
     BUTTONS = []
+    CLICKABLES = {}     # element id -> things you can press inside its close-up, see newRoomFunc.press
+    CODES = {}          # element id -> (code, picture shown when it is right), see newRoomFunc.CodeEntry
 
     def __init__(self, screen, player, fui):
         super().__init__(screen, player, fui)
@@ -20,6 +22,7 @@ class NewRoom(BaseRoom):
         self.elements = {}
         self.buttons = []
         self.extra = []         # buttons of this room besides its elements, only in the room view
+        self.inputs = {}        # view -> things you type in, only in that view
         self.getElements()
 
     def getElements(self):
@@ -28,6 +31,7 @@ class NewRoom(BaseRoom):
         self.elements = tmp[1]
         self.buttons = tmp[2]
         self.extra = tmp[3]
+        self.inputs = tmp[4]
 
     def goTo(self, room):
         self.next_room = room
@@ -40,6 +44,8 @@ class NewRoom(BaseRoom):
         else:
             for b in self.extra:
                 b.handle_event(event)
+        for i in self.inputs.get(view, []):
+            i.handle_event(event)
         if self.view == view:   # one click can't press the back button and an element at the same time
             for e in self.elements[view]:
                 e.handle_event(event)
@@ -48,6 +54,8 @@ class NewRoom(BaseRoom):
         self.screen.blit(self.image[self.view], (300, 0))
         for e in self.elements[self.view]:
             e.draw(self.screen)
+        for i in self.inputs.get(self.view, []):
+            i.draw(self.screen)
         if self.view != "room":
             for b in self.buttons:
                 b.draw2(self.screen)

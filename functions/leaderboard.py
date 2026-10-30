@@ -26,10 +26,10 @@ STEPS = {
         "lab2001R.window", "lab2001R.whiteboard", "lab2001R.server_rack", "lab2001R.metal_cabinet", "lab2001R.computers",
         "projRoom1R.window", "projRoom1R.bookshelf", "projRoom1R.printer_3d", "projRoom1R.whiteboard", "projRoom1R.table_left", "projRoom1R.table_right", "projRoom1R.beanbag",
         "projRoom2R.window", "projRoom2R.vending_machine", "projRoom2R.sticky_board", "projRoom2R.workshop_table", "projRoom2R.tool_cabinet", "projRoom2R.robot", "projRoom2R.cardboard_boxes",
-        "stairR.staircase", "stairR.fire_door", "stairR.fire_extinguisher", "stairR.emergency_light",
-        "teach1R.bookshelf", "teach1R.safe", "teach1R.notice_board", "teach1R.plant",
-        "teach2R.filing_cabinets", "teach2R.desk", "teach2R.notice_board", "teach2R.plant",
-        "teach3R.sofa", "teach3R.bookshelf", "teach3R.armchair", "teach3R.radio",
+        "stairR.staircase", "stairR.fire_door", "stairR.fire_extinguisher", "stairR.cardboard_boxes", "stairR.emergency_light",
+        "teach1R.bookshelf", "teach1R.desks", "teach1R.safe", "teach1R.notice_board", "teach1R.plant",
+        "teach2R.filing_cabinets", "teach2R.desk", "teach2R.notice_board", "teach2R.book_pile", "teach2R.plant",
+        "teach3R.sofa", "teach3R.telephone", "teach3R.bookshelf", "teach3R.armchair",
     ]}
 
 
@@ -104,4 +104,4 @@ def topFive():
     con.close()
     return rows
 
-connect().execute("DELETE FROM leaderboard WHERE name = '';")
+connect().execute("DELETE FROM leaderboard WHERE name = '';")

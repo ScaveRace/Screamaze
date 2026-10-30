@@ -16,3 +16,8 @@ class Lab2001(NewRoom):
         ("computers", "Computers"),
         ("door", "Leave room"),
     ]
+    # the password of the computers is the answer of the hangman game in classroom 2.021 (optional)
+    # the right code shows computers/log.png, the maintenance log
+    CODES = {
+        "computers": ("WATCH", "log"),
+    }
