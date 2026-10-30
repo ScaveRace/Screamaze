@@ -132,7 +132,7 @@ def resetProgress(room): # after failing only the sandwich puzzle starts again, 
 
 
 def say(room, who, messageID, **values):
-    room.fui.chat.sayKey(who or "", DB_TABLE, messageID, **values)
+    room.fui.chat.sayKey(who or "You", DB_TABLE, messageID, **values)
 
 
 def sayAll(room, lines):
