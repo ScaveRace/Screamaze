@@ -310,7 +310,6 @@ does not, so `assets/FrontDesk_1.png` works on one laptop and crashes on another
 
 ## Known issues
 
-- `assets/bedroom.png` is missing, so the ending screen shows a plain background.
 - The Dutch texts are not checked by a native speaker yet.
 
 ---
