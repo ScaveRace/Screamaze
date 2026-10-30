@@ -11,6 +11,12 @@ SHAPE_PATHS = {s: "assets/shapes/" + s.lower() + ".png" for s in SHAPES}    # th
 BADGE_WIDTH = 80                                                            # the badges you carry, below the box
 SLOT_SHAPE_WIDTH = 88                                                       # a badge in its slot
 
+BOX_PATH = "assets/project_room/shape_box.png"                            # the box with the three holes, cut out of assets/Shape_box.png
+BOX_POS = (420, 180)                                                        # top left of the box, relative to the room picture
+BOX_WIDTH = 420
+HOLES = {"Circle": (0.23, 0.37), "Triangle": (0.50, 0.375), "Square": (0.77, 0.365)}   # the middle of each hole in the box picture, as a part of its width and height
+SLOT_SIZE = 90                                                              # a bit bigger than a hole
+
 MASK_DIR = "assets/project_room/masks/"                                    # the things in the room you can press: cut out of the room picture
 
 # you'll notice some lambdas below in the code, that is to prevent buttons from firing their functions upon being built.
@@ -34,7 +40,7 @@ def spriteMask(path, width, centre, action): # a small picture, not as big as th
 
 def loadImages(screen):
     image = u.load_image("assets/project_room.png", screen.get_size(), (22, 20, 26))
-    boxImage = u.load_alpha_image("assets/", (420, 300), (40, 32, 26))
+    boxImage = u.load_alpha_image(BOX_PATH, fitWidth(BOX_PATH, BOX_WIDTH), (40, 32, 26))
     shapes = {s: u.load_alpha_image(SHAPE_PATHS[s], fitWidth(SHAPE_PATHS[s], SLOT_SHAPE_WIDTH)) for s in SHAPES}
     return image, boxImage, shapes
 
@@ -48,9 +54,16 @@ def buildMasks(room): # the things in the room are masks, so are the badges you 
         "box": u.Mask(MASK_DIR + "locked_box.png", size, (0, 0), lambda: openBox(room)),   # no label, it is too narrow for text
         "stone": spriteMask(STONE_PATH, STONE_WIDTH, STONE_POS, lambda: takeStone(room)),
         # a badge only shows up while the player carries it, in a row below the box
-        "badge": {s: spriteMask(SHAPE_PATHS[s], BADGE_WIDTH, (470 + 110 * i, 525), lambda s=s: pickUp(room, s))
+        "badge": {s: spriteMask(SHAPE_PATHS[s], BADGE_WIDTH, (470 + 110 * i, 565), lambda s=s: pickUp(room, s))
                   for i, s in enumerate(SHAPES)},
     }
+
+
+def slotButton(shape, action): # a button on the hole of the shape in the box picture
+    w, h = fitWidth(BOX_PATH, BOX_WIDTH)
+    centreX = u.startX + BOX_POS[0] + round(HOLES[shape][0] * w)
+    centreY = BOX_POS[1] + round(HOLES[shape][1] * h)
+    return u.Button(centreX - SLOT_SIZE // 2, centreY - SLOT_SIZE // 2, SLOT_SIZE, SLOT_SIZE, OWNERS[shape], action)
 
 
 def buildButtons(room):
@@ -58,9 +71,8 @@ def buildButtons(room):
     return {
         "leave": u.Button(x + 540, 650, 200, 45, "Leave the room", lambda: leave(room)),
         "back": u.Button(x + 60, 650, 160, 45, "Back", lambda: toRoom(room)),
-        # one slot per shape, it shows the name of its owner until the badge is in
-        "slot": {s: u.Button(x + 450 + 130 * i, 300, 100, 100, OWNERS[s], lambda s=s: tryPlace(room, s))
-                 for i, s in enumerate(SHAPES)},
+        # one slot per shape, on its hole in the box, it shows the name of its owner until the badge is in
+        "slot": {s: slotButton(s, lambda s=s: tryPlace(room, s)) for s in SHAPES},
     }
 
 
@@ -176,8 +188,7 @@ def drawScene(room):
     if room.view == "room":
         room.screen.blit(room.font.render("PROJECT ROOM 3", True, (230, 225, 235)), (u.startX + 60, 655))   # in the black below the room, the bookshelf mask is in the top corner
     else:
-        room.screen.blit(room.boxImage, (u.startX + 420, 180))
-        pygame.draw.rect(room.screen, (170, 150, 120), pygame.Rect(u.startX + 420, 180, 420, 300), 1)
+        room.screen.blit(room.boxImage, (u.startX + BOX_POS[0], BOX_POS[1]))
         for shape in SHAPES:
             if placed(room, shape): # the badge sits in its slot, the name of its owner below
                 slot = room.btn["slot"][shape].rect
