@@ -5,7 +5,6 @@ import functions.language as lang
 import pygame
 
 A = "assets/phoneIm/"
-PHONE_SIZE = (300,720)
 
 TITLE = pygame.Rect(24, 66, 252, 28)
 TITLE_COLOUR = (40, 38, 42)

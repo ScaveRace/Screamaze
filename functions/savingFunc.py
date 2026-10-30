@@ -25,7 +25,7 @@ def is_json_empty(path):
         return True
     with open(path, "r", encoding="utf-8") as f:
         try:
-            json_obj = json.load(f)
+            json.load(f)
         except json.JSONDecodeError:
             return True
     return False

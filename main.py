@@ -35,6 +35,7 @@ if not load.is_json_empty("data/gameSettings.json"):
 
 player = p.Player()
 frontui = fui.FrontUI(player,screen,aria)
+aria.preload()
 room = bR.REGISTRY["startup"](screen,player,frontui)
 room.on_enter()
 current = "startup"

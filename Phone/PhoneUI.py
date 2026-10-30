@@ -1,6 +1,6 @@
 import pygame
 from Phone.pages.homescreen import HomeScreen, PHONE_SIZE
-from Phone.pages.browser import Browser, PHONE_SIZE
+from Phone.pages.browser import Browser
 from Phone.pages.chatPage import ChatPage, CHAT_AREA
 from Phone.pages.settingsPage import SettingsPage
 from Phone.pages.dialerPage import DialerPage

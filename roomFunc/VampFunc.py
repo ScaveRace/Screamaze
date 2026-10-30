@@ -107,12 +107,6 @@ def start(p, f, screen):
         for name, f in files.items()
     }
 
-    # the circle is a small picture, not as big as the room
-    w, h = pygame.image.load(CIRCLE_ICON).get_size()
-    circle = (CIRCLE_WIDTH, round(CIRCLE_WIDTH * h / w))
-    cx = (size[0] - u.startX) // 2 + CIRCLE_OFFSET[0]
-    cy = size[1] // 2 + CIRCLE_OFFSET[1]
-
     masks = {
         "circle": u.Mask(MASK_DIR + "circle_in_drawer.png", size, (0, 0), collectCircle),
         "vampire": u.Mask(MASK_DIR + "vampire.png", size, (0, 0), talk),

@@ -2,12 +2,17 @@ import glob
 import json
 import threading
 import traceback
-from llama_cpp import Llama
 
-SYSTEM = "You are ARIA, the AI of Screamaze. You only answer questions about the game."
+TOP_FACTS = 3       # the model was trained with exactly 3 facts per question
+
+with open("AI/aria_knowledge.json", encoding="utf-8") as f:
+    knowledge = json.load(f)
+SYSTEM = knowledge["system"]        # the line the model was trained with, it is not shown to the player
 
 llm = None      # loaded the first time somebody asks, so the game also starts without the model (the start screen downloads it)
+formatter = None
 NO_MODEL = "The AI is not installed yet. Use Download AI and Open AI folder on the start screen."
+NO_LLAMA = "The AI needs llama-cpp-python: pip install llama-cpp-python"
 ERROR = "ARIA could not answer this one: "
 
 lock = threading.Lock()     # the model can only answer one question at a time, a second question waits here until the first answer is done
@@ -22,7 +27,7 @@ def find_lore(question):
     count = 0
     for entry in lore:
         for keyword in entry["keywords"]:
-            if keyword in question and count < 6:
+            if keyword in question and count < TOP_FACTS:
                 found = found + entry["fact"] + "\n"
                 count = count + 1
                 break
@@ -30,13 +35,17 @@ def find_lore(question):
 
 
 def getModel():
-    global llm
+    global llm, formatter
     if llm is None:
         # the full model is the standard, the 4-bit one is the smaller brother used when it is the only one
         files = sorted(glob.glob("AI/*.gguf"), key=lambda f: "f16" not in f)
         if not files:
             return None
+        from llama_cpp import Llama     # here and not at the top, so the game also starts without the package
+        from llama_cpp.llama_chat_format import Jinja2ChatFormatter
         llm = Llama(model_path=files[0], n_ctx=2048, verbose=False)
+        template = llm.metadata["tokenizer.chat_template"]
+        formatter = Jinja2ChatFormatter(template=template, eos_token=llm._model.token_get_text(llm.token_eos()), bos_token="")
     return llm
 
 
@@ -52,12 +61,26 @@ def ask(question, on_text):
                 {"role": "system", "content": system},
                 {"role": "user", "content": question},
             ]
-            for part in model.create_chat_completion(messages=messages, max_tokens=150, stream=True):
-                text = part["choices"][0]["delta"].get("content", "")
-                on_text(text)
+            # thinking is turned off in the template, otherwise the model writes its reasoning instead of an answer
+            prompt = formatter(messages=messages, enable_thinking=False).prompt
+            for part in model.create_completion(prompt, max_tokens=150, temperature=0, stop=["<|im_end|>"], stream=True):
+                on_text(part["choices"][0]["text"])
+        except ImportError:
+            on_text(NO_LLAMA)
         except Exception as e:      # an error in the thread would be lost, so the player sees it in the chat
             traceback.print_exc()
             on_text(ERROR + str(e)[:120])
+
+
+# loads the model while the player is still in the menus, so the first question doesn't have to wait for it
+def preload():
+    def load():
+        with lock:
+            try:
+                getModel()
+            except Exception:       # the first question tries again and shows the error in the chat
+                traceback.print_exc()
+    threading.Thread(target=load, daemon=True).start()
 
 
 def ask_in_background(question, on_text):
