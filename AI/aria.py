@@ -28,7 +28,8 @@ def find_lore(question):
 def getModel():
     global llm
     if llm is None:
-        files = glob.glob("AI/*.gguf")
+        # the full model is the standard, the 4-bit one is the smaller brother used when it is the only one
+        files = sorted(glob.glob("AI/*.gguf"), key=lambda f: "f16" not in f)
         if not files:
             return None
         llm = Llama(model_path=files[0], n_ctx=2048, verbose=False)

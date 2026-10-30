@@ -20,7 +20,7 @@ MAX_DIGITS = 12
 
 # the numbers that can be called: number -> the sound that plays after pressing call, every other number can't be called
 NUMBERS = {
-    "911": "assets/soundEffects/paranormal/misc/eerie1.mp3",
+    "911": "assets/soundEffects/phone/call911.mp3",
 }
 
 

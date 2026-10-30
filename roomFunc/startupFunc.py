@@ -9,7 +9,9 @@ import functions.savingFunc as load
 from functions.settingsFunc import settings as sett
 
 AI_FOLDER = "AI/"
-AI_LINK = "https://huggingface.co/Sacve/Screamaze_Qwen3.5_2B_Q4_K_M.gguff/resolve/main/game-q4_k_m.gguf"    # the browser downloads the model from here
+AI_REPO = "https://huggingface.co/Sacve/Screamaze_Qwen3.5_2B_Q4_K_M.gguff/resolve/main/"    # the browser downloads the models from here
+AI_LINK = AI_REPO + "game-f16.gguf"            # the standard model, full precision (3.6 GB)
+AI_LINK_SMALL = AI_REPO + "game-q4_k_m.gguf"   # the smaller brother for weak computers (1.2 GB)
 
 
 def getElements(player,screen,goTo,openSettings,openLeaderboard):
@@ -26,7 +28,8 @@ def current(player,goTo,openSettings,openLeaderboard):
     ]
     if not aiInstalled():       # only there until a .gguf is in the AI folder: download it, then put it in the folder
         buttons.append(u.Button(120, 620, 150, 50, "Download AI", lambda: webbrowser.open(AI_LINK)))
-        buttons.append(u.Button(120, 670, 150, 50, "Open AI folder", openAiFolder))
+        buttons.append(u.Button(20, 670, 125, 50, "Small AI", lambda: webbrowser.open(AI_LINK_SMALL)))
+        buttons.append(u.Button(155, 670, 125, 50, "Open AI folder", openAiFolder))
     return buttons
 
 
