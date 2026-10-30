@@ -20,6 +20,13 @@ class FrontUI:
         self.chat = self.phone.chat
         self.db = lang   # the rooms get their texts with fui.db.chatMessage(room, id)
 
+    def reset(self):
+        self.chat.messages.clear()
+        self.chat.input = ""
+        self.chat.focus = False
+        self.chat.scroll = 0
+        self.inventory.open = False
+        self.pause.paused = False
 
     def sendMessage(self,npc,roomName,msg_id):
         self.chat.sayKey(npc,roomName,msg_id)

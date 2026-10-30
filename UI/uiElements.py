@@ -308,7 +308,7 @@ class Mask:
         self.labelRect = self.labelSurf.get_rect(center=self.labelCentre)
 
     def handle_event(self, event):
-        mouseX, mouseY = pygame.mouse.get_pos()
+        mouseX, mouseY = getattr(event, "pos", pygame.mouse.get_pos())
         localX = mouseX - self.imageX
         localY = mouseY - self.imageY
         maskW, maskH = self.imageMask.get_size()
