@@ -324,12 +324,7 @@
     "projRoom2R.robot": "A small robot prototype. Its wheels are crusted with something dark.",
     "projRoom2R.robot.changed": "A dusty workshop robot, unplugged and long dead. It's just scenery.",
     "projRoom2R.cardboard_boxes": "Boxes of spare parts. One of them is taped shut many times over.",
-    "projRoom2R.cardboard_boxes.changed": "A doll's head in the packing foam. A tag on the box says 'Teacherroom 3'. You wait for it to blink. It doesn't.",
-    "items.brass_key": "A small key. The tag says '2.035 DESK BOX'. It opens something in a desk.",
-    "items.silver_key": "A small silver key. The tag says 'LOCKER 2'. It looks like a padlock key.",
-    "items.diary": "Day 41. It is not in the walls. It is in the windows. I started a game of hangman on the board in 2.021. I can't finish it. It keeps finishing itself. I hide my keys where the plants are. The little box in the 2.035 desk is mine. – Marsh",
-    "items.pin": "A pin from the globe. It marked a place with no name. Nothing here to use it on.",
-    "items.flyer": "'Biology room 2.015 has been rebuilt.' The date at the bottom has been torn off."
+    "projRoom2R.cardboard_boxes.changed": "A doll's head in the packing foam. A tag on the box says 'Teacherroom 3'. You wait for it to blink. It doesn't."
   },
   "Ending": {
     "wake": "You wake up in your bed..... was this real?",

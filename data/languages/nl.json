@@ -324,12 +324,7 @@
     "projRoom2R.robot": "Een klein prototype van een robot. Aan de wielen zit iets donkers vastgekoekt.",
     "projRoom2R.robot.changed": "Een stoffige werkplaatsrobot, losgekoppeld en al lang dood. Het is maar decor.",
     "projRoom2R.cardboard_boxes": "Dozen met reserveonderdelen. Eén ervan is vele malen dichtgetapet.",
-    "projRoom2R.cardboard_boxes.changed": "Een poppenhoofd in het verpakkingsschuim. Op een label op de doos staat 'Lerarenkamer 3'. Je wacht tot het knippert. Dat doet het niet.",
-    "items.brass_key": "Een klein sleuteltje. Op het label staat '2.035 DESK BOX'. Het opent iets in een bureau.",
-    "items.silver_key": "Een klein zilveren sleuteltje. Op het label staat 'LOCKER 2'. Het lijkt op een hangslotsleutel.",
-    "items.diary": "Dag 41. Het zit niet in de muren. Het zit in de ramen. Ik ben op het bord in 2.021 een potje galgje begonnen. Ik krijg het niet af. Het maakt zichzelf steeds af. Ik verstop mijn sleutels waar de planten staan. Het kistje in het bureau van 2.035 is van mij. – Marsh",
-    "items.pin": "Een speld uit de globe. Hij markeerde een plek zonder naam. Er is hier niets om hem voor te gebruiken.",
-    "items.flyer": "'Biologielokaal 2.015 is verbouwd.' De datum onderaan is eraf gescheurd."
+    "projRoom2R.cardboard_boxes.changed": "Een poppenhoofd in het verpakkingsschuim. Op een label op de doos staat 'Lerarenkamer 3'. Je wacht tot het knippert. Dat doet het niet."
   },
   "Ending": {
     "wake": "Je wordt wakker in je bed..... was dit echt?",

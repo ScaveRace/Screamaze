@@ -15,7 +15,6 @@ class FrontUI:
         self.screen = screen
         self.visible = False
         self.inventory = i.InventoryMenu(screen,p)
-        self.inventory.say = self.sendMessage   # pressing an item in the inventory tells its text in the chat
         self.pause = pause.PauseMenu(screen,p)
         self.pauseButton = u.Button(1370, 20, 90, 36, "pause", self.pause.toggle)
         self.phone = Phone(screen,p,self)     # the phone is where the chat was, the chats of the phone are Chatboxes
