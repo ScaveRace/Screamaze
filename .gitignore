@@ -1,0 +1,10 @@
+__pycache__/
+.venv/
+.idea/
+AI/*.gguf
+
+# your own game state, the game creates these files itself
+data/savePlayer.json
+data/gameSettings.json
+data/leaderboard.db
+*.pyc
