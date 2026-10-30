@@ -63,7 +63,6 @@ class PauseMenu:
 
 
     def saveAction(self):
-        print("works")
         save.save(sett, "data/gameSettings.json")
 
     def handle_event(self, event):

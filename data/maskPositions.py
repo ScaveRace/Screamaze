@@ -21,6 +21,7 @@ CUT = {
     "assets/classroom_2031/masks/teacher_desk.png": (707, 92, 1672, 941),
     "assets/classroom_2031/masks/window.png": (640, 30, 1672, 941),
     "assets/classroom_2031/chalkboard/mask.png": (0, 62, 1672, 941),
+    "assets/classroom_2031/globe/flyer_mask.png": (810, 822, 1672, 941),
     "assets/classroom_2031/globe/mask.png": (578, 89, 1672, 941),
     "assets/classroom_2031/lockers/locker_2_mask.png": (888, 58, 1672, 941),
     "assets/classroom_2031/lockers/mask.png": (309, 57, 1672, 941),

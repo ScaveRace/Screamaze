@@ -38,9 +38,10 @@ class FrontUI:
         print(self.chat.messages)
         return
     def handleEvenet(self,event):
+        if self.inventory.open and self.inventory.handle_event(event):      # the open inventory is on top, so the room and the phone don't get the click
+            return True
         if self.pause.handle_event(event):
             return True
-        self.inventory.handle_event(event)
         self.pauseButton.handle_event(event)
         self.phone.handle_event(event)
         return False

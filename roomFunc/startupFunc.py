@@ -51,8 +51,9 @@ def start(screen):
 
 
 def load_game(player,goTo):
-    if not load.is_json_empty("data/savePlayer.json"):
-        player.reset()
+    if load.is_json_empty("data/savePlayer.json"):      # nothing saved yet (or a broken file), so there is nothing to continue
+        return
+    player.reset()
     load.load(player,"data/savePlayer.json")
     player.setImage()
     goTo(player.location)
