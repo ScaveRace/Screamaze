@@ -2,7 +2,12 @@
 import pygame
 import Rooms.baseRoom as bR
 from Rooms import load_all
+####auto player hook ####
+import sys
+from autoplayer import AutoPlayer
+from playthrough import STEPS
 
+bot = AutoPlayer(STEPS) if "--autoplay" in sys.argv else None
 import player as p
 import functions.savingFunc as load
 from functions.settingsFunc import settings as sett
@@ -38,40 +43,51 @@ current = "startup"
 ms_buffer = 0          # leftover milliseconds not yet worth a whole second
 
 ########## game loop ##########
- ## initial screen
 while running:
-    dt = clock.tick(60)                     # caps at 60 fps, returns ms since last call
-    #show_pause = current not in ("startup", "frontD")      # no pause button on the title screen
+    dt = clock.tick(60)
 
-    for event in pygame.event.get():   ### handle user events
+    # Process events
+    for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         elif not (room.show_ui and frontui.handleEvenet(event)):
             room.handle_event(event)
 
+    # Run the autoplayer once per frame, not once per event
+    if bot:
+        bot.update(current, player, room)
+
+    # Handle room transitions
     if room.next_room is not None:
         name = room.next_room
+
         if name not in bR.REGISTRY:
-            raise KeyError(f"No room named {name!r}. Known: {sorted(bR.REGISTRY)}")
-        room = bR.REGISTRY[name](screen,player,frontui)
+            raise KeyError(
+                f"No room named {name!r}. Known: {sorted(bR.REGISTRY)}"
+            )
+
+        room = bR.REGISTRY[name](screen, player, frontui)
         room.on_enter()
         current = name
         player.location = name
+
     paranormal.setActive(room.paranormal)
     paranormal.update()
 
     if current == "startup":
         frontui.reset()
+
     room.draw()
+
     if room.show_ui:
         if not frontui.pause.paused:
-            # clock only advances while unpaused
             ms_buffer += dt
             while ms_buffer >= 1000:
                 player.add_time(1)
                 ms_buffer -= 1000
+
         frontui.draw()
+
     pygame.display.flip()
 
-
-pygame.quit()       # quits pygame
+pygame.quit()
