@@ -12,6 +12,7 @@ class NewRoom(BaseRoom):
     ELEMENTS = []
     FOUND = {}
     BUTTONS = []
+    PEOPLE = []         # people in the room you can press, see newRoomFunc.getElements
     CLICKABLES = {}     # element id -> things you can press inside its close-up, see newRoomFunc.press
     CODES = {}          # element id -> (code, picture shown when it is right), see newRoomFunc.CodeEntry
 

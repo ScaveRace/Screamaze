@@ -46,7 +46,7 @@ STONE_HEIGHT = 50
 NECKLACE_MASK = "assets/teacherRoom/tr_necklace_in_chest.png"
 # box around the thin necklace that also counts as a click, on the 1024 x 572 picture
 NECKLACE_AREA = (404, 224, 221, 117)
-NECKLACE_ICON = "assets/teacherRoom/tr_necklace_icon.png"
+NECKLACE_ICON = NECKLACE_MASK
 
 COUNTER_POS = (615, 205)
 
