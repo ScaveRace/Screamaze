@@ -176,7 +176,6 @@ class EndingScreen(BaseRoom):
         self.drawText(
             "thanks",
             (370, h // 2),
-            600,
-            show_box=not board_visible)
+            600,)
         if board_visible:
             self.board.draw()
