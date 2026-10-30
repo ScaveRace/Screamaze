@@ -1,6 +1,6 @@
 import pygame
 from Phone.pages.homescreen import HomeScreen, PHONE_SIZE
-from Phone.pages.bowser import Browser, PHONE_SIZE
+from Phone.pages.browser import Browser, PHONE_SIZE
 from Phone.pages.chatPage import ChatPage, CHAT_AREA
 import UI.uiElements as u
 
@@ -10,7 +10,7 @@ PAGES = {
     "browser" : Browser,
     "chat": ChatPage,
 }
-
+HOMEBUTTON = pygame.Rect(135, 660, 30, 30)
 
 # the phone on the left of the screen, in the place of the chat, it shows one page at a time
 class Phone:
@@ -29,9 +29,16 @@ class Phone:
 
     def handle_event(self, event):
         self.pages[self.page].handle_event(event)
+        if event.type == pygame.MOUSEBUTTONUP:
+            if HOMEBUTTON.collidepoint(pygame.mouse.get_pos()):
+                self.goTo("home")
 
     def draw(self):
+
         self.pages[self.page].draw()
+        pygame.draw.rect(self.screen, (40, 38, 42), HOMEBUTTON, border_radius=10)
+
+
 
 
 # runs only the phone, in a window of its size, to build the pages, from the project folder: python -m Phone.PhoneUI
