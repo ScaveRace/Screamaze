@@ -33,16 +33,20 @@ STEPS = {
     ]}
 
 
+# how much of the 100% the secondary rooms are worth, the main rooms share the rest
+SECONDARY_SHARE = 20
+
+
 # how much of the game the player did, from 0 to 100
 def completion(player):
+    mainSteps = sum(len(steps) for room, steps in STEPS.items() if room != "SecondaryRooms")
     done = 0
-    total = 0
     for room, steps in STEPS.items():
+        weight = SECONDARY_SHARE / len(steps) if room == "SecondaryRooms" else (100 - SECONDARY_SHARE) / mainSteps
         for step in steps:
-            total += 1
             if step in player.getCompletion(room)["all"]:
-                done += 1
-    return round(done / total * 100)
+                done += weight
+    return round(done)
 
 def today():
     return datetime.now().strftime("%d-%m-%Y") # "29-10-2026"
