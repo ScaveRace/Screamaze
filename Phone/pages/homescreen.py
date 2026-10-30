@@ -34,7 +34,7 @@ class HomeScreen(BasePage):
         self.goTo("browser")
 
     def open_chat(self):
-        self.goTo("chat")
+        self.phone.openChat(False)      # the NPC talks
 
     def open_gear(self):
         pass
@@ -43,7 +43,7 @@ class HomeScreen(BasePage):
         pass
 
     def open_handset(self):
-        pass
+        self.phone.openChat(True)       # the AI chat
 
     def open_corner(self):
         pass

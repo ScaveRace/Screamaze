@@ -14,12 +14,22 @@ HOMEBUTTON = pygame.Rect(135, 660, 30, 30)
 
 # the phone on the left of the screen, in the place of the chat, it shows one page at a time
 class Phone:
-    def __init__(self, screen, player):
+    def __init__(self, screen, player, fui):
         self.screen = screen
         self.player = player
-        self.chat = u.Chatbox(*CHAT_AREA)       # every message of the game, the rooms add theirs through fui.chat, the chat page shows it
+        self.fui = fui              # fui.showAiChat says which of the two chats the chat page shows
+        self.chat = u.Chatbox(*CHAT_AREA)       # the NPC talks, the rooms add theirs through fui.chat
+        self.aiChat = u.Chatbox(*CHAT_AREA)     # the AI chat
         self.pages = {name: page(screen, player, self) for name, page in PAGES.items()}
         self.page = "home"
+
+    # the chat page shows the NPC talks (the chat app) or the AI chat (the handset app)
+    def openChat(self, ai):
+        self.fui.showAiChat = ai
+        self.goTo("chat")
+
+    def shownChat(self):
+        return self.aiChat if self.fui.showAiChat else self.chat
 
     def goTo(self, page):
         if page not in self.pages:
@@ -47,7 +57,9 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode(PHONE_SIZE, pygame.SCALED | pygame.RESIZABLE)      # resizing keeps its shape
     pygame.display.set_caption("Phone")
     clock = pygame.time.Clock()
-    phone = Phone(screen, None)
+    import player as p
+    from UI.frontUI import FrontUI
+    phone = FrontUI(p.Player(), screen).phone       # the phone needs the FrontUI, it keeps showAiChat
     running = True
     while running:
         for event in pygame.event.get():
