@@ -1,0 +1,7 @@
+# pip install -r requirements.txt     (Python 3.13)
+pygame==2.6.1
+
+# the AI (ARIA). The game also runs without it: if this line fails, delete it and install the rest.
+# the extra index has ready-made CPU builds, so no compiler is needed on most computers
+--extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+llama-cpp-python==0.3.36

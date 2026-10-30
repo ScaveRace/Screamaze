@@ -8,31 +8,38 @@ This file is what a new person on the team reads first.
 
 ---
 
-## Requirements
+## Install
 
-- **Python 3.13.** Not 3.14 — pygame 2.6.1 has no ready-made install for it and `pip install`
-  fails with a long red error.
-- **pygame 2.6.1.** It is the only dependency (`json` comes with Python).
-- Git.
+You need **Python 3.13** and **Git**. Not Python 3.14: pygame 2.6.1 has no ready-made install for
+it and `pip install` fails with a long red error.
 
 ```
 py -3.13 --version        # Windows
 python3.13 --version      # macOS and Linux
 ```
 
----
-
-## Getting started
+### 1. Get the game
 
 ```
 git clone https://github.com/ScaveRace/Screamaze.git
 cd Screamaze
 ```
 
+### 2. Install the packages
+
 | | Windows (PowerShell) | macOS and Linux |
 |---|---|---|
 | Create the environment | `py -3.13 -m venv .venv` | `python3.13 -m venv .venv` |
-| Install pygame | `.venv\Scripts\python -m pip install pygame==2.6.1` | `.venv/bin/python -m pip install pygame==2.6.1` |
+| Install everything | `.venv\Scripts\python -m pip install -r requirements.txt` | `.venv/bin/python -m pip install -r requirements.txt` |
+
+`requirements.txt` holds **pygame** (the game) and **llama-cpp-python** (runs the AI). If
+llama-cpp-python does not install, open `requirements.txt`, delete its last two lines and run
+the command again: the game works without it, only the AI chat does not.
+
+### 3. Run it
+
+| | Windows (PowerShell) | macOS and Linux |
+|---|---|---|
 | Run the game | `.venv\Scripts\python main.py` | `.venv/bin/python main.py` |
 
 Run the game from the project folder: all asset and data paths are relative to it.
@@ -46,20 +53,46 @@ than the one in `.venv`.
 
 ---
 
+## The AI (ARIA)
+
+ARIA answers questions about the game in the **globe** app of the phone. The model is too big for
+git, so it is not in the repository: you download it once.
+
+| Model | Size | For |
+|---|---|---|
+| `game-f16.gguf` | 3.6 GB | the standard, full precision |
+| `game-q4_k_m.gguf` | 1.2 GB | the smaller brother, for weak computers |
+
+1. Start the game. While there is no `.gguf` in the `AI/` folder, the start screen shows three
+   buttons: **Download AI** (the standard model), **Small AI** (the small one) and
+   **Open AI folder**.
+2. Press one of the download buttons. Your browser downloads the file from Hugging Face
+   (`Sacve/Screamaze_Qwen3.5_2B_Q4_K_M.gguff`).
+3. Press **Open AI folder** and put the `.gguf` file in it. Restart the game.
+
+If both files are in `AI/`, the game uses the full one. The model loads in the background while
+you are in the menus. The first answers can be slow on a weak computer.
+
+ARIA does not know the game by heart. For each question `AI/aria.py` looks up 3 facts in
+`AI/lore.json` by keyword and puts them in the prompt, so a new puzzle needs a new entry there.
+
+---
+
 ## Playing
 
 | | |
 |---|---|
 | Click | Buttons, doors and objects. Hover over something clickable to see it highlighted. |
-| Type + `Enter` | Click the chat first, then type. Used for riddle answers. |
+| Type + `Enter` | Click the chat first, then type. Used for riddle answers and for ARIA. |
 | Mouse wheel over the chat | Scroll back through older messages. |
-| `Esc` or the **pause** button | Pause menu: music volume, sound-effect volume, save game, resume. |
-| **Briefcase** app on the phone | Shows the items you carry. |
+| `Esc` or the **pause** button | Pause menu: save game, resume. |
+| **Phone** (left side) | **Globe** ARIA, **chat** the talks of the characters, **gear** volume and language, **handset** a keypad (try 911), **briefcase** your items. The button under the phone goes back to its home screen. |
 
-The timer at the top only runs while the game is not paused.
+The timer on the phone only runs while the game is not paused. The battery shows how far you are.
 
 **Load Game** on the start screen continues from `data/savePlayer.json`, in the room you saved in.
-Volume settings are stored in `data/gameSettings.json` every time you move a slider.
+Volume and language are stored in `data/gameSettings.json` every time you change them. All buttons,
+labels and texts follow the chosen language (English or Dutch).
 
 The window can be resized. The game always renders at 1480×720 and pygame scales that picture to
 the window, keeping the aspect ratio.
@@ -73,8 +106,17 @@ main.py                    the window, the game loop and the timer; finds rooms 
 player.py                  Player: name, gender, time, location, inventory
 UI/
   uiElements.py            Button, Chatbox, TextField, Mask, Slider, load_image — shared by everyone
-  frontUI.py               the overlay drawn on top of every room: phone (with the chat), timer, pause, inventory
+  frontUI.py               the overlay drawn on top of every room: phone, pause button, inventory
+  leaderboard.py           the leaderboard panel of the start screen
   pauseMenu.py             pause panel with volume sliders and save
+AI/
+  aria.py                  ARIA: loads the .gguf model, finds the facts, answers in a background thread
+  lore.json                the game facts ARIA looks up by keyword
+  aria_knowledge.json      the line the model was trained with
+Phone/
+  PhoneUI.py               the phone on the left: shows one page at a time (PAGES = name -> class)
+  pages/                   homescreen, browser (ARIA), chatPage, settingsPage, dialerPage
+roomFunc/                  the puzzle code of each room, next to its Rooms/ file
 menu/
   startupMenu.py           new game / load game / settings (a room: key "startup")
   endingScreen.py          the end of the game and the leaderboard (a room: key "ending")
@@ -96,11 +138,12 @@ functions/
   sound.py                 play_music, play_sound
   settingsFunc.py          the shared `settings` object (volumes, language)
   savingFunc.py            save / load any object to JSON
-  language.py              chatMessage: reads dialogue from the language files
+  language.py              chatMessage and ui(): read dialogue and button texts from the language files
+  leaderboard.py           saves finished runs in data/leaderboard.db
 data/
   playerLogistics.py       DOOR_SPAWNS: where the player stands in front of each corridor door
-  languages/en.json        dialogue in english, room -> id -> text
-  languages/nl.json        the same dialogue in dutch
+  languages/en.json        dialogue in english, room -> id -> text, and a Buttons table: the labels
+  languages/nl.json        the same in dutch
   savePlayer.json          the save file
   gameSettings.json        volume and language settings
 assets/                    images, masks and music
@@ -267,10 +310,8 @@ does not, so `assets/FrontDesk_1.png` works on one laptop and crashes on another
 
 ## Known issues
 
-- Most corridor doors without a room of their own currently lead to the vampire room.
-- The **Settings** button on the start screen does nothing yet; the volume sliders are in the
-  pause menu.
-- There is no `requirements.txt` yet.
+- `assets/bedroom.png` is missing, so the ending screen shows a plain background.
+- The Dutch texts are not checked by a native speaker yet.
 
 ---
 
@@ -282,7 +323,8 @@ does not, so `assets/FrontDesk_1.png` works on one laptop and crashes on another
    `data/`) get their own small pull request, announced in the group chat first.
 4. Pull `main` into your branch every day.
 5. Read `git status` before every commit. Don't commit `__pycache__`, `.venv`, `.idea` or your
-   own save file.
+   own save file. The `.gitignore` already skips `__pycache__`, `.venv`, `.idea` and the
+   `.gguf` models: never add a model to git, it is bigger than GitHub allows.
 
 ```
 git switch main
