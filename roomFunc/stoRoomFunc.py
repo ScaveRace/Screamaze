@@ -149,8 +149,12 @@ def current():
 
 
 ########## helpers ##########
-def say(text):
-    fui.chat.say(text)
+def say(who, textId):
+    fui.chat.sayKey(who, TABLE, textId)
+
+
+def questionId():
+    return QUESTION_IDS[quiz.index][0]
 
 
 def currentButtons():
@@ -182,7 +186,7 @@ def setView(newView, message=None):
         buttons[View.QUIZ] = quizButtons()
 
     if message:
-        say(message)
+        say(*message)       # message is (who, text id)
 
 
 def quizButtons():
@@ -206,7 +210,7 @@ def gotoRoom():
 
 
 def gotoDesk():
-    msg = "You > " + (T(MSG_DRAWER_UNLOCKED) if quiz.completed else T(MSG_DRAWER_LOCKED_QUIZ))
+    msg = ("You", MSG_DRAWER_UNLOCKED if quiz.completed else MSG_DRAWER_LOCKED_QUIZ)
     setView(View.DESK, msg)
 
 
@@ -214,7 +218,7 @@ def gotoDesk():
 def openRack():
     setView(View.RACK)
     if not fuse_collected:
-        say("You > " + T(MSG_FUSE_BOX))
+        say("You", MSG_FUSE_BOX)
 
 
 def takeFuse():
@@ -225,23 +229,23 @@ def takeFuse():
     player.addCompletion("StorrageRoom", "sto.fuse", "")
     # add_item(category, name, icon path)
     player.add_item("Items", "Fuse", FUSE_ICON)
-    say("You > " + T(MSG_FUSE_TAKEN))
+    say("You", MSG_FUSE_TAKEN)
 
 
 ########## desk ##########
 def openQuiz():
     if quiz.completed:
         return
-    setView(View.QUIZ, "Desk > " + quiz.current_question()[0])
+    setView(View.QUIZ, ("Desk", questionId()))
 
 
 def openDrawer():
     if not quiz.completed:
-        say("You > " + T(MSG_DRAWER_LOCKED_HINT))
+        say("You", MSG_DRAWER_LOCKED_HINT)
     elif stone_collected:
-        setView(View.DRAWER, "You > " + T(MSG_DRAWER_EMPTY))
+        setView(View.DRAWER, ("You", MSG_DRAWER_EMPTY))
     else:
-        setView(View.DRAWER, "You > " + T(MSG_DRAWER_STONE))
+        setView(View.DRAWER, ("You", MSG_DRAWER_STONE))
 
 
 ########## quiz ##########
@@ -249,17 +253,17 @@ def checkAnswer(choice):
     correct, justCompleted = quiz.answer(choice)
 
     if not correct:
-        say("You > " + T(MSG_WRONG))
+        say("You", MSG_WRONG)
         setView(View.QUIZ)
         return
 
     if justCompleted:
         player.addCompletion("StorrageRoom", "sto.quiz", "")
         # quiz done: back to the desk, the drawer is unlocked but you still have to open it
-        say("You > " + T(MSG_QUIZ_DONE))
+        say("You", MSG_QUIZ_DONE)
         setView(View.DESK)
     else:
-        setView(View.QUIZ, "Desk > " + quiz.current_question()[0])
+        setView(View.QUIZ, ("Desk", questionId()))
 
 
 ########## stone ##########
@@ -270,5 +274,5 @@ def collectStone():
     stone_collected = True
     player.addCompletion("StorrageRoom", "sto.stone", "")
     player.add_item("Stones", "Green", STONE_IMAGE)
-    say("You > " + T(MSG_STONE_TAKEN))
+    say("You", MSG_STONE_TAKEN)
     setView(View.DRAWER)

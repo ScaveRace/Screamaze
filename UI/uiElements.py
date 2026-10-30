@@ -84,91 +84,150 @@ class Button:
 
  
 
-#########  A chatbox is used for NPC talking or player talking, needs rework to create text boundaries ########
+#########  one message in the chatbox  ########
+##  a message from the language files is kept as (table, id) and looked up again every time it is drawn, so the old messages follow the language
+##  a message the player typed has no id, it stays as it was typed
+class Message:
+    def __init__(self, who="", table=None, messageID=None, values=None, text=""):
+        self.who = who.strip().rstrip(":").strip()     ## "Thuas: " and "Thuas" are the same speaker
+        self.table = table
+        self.messageID = messageID
+        self.values = values        ## fills the {} in the text
+        self.text = text
+
+    def body(self):
+        if self.table is None:
+            return self.text
+        text = lang.chatMessage(self.table, self.messageID) or ""
+        if self.values is not None:
+            text = text.format(**self.values)
+        return text
+
+
+#########  A chatbox is used for NPC talking or player talking, the rows change grey every time the speaker changes ########
 class Chatbox:
+    CHAT_FONTS = "segoeui,helveticaneue,arial,dejavusans,liberationsans,notosans,freesans"   ## clean sans-serif, the first one on this computer
 
-
-    def __init__(self,x,y,w,h,font = pygame.font.Font(None, 28)):
+    def __init__(self,x,y,w,h,font = None,nameFont = None):
         self.rect = pygame.Rect(x,y,w,h)
+        self.viewRect = pygame.Rect(x,y,w,h-46)            ## the messages
+        self.inputRect = pygame.Rect(x,y+h-38,w,38)        ## the line the player types in
         self.messages = []
         self.input = ""
         self.focus = False
-        self.font = font  ### make it used standard font, can decide a different one.
-        self.scroll = 0
-        self.scrollRect = None
-        self.startScroll = None
+        self.font = font or pygame.font.SysFont(self.CHAT_FONTS, 15)
+        self.nameFont = nameFont or pygame.font.SysFont(self.CHAT_FONTS, 13, bold = True)
+        self.scroll = 0     ## pixels up from the newest message, gets clamped in draw
+        self.count = 0      ## how many messages there were last frame, to jump to a new one
+        self.unread = False ## a message came and the chat was not open, the phone shows a red dot
 
-    def say(self,text): ### simple get a new messages
-        self.messages.append(text)
-        self.scroll = 0  ## jump back to the newest message
+    def say(self,text): ### a message that is not in the language files, "Name > text" or just text
+        who, sep, rest = text.partition(" > ")
+        if not sep:
+            who, rest = "", text
+        self.add(Message(who, text = rest))
+
+    def sayKey(self,who,table,messageID,**values): ### a message from the language files, values fill the {} in it
+        self.add(Message(who, table, messageID, values if values else None))
+
+    def add(self,message):
+        message.body()      ## a wrong table or id shows up here, where the room said it
+        self.messages.append(message)
+        self.unread = True
 
     def handle_event(self,event):   ###  if text was added, create that as well
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            self.focus = uF.focused(event,self.rect)
-        if event.type == pygame.MOUSEWHEEL and self.rect.collidepoint(pygame.mouse.get_pos()):
-            self.scroll += event.y  ## gets clamped in draw
+            self.focus = uF.focused(event,self.inputRect)
+        if event.type == pygame.MOUSEWHEEL and self.viewRect.collidepoint(pygame.mouse.get_pos()):
+            self.scroll += event.y * 36
 
-        if self.focus:
-            if(self.isSubmit(event)):
-                text = self.input.strip()
-                self.input = ""
-                if text:
-                    self.say(f"You > {text}")
-            else:
-                self.input = uF.handle_text_event(self.input,event)
-
-    def handle_event_npc(self,npc, message_npc):  ###  prints message as NPC
-        self.say(f"{npc} > {message_npc}")
+        if not self.focus:
+            return
+        if self.isSubmit(event):
+            text = self.input.strip()
+            self.input = ""
+            if text:
+                self.add(Message("You", text = text))
+        else:
+            self.input = uF.handle_text_event(self.input,event)[:200]
 
     def isSubmit(self,event):  ###  enters upon user pressing enter (return)
         return event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN
 
-    def draw(self, screen):
-        pygame.draw.rect(screen, (26, 25, 28), self.rect)  ## background
-        pygame.draw.rect(screen, (60, 58, 64), self.rect, 1)  ## outline
-        max_w = self.rect.width - 20
-
-        # Input line: show only the end if it's too long
-        shown = "> " + self.input
-        while self.font.size(shown + "|")[0] > max_w and len(shown) > 2:
-            shown = shown[:2] + shown[3:]  ## drop the oldest character after "> "
-        if self.focus and (pygame.time.get_ticks() // 500) % 2 == 0:
-            shown += "|"
-        screen.blit(self.font.render(shown, True, (222, 222, 214)),
-                    (self.rect.x + 10, self.rect.bottom - 34))
-
-        # Messages: wrap only the text next to the name, then draw from the bottom up
-        rows = []  ## (name, indent, line), name is empty on wrapped lines
+    ###  cuts every message in lines, the grey changes every time the speaker changes
+    ###  the messages are looked up again every frame, that is why they follow the language
+    def getRows(self):
+        rows = []
+        grey = 0
+        speaker = None
         for message in self.messages:
-            speaker, sep, text = message.partition(" > ")
-            if not sep:
-                speaker, text = "", message  ## no name in front, use the full width
-            name = speaker + sep
-            indent = self.font.size(name)[0]
-            for i, line in enumerate(uF.wrap_lines(self.font, text, max_w - indent)):
-                rows.append((name if i == 0 else "", indent, line))
-        line_h = self.font.get_linesize()
-        visible = (self.rect.height - 54) // line_h
-        self.scroll = max(0, min(self.scroll, len(rows) - visible))
-        y = self.rect.bottom - 44
-        for name, indent, line in reversed(rows[:len(rows) - self.scroll]):
-            y -= line_h
-            if y < self.rect.y + 10:
-                break  ## box is full
-            if name:
-                screen.blit(self.font.render(name, True, (222, 222, 214)),
-                            (self.rect.x + 15, y))
-            screen.blit(self.font.render(line, True, (150, 150, 142)),
-                        (self.rect.x + 15 + indent, y))
-            # Scroll bar: thin line on the left, only when there is something to scroll
-            max_scroll = len(rows) - visible
-            if max_scroll > 0:
-                track_h = self.rect.height - 54
-                thumb_h = max(20, track_h * visible // len(rows))
-                thumb_y = self.rect.y + 10 + (track_h - thumb_h) * (max_scroll - self.scroll) // max_scroll
-                self.scrollRect = pygame.rect.Rect(self.rect.x + 3, thumb_y, 4, thumb_h)
-                pygame.draw.rect(screen, (90, 88, 96),self.scrollRect)
+            first = message.who != speaker      ## the first message of this speaker, only that one has the name
+            if first and speaker is not None:
+                grey = 1 - grey
+            speaker = message.who
 
+            textY = 7 if first else 2
+            if first and message.who:
+                textY += self.nameFont.get_linesize()
+            lines = uF.wrap_lines(self.font, message.body(), self.viewRect.width - 26)
+            height = textY + len(lines) * self.font.get_linesize() + 7
+            rows.append({"who": message.who if first else "", "lines": lines, "grey": grey, "textY": textY, "height": height})
+        return rows
+
+    def draw(self, screen):
+        view = self.viewRect
+        pygame.draw.rect(screen, (22, 22, 25), view, border_radius=6)
+
+        rows = self.getRows()
+        total = sum(row["height"] for row in rows)
+        if len(rows) != self.count:
+            self.scroll = 0                 ## a new message, show it
+            self.count = len(rows)
+        self.scroll = max(0, min(self.scroll, total - view.height))
+
+        # the newest message sits at the bottom, everything outside of the view is cut off
+        greys = ((30, 30, 34), (42, 42, 47))
+        y = view.bottom - total + self.scroll       ## scrolling up pushes the messages down, so older ones come into view
+        screen.set_clip(view)
+        for row in rows:
+            if view.top - row["height"] < y < view.bottom:
+                pygame.draw.rect(screen, greys[row["grey"]], (view.x, y, view.width, row["height"]))
+                if row["who"]:
+                    colour = (140, 190, 255) if row["who"] == "You" else (232, 190, 120)
+                    screen.blit(self.nameFont.render(row["who"], True, colour), (view.x + 10, y + 7))
+                lineY = y + row["textY"]
+                for line in row["lines"]:
+                    screen.blit(self.font.render(line, True, (206, 206, 200)), (view.x + 10, lineY))
+                    lineY += self.font.get_linesize()
+            y += row["height"]
+        screen.set_clip(None)
+
+        # scroll bar, only when there is something to scroll
+        if total > view.height:
+            thumb = max(20, view.height * view.height // total)
+            thumbY = view.y + (view.height - thumb) * (total - view.height - self.scroll) // (total - view.height)
+            pygame.draw.rect(screen, (90, 88, 96), (view.right - 5, thumbY, 3, thumb), border_radius=2)
+
+        self.drawInput(screen, greys[1])
+
+    def drawInput(self, screen, grey):
+        pygame.draw.rect(screen, grey, self.inputRect, border_radius=10)
+        pygame.draw.rect(screen, (110, 110, 120) if self.focus else (60, 58, 64), self.inputRect, 1, border_radius=10)
+
+        shown = self.input
+        colour = (206, 206, 200)
+        if not shown and not self.focus:
+            shown, colour = lang.ui("Type a message"), (120, 120, 128)
+        else:
+            ###  the line is only so wide, so when the text is too long to fit we cut letters off the front
+            ###  until the rest fits, so you always see the end of what you type, where the cursor is
+            ###  the whole text is still kept in self.input and sent when you press enter
+            while shown and self.font.size(shown + "|")[0] > self.inputRect.width - 20:
+                shown = shown[1:]
+            if self.focus and (pygame.time.get_ticks() // 500) % 2 == 0:
+                shown += "|"
+        text = self.font.render(shown, True, colour)
+        screen.blit(text, text.get_rect(midleft=(self.inputRect.x + 10, self.inputRect.centery)))
 
 
 
