@@ -83,9 +83,8 @@ class PauseMenu:
         return False
 
     def draw(self):
-        pygame.draw.rect(self.screen,(10,10,10),pygame.rect.Rect(0,0,300,60))
-        self.screen.blit(
-            font.render(f"{self.player.name}", True, (210, 200, 160)), (10, 20))
+
+
         if self.paused:
             panel = pygame.Rect(740, 180, 400, self.firstButtonY - 175 + len(self.buttons) * 55)
             pygame.draw.rect(self.screen, (0, 0, 0), panel)

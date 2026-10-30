@@ -1,10 +1,12 @@
+import glob
 import json
 import threading
 from llama_cpp import Llama
 
 SYSTEM = "You are ARIA, the AI of Screamaze. You only answer questions about the game."
 
-llm = Llama(model_path="AI/game-q4_k_m.gguf", n_ctx=2048, verbose=False)
+llm = None      # loaded the first time somebody asks, so the game also starts without the model (the start screen downloads it)
+NO_MODEL = "The AI is not installed yet. Use Download AI and Open AI folder on the start screen."
 
 with open("AI/lore.json", encoding="utf-8") as f:
     lore = json.load(f)
@@ -23,13 +25,27 @@ def find_lore(question):
     return found
 
 
+def getModel():
+    global llm
+    if llm is None:
+        files = glob.glob("AI/*.gguf")
+        if not files:
+            return None
+        llm = Llama(model_path=files[0], n_ctx=2048, verbose=False)
+    return llm
+
+
 def ask(question, on_text):
+    model = getModel()
+    if model is None:
+        on_text(NO_MODEL)
+        return
     system = SYSTEM + "\nKnowledge:\n" + find_lore(question)
     messages = [
         {"role": "system", "content": system},
         {"role": "user", "content": question},
     ]
-    for part in llm.create_chat_completion(messages=messages, max_tokens=150, stream=True):
+    for part in model.create_chat_completion(messages=messages, max_tokens=150, stream=True):
         text = part["choices"][0]["delta"].get("content", "")
         on_text(text)
 

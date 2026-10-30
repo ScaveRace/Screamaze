@@ -38,7 +38,7 @@ class HomeScreen(BasePage):
         self.goTo("settings")
 
     def open_handset(self):
-        self.phone.openChat(True)       # the AI chat
+        self.goTo("dialer")
 
     def handle_event(self, event):
         for m in self.masks:

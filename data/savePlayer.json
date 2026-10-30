@@ -1,12 +1,12 @@
 {
   "name": "q",
-  "time": 211,
+  "time": 457,
   "position": [
     808,
     215
   ],
   "location": "corridor",
-  "lastLocation": "frontDesk",
+  "lastLocation": "teach1R",
   "inventory": {
     "Stones": [
       {
@@ -22,14 +22,23 @@
   "gender": "Male",
   "completion": {
     "VampRoom": {
-      "all": [],
-      "current": "",
+      "all": [
+        "vamp.talk_1",
+        "vamp.talk_2",
+        "vamp.talk_3"
+      ],
+      "current": "vamp.talk_3",
       "msg": ""
     },
     "GhostRoom": {
-      "all": [],
-      "current": "",
-      "msg": ""
+      "all": [
+        "gr.described",
+        "gr.talk_1",
+        "gr.talk_2",
+        "gr.talk_3"
+      ],
+      "current": "gr.talk_3",
+      "msg": 3
     },
     "TeacherRoom": {
       "all": [],

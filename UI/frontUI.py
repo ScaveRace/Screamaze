@@ -48,10 +48,6 @@ class FrontUI:
         return False
 
     def draw(self):
-
-        seconds = self.player.time
-        timeText = font.render(f"{seconds // 60:02d}:{seconds % 60:02d}", True, (210, 200, 160))
-        self.screen.blit(timeText, timeText.get_rect(topleft=(320, 30)))
         self.phone.draw()
         self.pauseButton.draw2(self.screen)
         self.pause.draw()

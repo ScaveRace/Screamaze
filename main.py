@@ -33,7 +33,6 @@ if not load.is_json_empty("data/gameSettings.json"):
     load.load(sett,"data/gameSettings.json")
     print(sett.getMusicVolume())
 
-
 player = p.Player()
 frontui = fui.FrontUI(player,screen,aria)
 room = bR.REGISTRY["startup"](screen,player,frontui)

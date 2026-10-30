@@ -148,8 +148,11 @@ class Chatbox:
             self.input = ""
             if text:
                 self.add(Message("You", text = text))
+                return True      ## the player sent a message, an empty line is not one
+            return False
         else:
             self.input = uF.handle_text_event(self.input,event)[:200]
+            return False
 
     def isSubmit(self,event):  ###  enters upon user pressing enter (return)
         return event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN
