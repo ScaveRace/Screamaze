@@ -17,15 +17,19 @@ class FrontUI:
         self.inventory = i.InventoryMenu(screen,p)
         self.pause = pause.PauseMenu(screen,p)
         self.pauseButton = u.Button(1370, 20, 90, 36, "pause", self.pause.toggle)
-        self.phone = Phone(screen,p)     # the phone is where the chat was, the chat of the phone is the Chatbox
-        self.chat = self.phone.chat
+        self.showAiChat = False          # which chat the phone shows: False the NPC talks (the chat app), True the AI chat (the handset app)
+        self.phone = Phone(screen,p,self)     # the phone is where the chat was, the chats of the phone are Chatboxes
+        self.chat = self.phone.chat           # the NPC talks, the rooms add theirs here
+        self.aiChat = self.phone.aiChat       # the AI chat
         self.db = lang   # the rooms get their texts with fui.db.chatMessage(room, id)
 
     def reset(self):
-        self.chat.messages.clear()
-        self.chat.input = ""
-        self.chat.focus = False
-        self.chat.scroll = 0
+        for chat in (self.chat, self.aiChat):
+            chat.messages.clear()
+            chat.input = ""
+            chat.focus = False
+            chat.scroll = 0
+        self.showAiChat = False
         self.inventory.open = False
         self.pause.paused = False
 

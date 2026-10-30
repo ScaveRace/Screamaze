@@ -20,19 +20,19 @@ class Browser(BasePage):
         self.titleFont = pygame.font.SysFont(u.Chatbox.CHAT_FONTS, 14, bold=True)
 
     def on_enter(self):
-        self.phone.chat.focus = True
-        self.phone.chat.unread = False
+        self.phone.aiChat.focus = True
+        self.phone.aiChat.unread = False
 
     def handle_event(self, event):
-        self.phone.chat.handle_event(event)
+        self.phone.aiChat.handle_event(event)
 
     def draw(self):
-        self.phone.chat.unread = False  ## the chat is open, so nothing is new
+        self.phone.aiChat.unread = False  ## the chat is open, so nothing is new
         self.screen.blit(self.image, (0, 0))
         pygame.draw.rect(self.screen, TITLE_COLOUR, TITLE, border_radius=TITLE_RADIUS)     # the rounded bar the title sits on
         title = self.titleFont.render(lang.ui("ARIA HELP Chat"), True, (206, 206, 200))
         self.screen.blit(title, title.get_rect(center=TITLE.center))
-        self.phone.chat.draw(self.screen)
+        self.phone.aiChat.draw(self.screen)
 
 
 

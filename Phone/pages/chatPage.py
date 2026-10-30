@@ -20,15 +20,17 @@ class ChatPage(BasePage):
         self.titleFont = pygame.font.SysFont(u.Chatbox.CHAT_FONTS, 17, bold=True)
 
     def on_enter(self):
-        self.phone.chat.focus = False
-        self.phone.chat.unread = False
+        for chat in (self.phone.chat, self.phone.aiChat):
+            chat.focus = False
+        self.phone.shownChat().unread = False
 
     def handle_event(self, event):
-        self.phone.chat.handle_event(event)
+        self.phone.shownChat().handle_event(event)
 
     def draw(self):
-        self.phone.chat.unread = False      ## the chat is open, so nothing is new
+        chat = self.phone.shownChat()       ## the NPC talks or the AI chat, the phone knows from fui.showAiChat
+        chat.unread = False                 ## the chat is open, so nothing is new
         self.screen.blit(self.image, (0, 0))
-        title = self.titleFont.render(lang.ui("Chat"), True, (206, 206, 200))
+        title = self.titleFont.render(lang.ui("AI chat" if self.phone.fui.showAiChat else "Chat"), True, (206, 206, 200))
         self.screen.blit(title, title.get_rect(center=TITLE.center))
-        self.phone.chat.draw(self.screen)
+        chat.draw(self.screen)

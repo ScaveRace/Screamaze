@@ -307,6 +307,7 @@
   },
   "Buttons": {
     "Chat": "Chat",
+    "AI chat": "AI-chat",
     "Type a message": "Typ een bericht",
     "New Game": "Nieuw spel",
     "Load Game": "Spel laden",
