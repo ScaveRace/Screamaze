@@ -12,6 +12,7 @@ class NewRoom(BaseRoom):
     ELEMENTS = []
     FOUND = {}
     BUTTONS = []
+    PEOPLE = []
 
     def __init__(self, screen, player, fui):
         super().__init__(screen, player, fui)

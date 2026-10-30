@@ -37,9 +37,12 @@ def getElements(room):
         found = room.FOUND.get(name)
         if found and not isFound(room, name):
             masks[name + ".changed"] = [spriteMask(found[1], found[3], found[2], pickUp(room, name))]
+    # the people in a room, you press them in the room view: they are cut out of the room picture like the elements, but have no close-up
+    for name, label, action in room.PEOPLE:
+        masks["room"].append(u.Mask(folder + "masks/" + name + ".png", size, (0, 0), ACTIONS[action](room), label))
     buttons = [u.Button(1320, 650, 140, 50, "Back", lambda: back(room))]
     # the buttons a room has besides its elements, they are in the room view only
-    extra = [u.Button(x, y, w, h, label, lambda action=ACTIONS[action]: action(room))
+    extra = [u.Button(x, y, w, h, label, ACTIONS[action](room))
              for label, (x, y, w, h), action in room.BUTTONS]
     return images, masks, buttons, extra
 
@@ -98,15 +101,17 @@ def back(room):
     room.view = "room"
 
 
-# the lady at the front desk takes the necklace, and the game ends
+# makes the action for the lady at the front desk: she takes the necklace, and the game ends
 def giveNecklace(room):
-    if not room.player.has_item("Items", "Necklace"):
-        room.fui.sendMessage("You", DB_TABLE, room.key + ".necklace_missing")
-        return
-    room.player.remove_item("Items", "Necklace")
-    room.player.addCompletion("SecondaryRooms", room.key + ".necklace", "")
-    room.goTo("ending")
+    def action():
+        if not room.player.has_item("Items", "Necklace"):
+            room.fui.sendMessage("You", DB_TABLE, room.key + ".necklace_missing")
+            return
+        room.player.remove_item("Items", "Necklace")
+        room.player.addCompletion("SecondaryRooms", room.key + ".necklace", "")
+        room.goTo("ending")
+    return action
 
 
-# the actions a room can give to its buttons, by the name used in the BUTTONS of its file
+# what a person in a room can do, by the name used in the PEOPLE of its file: name -> function(room) that makes the action
 ACTIONS = {"giveNecklace": giveNecklace}

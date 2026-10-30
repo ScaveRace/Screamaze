@@ -122,8 +122,11 @@ def getMistakes(room):
     return progress(room)["all"].count("equin.mistake")
 
 
-def resetProgress(room):
-    progress(room)["all"].clear()
+PUZZLE_EVENTS = ("equin.got.", "equin.placed.", "equin.mistake")     # what the sandwich puzzle saves, the rest (talked, sandwich, lookaway, stone, shape) stays
+
+
+def resetProgress(room): # after failing only the sandwich puzzle starts again, the rest of the room keeps what the player did
+    progress(room)["all"][:] = [e for e in progress(room)["all"] if not e.startswith(PUZZLE_EVENTS)]
     progress(room)["current"] = ""
     progress(room)["msg"] = ""
 

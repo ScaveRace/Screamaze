@@ -25,6 +25,7 @@ class HomeScreen(BasePage):
             self.chatMask,
             u.Mask(A + "apps/gear.png", size, (0, 0), self.open_gear, ""),
             u.Mask(A + "apps/handset.png", size, (0, 0), self.open_handset, ""),
+            u.Mask(A + "apps/briefcase.png", size, (0, 0), self.open_briefcase, ""),
         ]
 
     # what pressing an app does: none of the pages is made yet, later it is self.goTo("<name of the page>")
@@ -32,13 +33,16 @@ class HomeScreen(BasePage):
         self.goTo("browser")
 
     def open_chat(self):
-        self.phone.openChat(False)      # the NPC talks
+        self.goTo("chat")
 
     def open_gear(self):
         self.goTo("settings")
 
     def open_handset(self):
         self.goTo("dialer")
+
+    def open_briefcase(self):
+        self.phone.fui.inventory.toggle()       # the inventory is a panel over the room, not a page of the phone
 
     def handle_event(self, event):
         for m in self.masks:
