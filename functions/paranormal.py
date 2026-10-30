@@ -13,7 +13,7 @@ FILES = {
 
 
 class Paranormal:
-    def __init__(self, minDelay=8000, maxDelay=25000, volume=0.7):
+    def __init__(self, minDelay=60000, maxDelay=200000, volume=0.7):
         if not pygame.mixer.get_init():
             pygame.mixer.init()
         self.volume = volume
