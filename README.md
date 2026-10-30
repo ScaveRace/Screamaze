@@ -306,13 +306,6 @@ Room file names and keys: letters and digits, camelCase, starting with a letter 
 Write asset paths exactly as the file is named. Windows and macOS ignore capitalisation, Linux
 does not, so `assets/FrontDesk_1.png` works on one laptop and crashes on another.
 
----
-
-## Known issues
-
-- The Dutch texts are not checked by a native speaker yet.
-
----
 
 ## Working together
 
