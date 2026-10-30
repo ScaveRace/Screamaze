@@ -61,6 +61,9 @@ def getElements(room):
             images[viewOf(name, pic)] = u.load_image(picture(folder + name + "/" + pic + ".png", folder + name + "/pov_changed.png"), size)
             masks[viewOf(name, pic)] = []
             inputs[name + ".changed"] = [CodeEntry(room, name)]
+    # the people in the room, see PEOPLE in the room's file: pressing one does an action from ACTIONS
+    for name, label, action in room.PEOPLE:
+        masks["room"].append(u.Mask(folder + "masks/" + name + ".png", size, (0, 0), lambda action=ACTIONS[action]: action(room), label))
     buttons = [u.Button(1320, 650, 140, 50, "Back", lambda: back(room))]
     # the buttons a room has besides its elements, they are in the room view only
     extra = [u.Button(x, y, w, h, label, lambda action=ACTIONS[action]: action(room))
@@ -212,5 +215,5 @@ def giveNecklace(room):
     room.goTo("ending")
 
 
-# the actions a room can give to its buttons, by the name used in the BUTTONS of its file
+# the actions a room can give to its people and buttons, by the name used in the PEOPLE or BUTTONS of its file
 ACTIONS = {"giveNecklace": giveNecklace}
