@@ -108,6 +108,8 @@ def start(room):
     room.masks = [
         u.Mask("assets/teacherRoom/tr_room_chest_mask.png", room.screensize, (0, 0), lambda: chest(room), "Chest"),
     ]
+    if room.reward_taken:   # the mask is the closed chest, it would sit on top of the open one
+        room.masks.clear()
 
     room.chest_masks = []
     for hole in STONE_HOLES:
@@ -241,6 +243,7 @@ def take_reward(room):
     room.reward_taken = True
     add(room, "tr.necklace")
     room.player.add_item("Items", "Necklace", NECKLACE_ICON)
+    room.masks.clear()      # the chest is empty now, see start
     lb.finishRun(room.player)
     room.fui.sendMessage("You", "TeacherRoom", 25)
     room.current_image = room.chest_open_image

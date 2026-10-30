@@ -111,7 +111,7 @@ def start(player, fui, screen):
         keys.append(u.Button(KEYPAD_ORIGIN[0]  +  i % 3 * STEP, KEYPAD_ORIGIN[1]  + i // 3 * STEP, KEY , KEY, label, action))
     keys.append(u.Button(1000, 520, 140, 50, "Back", close_keypad))
 
-    buttons["room"] = [u.Button(560, 650, 140, 50, "Corridor", leave)]
+    buttons["room"] = [u.Button(1200, 640, 140, 50, "Corridor", leave)]
     buttons["teacher"] = [u.Button(830, 660, 140, 50, "Give", give_homework),
                           u.Button(1000, 520, 140, 50, "Return", back_to_room)]
     buttons["back"] = [u.Button(1000, 520, 140, 50, "Return", back_to_room)]
