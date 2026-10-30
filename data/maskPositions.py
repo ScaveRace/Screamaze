@@ -46,6 +46,7 @@ CUT = {
     "assets/front_desk_office/masks/door.png": (601, 869, 1672, 941),
     "assets/front_desk_office/masks/filing_cabinets.png": (463, 185, 1672, 941),
     "assets/front_desk_office/masks/key_cabinet.png": (1026, 186, 1672, 941),
+    "assets/front_desk_office/masks/lady.png": (784, 312, 1672, 941),
     "assets/front_desk_office/masks/printer.png": (1089, 606, 1672, 941),
     "assets/front_desk_office/masks/reception_desk.png": (658, 344, 1672, 941),
     "assets/front_desk_office/masks/wall_clock.png": (1020, 119, 1672, 941),
@@ -187,11 +188,12 @@ CUT = {
 }
 
 # the apps of the phone (Phone/pages/homescreen.py), cut out of assets/phoneIm/phone_full.png which is 809 x 1944
-# the briefcase (inventory) and the corner app are not on the phone anymore, the handset took the place of the briefcase
+# the corner app is not on the phone anymore, the handset took the place of the briefcase, the briefcase (inventory) is next to it
 # the phone is 300 wide and replaces the chat, so it sits left of the room: every x is the place in phone_full.png - 810
 CUT.update({
     "assets/phoneIm/apps/globe.png": (-716, 808, 3186, 1944),
     "assets/phoneIm/apps/chat.png": (-492, 808, 3186, 1944),
     "assets/phoneIm/apps/gear.png": (-276, 808, 3186, 1944),
     "assets/phoneIm/apps/handset.png": (-716, 1027, 3186, 1944),
+    "assets/phoneIm/apps/briefcase.png": (-492, 1027, 3186, 1944),
 })

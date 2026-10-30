@@ -18,10 +18,9 @@ class FrontUI:
         self.inventory.say = self.sendMessage   # pressing an item in the inventory tells its text in the chat
         self.pause = pause.PauseMenu(screen,p)
         self.pauseButton = u.Button(1370, 20, 90, 36, "pause", self.pause.toggle)
-        self.showAiChat = False          # which chat the phone shows: False the NPC talks (the chat app), True the AI chat (the handset app)
         self.phone = Phone(screen,p,self)     # the phone is where the chat was, the chats of the phone are Chatboxes
         self.chat = self.phone.chat           # the NPC talks, the rooms add theirs here
-        self.aiChat = self.phone.aiChat       # the AI chat
+        self.aiChat = self.phone.aiChat       # the AI chat, the browser page of the phone
         self.db = lang   # the rooms get their texts with fui.db.chatMessage(room, id)
 
     def reset(self):
@@ -30,7 +29,6 @@ class FrontUI:
             chat.input = ""
             chat.focus = False
             chat.scroll = 0
-        self.showAiChat = False
         self.inventory.open = False
         self.pause.paused = False
 

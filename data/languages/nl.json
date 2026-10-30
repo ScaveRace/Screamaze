@@ -48,8 +48,7 @@
     "9": "Alle drie de zekeringen moeten erin zitten voordat ik hierop druk.",
     "10": "*klik* — het paneel komt zoemend weer tot leven.",
     "11": "Buiten schreeuwde iets. Ik moet gaan kijken.",
-    "12": "Een rode steen... nog steeds koud.",
-    "13": "blabla"
+    "12": "Een rode steen... nog steeds koud."
   },
   "GhostRoom": {
     "1": "Ohh, er is eindelijk een student naar de les gekomen.",
@@ -84,7 +83,9 @@
     "30": "Op de voorkant zit een klein toetsenpaneel, vier lege vakjes wachten op een code.",
     "31": "De kastdeuren staan open. Op de middelste plank ligt een dikke stapel papieren.",
     "32": "De kast staat open en is leeg. Alleen stof op de planken.",
-    "33": "Het toetsenpaneel van dichtbij. Twaalf versleten toetsen: nul tot negen, C om te wissen en E om te bevestigen."
+    "33": "Het toetsenpaneel van dichtbij. Twaalf versleten toetsen: nul tot negen, C om te wissen en E om te bevestigen.",
+    "34": "De leraar is in een steen veranderd. Hij ligt op het lege bureau.",
+    "35": "Er is niets meer over in de kamer."
   },
   "ProjectRoom": {
     "intro_1": "Een projectruimte voor studenten. Zitzakken, een boekenkast, een whiteboard en een afgesloten kistje. Het lijkt alsof iemand midden in een zin is weggegaan.",
@@ -338,7 +339,7 @@
   },
   "Buttons": {
     "Chat": "Chat",
-    "AI chat": "AI-chat",
+    "Lady": "Mevrouw",
     "Type a message": "Typ een bericht",
     "New Game": "Nieuw spel",
     "Load Game": "Spel laden",

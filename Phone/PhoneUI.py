@@ -30,19 +30,11 @@ class Phone:
     def __init__(self, screen, player, fui):
         self.screen = screen
         self.player = player
-        self.fui = fui              # fui.showAiChat says which of the two chats the chat page shows
+        self.fui = fui              # the pages get ARIA and the inventory from it
         self.chat = u.Chatbox(*CHAT_AREA)       # the NPC talks, the rooms add theirs through fui.chat
-        self.aiChat = u.Chatbox(*CHAT_AREA)     # the AI chat
+        self.aiChat = u.Chatbox(*CHAT_AREA)     # the AI chat, the browser page shows it
         self.pages = {name: page(screen, player, self) for name, page in PAGES.items()}
         self.page = "home"
-
-    # the chat page shows the NPC talks (the chat app) or the AI chat (the handset app)
-    def openChat(self, ai):
-        self.fui.showAiChat = ai
-        self.goTo("chat")
-
-    def shownChat(self):
-        return self.aiChat if self.fui.showAiChat else self.chat
 
     def goTo(self, page):
         if page not in self.pages:
@@ -86,3 +78,23 @@ class Phone:
         pygame.draw.rect(self.screen, HOME_OUTLINE, inner, 1, border_radius=4)                # the inner outline
 
 
+# runs only the phone, in a window of its size, to build the pages, from the project folder: python -m Phone.PhoneUI
+if __name__ == "__main__":
+    import player as p
+    import AI.aria as aria
+    from UI.frontUI import FrontUI
+    pygame.init()
+    screen = pygame.display.set_mode(PHONE_SIZE, pygame.SCALED | pygame.RESIZABLE)      # resizing keeps its shape
+    pygame.display.set_caption("Phone")
+    clock = pygame.time.Clock()
+    phone = FrontUI(p.Player(), screen, aria).phone       # the phone needs the FrontUI: it gives the pages ARIA and the inventory
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                running = False
+            phone.handle_event(event)
+        phone.draw()
+        pygame.display.flip()
+        clock.tick(60)
+    pygame.quit()

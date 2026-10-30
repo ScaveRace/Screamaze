@@ -54,7 +54,7 @@ than the one in `.venv`.
 | Type + `Enter` | Click the chat first, then type. Used for riddle answers. |
 | Mouse wheel over the chat | Scroll back through older messages. |
 | `Esc` or the **pause** button | Pause menu: music volume, sound-effect volume, save game, resume. |
-| **Inventory** button | Shows the items you carry. |
+| **Briefcase** app on the phone | Shows the items you carry. |
 
 The timer at the top only runs while the game is not paused.
 
