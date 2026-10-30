@@ -97,7 +97,7 @@ def carried(room, shape): # the player has the badge and it is not in the box ye
 
 
 def say(room, who, messageID):
-    room.fui.chat.sayKey(who or "", DB_TABLE, messageID)
+    room.fui.chat.sayKey(who or "You", DB_TABLE, messageID)
 
 
 def sayAll(room, lines):
